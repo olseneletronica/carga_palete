@@ -6,8 +6,7 @@
 <title>Monitor de Paletes</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg:        #f4f5f2;
@@ -25,131 +24,152 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: var(--font-sans); font-size: 14px; min-height: 100vh; }
 
-  /* HEADER */
+  /* ── HEADER ── */
   header {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 20px 32px; border-bottom: 1px solid var(--border);
-    background: var(--surface);
+    padding: 18px 32px; border-bottom: 1px solid var(--border);
+    background: var(--surface); position: sticky; top: 0; z-index: 50;
   }
-  .header-title { font-family: var(--font-mono); font-size: 13px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+  .header-title { font-family: var(--font-mono); font-size: 12px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
   .header-title span { color: var(--accent); margin-right: 10px; }
-  .header-right { display: flex; align-items: center; gap: 16px; }
+  .header-right { display: flex; align-items: center; gap: 12px; }
   .last-update { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
 
-  /* BUTTONS */
+  /* ── BUTTONS ── */
   .btn {
-    display: flex; align-items: center; gap: 7px;
-    font-family: var(--font-mono); font-size: 11px; letter-spacing: .07em;
-    text-transform: uppercase; background: transparent;
-    border: 1px solid var(--border); border-radius: 3px;
-    padding: 7px 14px; cursor: pointer; transition: background .15s, border-color .15s;
-    color: var(--accent);
+    display: flex; align-items: center; gap: 6px;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase;
+    background: transparent; border: 1px solid var(--border); border-radius: 3px;
+    padding: 7px 13px; cursor: pointer; transition: background .15s, border-color .15s; color: var(--accent);
   }
   .btn:hover { background: rgba(26,122,74,.07); border-color: var(--accent); }
   .btn:active { opacity: .7; }
-  .btn:disabled { opacity: .5; cursor: default; }
+  .btn:disabled { opacity: .45; cursor: default; }
   .btn.secondary { color: var(--muted); }
   .btn.secondary:hover { background: rgba(0,0,0,.04); border-color: var(--muted); }
-  .btn svg { transition: transform .5s ease; }
+  .btn svg { transition: transform .5s; }
   .btn.spinning svg { animation: spin .6s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* MODAL */
-  .modal-backdrop {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,.35); z-index: 200;
-    align-items: center; justify-content: center;
-  }
+  /* ── MODAL ── */
+  .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.32); z-index: 200; align-items: center; justify-content: center; }
   .modal-backdrop.open { display: flex; }
-  .modal {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 6px; width: 560px; max-width: 95vw;
-    padding: 28px; box-shadow: 0 8px 40px rgba(0,0,0,.12);
-    max-height: 90vh; overflow-y: auto;
-  }
-  .modal-title {
-    font-family: var(--font-mono); font-size: 12px;
-    letter-spacing: .1em; text-transform: uppercase;
-    color: var(--muted); margin-bottom: 6px;
-  }
-  .modal-subtitle {
-    font-size: 12px; color: var(--muted); margin-bottom: 20px;
-  }
-  .device-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-  .device-row {
-    display: grid; grid-template-columns: 1fr 1fr 1fr auto;
-    gap: 8px; align-items: center;
-  }
-  .device-row input {
-    font-family: var(--font-mono); font-size: 11px;
-    background: var(--bg); border: 1px solid var(--border);
-    border-radius: 3px; padding: 8px 10px; color: var(--text); width: 100%;
-  }
+  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; width: 580px; max-width: 96vw; padding: 28px; box-shadow: 0 8px 40px rgba(0,0,0,.10); max-height: 88vh; overflow-y: auto; }
+  .modal-title { font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .modal-subtitle { font-size: 12px; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
+  .col-headers { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 8px; margin-bottom: 6px; }
+  .col-header { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; padding: 0 2px; }
+  .device-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+  .device-row { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 8px; align-items: center; }
+  .device-row input { font-family: var(--font-mono); font-size: 11px; background: var(--bg); border: 1px solid var(--border); border-radius: 3px; padding: 8px 10px; color: var(--text); width: 100%; }
   .device-row input:focus { outline: none; border-color: var(--accent); }
   .device-row input::placeholder { color: var(--muted); }
-  .col-headers {
-    display: grid; grid-template-columns: 1fr 1fr 1fr auto;
-    gap: 8px; margin-bottom: 6px;
-  }
-  .col-header { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; padding: 0 2px; }
-  .btn-remove { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 18px; line-height: 1; padding: 2px 4px; transition: color .15s; }
+  .btn-remove { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 18px; line-height: 1; padding: 2px 5px; transition: color .15s; }
   .btn-remove:hover { color: var(--danger); }
   .modal-footer { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
   .modal-status { font-family: var(--font-mono); font-size: 11px; color: var(--muted); min-height: 16px; transition: color .3s; }
-  .modal-status.ok     { color: var(--accent); }
-  .modal-status.error  { color: var(--danger); }
+  .modal-status.ok    { color: var(--accent); }
+  .modal-status.error { color: var(--danger); }
 
-  /* MAIN */
-  main { padding: 28px 32px; }
+  /* ── MAIN ── */
+  main { padding: 28px 32px; display: flex; flex-direction: column; gap: 24px; }
 
-  /* PALETES GRID */
-  .paletes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-bottom: 24px; }
-
-  /* PALETE CARD */
-  .palete-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 4px; padding: 20px 24px;
-    opacity: 0; transform: translateY(10px); animation: fadeUp .4s ease forwards;
+  /* ── SUMMARY BAR ── */
+  .summary-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
   }
-  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
-  .palete-card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 4px; }
-  .palete-card-name { font-family: var(--font-mono); font-size: 14px; font-weight: 500; color: var(--text); }
-  .palete-card-mac { font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
-  .palete-card-product { font-size: 12px; color: var(--muted); margin-bottom: 16px; font-family: var(--font-mono); }
-  .palete-status-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
+
+  .summary-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 18px 20px;
+    display: flex; flex-direction: column; gap: 6px;
+    opacity: 0; transform: translateY(8px);
+    animation: fadeUp .35s ease forwards;
+  }
+
+  .summary-card:nth-child(1) { animation-delay: .00s; }
+  .summary-card:nth-child(2) { animation-delay: .05s; }
+  .summary-card:nth-child(3) { animation-delay: .10s; }
+  .summary-card:nth-child(4) { animation-delay: .15s; }
+
+  @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+
+  .summary-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
+  .summary-value { font-family: var(--font-mono); font-size: 32px; font-weight: 300; line-height: 1; color: var(--text); }
+  .summary-value.ok     { color: var(--accent); }
+  .summary-value.warn   { color: var(--warn); }
+  .summary-value.danger { color: var(--danger); }
+  .summary-sub { font-size: 11px; color: var(--muted); }
+
+  /* ── PALETES GRID ── */
+  .paletes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+
+  /* ── PALETE CARD ── */
+  .palete-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+    padding: 20px 22px; opacity: 0; transform: translateY(8px); animation: fadeUp .4s ease forwards;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+
+  .pc-header { display: flex; align-items: flex-start; justify-content: space-between; }
+  .pc-name { font-family: var(--font-sans); font-size: 15px; font-weight: 600; color: var(--text); }
+  .pc-mac  { font-family: var(--font-mono); font-size: 10px; color: var(--muted); margin-top: 2px; }
+  .pc-product { font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-top: -8px; }
+
+  /* status pill */
+  .pc-status {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px; border-radius: 20px; font-family: var(--font-mono);
+    font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase;
+    align-self: flex-start;
+  }
+  .pc-status.cheio  { background: rgba(26,122,74,.10);  color: var(--accent); }
+  .pc-status.baixo  { background: rgba(176,106,0,.10);  color: var(--warn); }
+  .pc-status.vazio  { background: rgba(192,57,43,.10);  color: var(--danger); }
+  .pc-status.parcial{ background: rgba(176,106,0,.08);  color: var(--warn); }
+  .pc-status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  /* slots */
+  .pc-slots { display: grid; grid-template-columns: repeat(4,1fr); gap: 7px; }
   .slot {
-    display: flex; flex-direction: column; align-items: center; gap: 6px;
-    padding: 10px 6px; border-radius: 3px; border: 1px solid var(--border);
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    padding: 9px 4px; border-radius: 3px; border: 1px solid var(--border);
     transition: border-color .3s, background .3s;
   }
   .slot.present { border-color: var(--accent); background: rgba(26,122,74,.06); }
-  .slot.absent  { border-color: rgba(192,57,43,.3); background: rgba(192,57,43,.04); }
-  .slot-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border); transition: background .3s; }
+  .slot.absent  { border-color: rgba(192,57,43,.25); background: rgba(192,57,43,.04); }
+  .slot-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border); transition: background .3s; }
   .slot.present .slot-dot { background: var(--accent); }
   .slot.absent  .slot-dot { background: var(--danger); }
-  .slot-label { font-family: var(--font-mono); font-size: 9px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
-  .palete-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .mini-kpi { background: var(--bg); border-radius: 3px; padding: 10px 12px; }
-  .mini-kpi-label { font-family: var(--font-mono); font-size: 9px; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; margin-bottom: 4px; }
-  .mini-kpi-value { font-family: var(--font-mono); font-size: 20px; font-weight: 300; color: var(--text); line-height: 1; transition: color .3s; }
-  .mini-kpi-value.accent { color: var(--accent); }
-  .mini-kpi-value.warn   { color: var(--warn); }
-  .mini-kpi-value.danger { color: var(--danger); }
-  .palete-evento { margin-top: 12px; font-family: var(--font-mono); font-size: 10px; color: var(--muted); min-height: 14px; }
+  .slot-label { font-family: var(--font-mono); font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
 
-  /* BOTTOM SECTION */
-  .bottom-section { display: grid; grid-template-columns: 1fr; gap: 20px; }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 24px 28px; }
-  .section-title { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; }
+  /* kpis */
+  .pc-kpis { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+  .kpi { background: var(--bg); border-radius: 3px; padding: 10px 12px; }
+  .kpi-label { font-family: var(--font-mono); font-size: 9px; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; margin-bottom: 4px; }
+  .kpi-value { font-family: var(--font-mono); font-size: 18px; font-weight: 300; color: var(--text); line-height: 1.1; }
+  .kpi-value.accent { color: var(--accent); }
+  .kpi-value.warn   { color: var(--warn); }
+  .kpi-value.danger { color: var(--danger); }
+  .kpi-sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+  .pc-evento { font-family: var(--font-mono); font-size: 10px; color: var(--muted); min-height: 13px; }
+
+  /* ── TABLE ── */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 22px 26px; }
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .section-title { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
   .chart-select { font-family: var(--font-mono); font-size: 11px; background: var(--bg); border: 1px solid var(--border); border-radius: 3px; padding: 4px 8px; color: var(--text); cursor: pointer; }
-  .chart-wrapper { position: relative; height: 200px; }
 
-  /* TABLE */
   table { width: 100%; border-collapse: collapse; }
-  thead th { font-family: var(--font-mono); font-size: 10px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 0 10px 10px; border-bottom: 1px solid var(--border); }
+  thead th { font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 0 10px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
   tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
   tbody tr:last-child { border-bottom: none; }
-  tbody tr:hover { background: rgba(0,0,0,.02); }
+  tbody tr:hover { background: rgba(0,0,0,.018); }
   tbody td { font-family: var(--font-mono); font-size: 11px; color: var(--text); padding: 9px 10px; white-space: nowrap; }
   tbody td.muted { color: var(--muted); }
 
@@ -159,10 +179,10 @@
   .badge.vazio   { background: rgba(192,57,43,.10);  color: var(--danger); }
   .badge.normal  { background: rgba(0,0,0,.05);      color: var(--muted); }
 
-  /* EMPTY */
-  .empty-state { text-align: center; padding: 60px 20px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); letter-spacing: .06em; line-height: 2; }
+  /* ── EMPTY ── */
+  .empty-state { text-align: center; padding: 56px 20px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); letter-spacing: .06em; line-height: 2.2; }
 
-  /* LOADING */
+  /* ── LOADING ── */
   .loading-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; z-index: 100; transition: opacity .4s; }
   .loading-overlay.hidden { opacity: 0; pointer-events: none; }
   .loading-bar { width: 140px; height: 1px; background: var(--border); position: relative; overflow: hidden; }
@@ -170,12 +190,14 @@
   @keyframes slide { to { left: 100%; } }
   .loading-text { font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: .1em; }
 
-  @media (max-width: 600px) {
-    header { padding: 16px; }
-    main   { padding: 16px; }
+  /* ── RESPONSIVE ── */
+  @media (max-width: 700px) {
+    header { padding: 14px 16px; }
+    main   { padding: 16px; gap: 16px; }
+    .summary-bar { grid-template-columns: repeat(2,1fr); }
     .paletes-grid { grid-template-columns: 1fr; }
     .device-row { grid-template-columns: 1fr 1fr; }
-    .device-row input:first-child { grid-column: 1 / -1; }
+    .device-row input:first-child { grid-column: 1/-1; }
   }
 </style>
 </head>
@@ -187,11 +209,11 @@
   <div class="loading-text">carregando dados</div>
 </div>
 
-<!-- MODAL DISPOSITIVOS -->
+<!-- MODAL -->
 <div class="modal-backdrop" id="modalBackdrop">
   <div class="modal">
     <div class="modal-title">Gerenciar Dispositivos</div>
-    <div class="modal-subtitle">Cadastre o MAC de cada ESP32 com um nome e produto para identificação nos alertas por e-mail.</div>
+    <div class="modal-subtitle">Cadastre o MAC de cada ESP32 com nome e produto. Essas informações serão usadas nos alertas por e-mail.</div>
     <div class="col-headers">
       <div class="col-header">MAC</div>
       <div class="col-header">Nome</div>
@@ -214,23 +236,44 @@
   <div class="header-title"><span>◆</span>monitor / paletes</div>
   <div class="header-right">
     <button class="btn secondary" onclick="openModal()">
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-        <circle cx="6" cy="6" r="2"/><circle cx="6" cy="6" r="5"/>
-      </svg>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="6" r="2"/><circle cx="6" cy="6" r="5"/></svg>
       dispositivos
     </button>
     <button class="btn" id="btnRefresh" onclick="manualRefresh()">
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M10.5 2A5 5 0 1 0 11 6"/><polyline points="8 0 10.5 2 8.5 4.5"/>
-      </svg>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 2A5 5 0 1 0 11 6"/><polyline points="8 0 10.5 2 8.5 4.5"/></svg>
       atualizar
     </button>
     <span class="last-update" id="lastUpdate">—</span>
   </div>
 </header>
 
-<!-- MAIN -->
 <main>
+
+  <!-- SUMMARY BAR -->
+  <div class="summary-bar" id="summaryBar">
+    <div class="summary-card">
+      <div class="summary-label">Dispositivos</div>
+      <div class="summary-value" id="sumTotal">—</div>
+      
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">Carga cheia</div>
+      <div class="summary-value ok" id="sumOk">—</div>
+      
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">Carga baixa</div>
+      <div class="summary-value warn" id="sumWarn">—</div>
+      
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">Sem carga</div>
+      <div class="summary-value danger" id="sumDanger">—</div>
+      
+    </div>
+  </div>
+
+  <!-- PALETES -->
   <div class="paletes-grid" id="paleteGrid">
     <div class="empty-state" id="emptyState">
       Aguardando dados dos dispositivos.<br>
@@ -238,43 +281,36 @@
     </div>
   </div>
 
-  <div class="bottom-section">
-    <div class="card">
-      <div class="section-title">
-        Histórico — posições presentes
-        <select class="chart-select" id="chartSelect" onchange="updateChart()"></select>
-      </div>
-      <div class="chart-wrapper"><canvas id="chartPaletes"></canvas></div>
+  <!-- TABLE -->
+  <div class="card">
+    <div class="section-header">
+      <div class="section-title">Últimos registros</div>
+      <select class="chart-select" id="tableSelect" onchange="updateTable()"></select>
     </div>
-    <div class="card">
-      <div class="section-title">
-        Últimos registros
-        <select class="chart-select" id="tableSelect" onchange="updateTable()"></select>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Data / Hora</th>
-            <th>Dispositivo</th>
-            <th>Produto</th>
-            <th>C1</th><th>C2</th><th>C3</th><th>C4</th>
-            <th>Presentes</th>
-            <th>Reposições</th>
-            <th>T. Rep. (min)</th>
-            <th>Evento</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody">
-          <tr><td colspan="11" class="muted" style="text-align:center;padding:24px">carregando...</td></tr>
-        </tbody>
-      </table>
-    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Data / Hora</th>
+          <th>Dispositivo</th>
+          <th>Produto</th>
+          <th>C1</th><th>C2</th><th>C3</th><th>C4</th>
+          <th>Presentes</th>
+          <th>Reposições</th>
+          <th>T. Rep. (min)</th>
+          <th>Evento</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr><td colspan="11" class="muted" style="text-align:center;padding:24px">carregando...</td></tr>
+      </tbody>
+    </table>
   </div>
+
 </main>
 
 <script>
 // ══════════════════════════════════════════════════════
-//  CONFIG — atualize com o ID do seu Apps Script
+//  CONFIG
 // ══════════════════════════════════════════════════════
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxpSCcIj_Hn5LAkb3hjNkHJdWnl7Gymn-3efUnQcyQy6L9iq6yRIvvCMoustLs_qkkv/exec';
 const CSV_URL    = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRAZD5ue759yWSG-rhT8pcyR1cLOK9ssciEPKoiR7hrhPpr2777ZtaxqxjEQqflXl63l-TDIzhqTvpA/pub?output=csv';
@@ -283,7 +319,6 @@ const LS_KEY     = 'monitor_paletes_devices_v2';
 
 // ══════════════════════════════════════════════════════
 //  DISPOSITIVOS
-//  Cache local: [ { mac, name, product }, ... ]
 // ══════════════════════════════════════════════════════
 let deviceCache = [];
 
@@ -292,25 +327,22 @@ function loadDeviceCache() {
   catch(e) { deviceCache = []; }
 }
 
-function saveDeviceCache(devices) {
-  deviceCache = devices;
-  localStorage.setItem(LS_KEY, JSON.stringify(devices));
+function saveDeviceCache(d) {
+  deviceCache = d;
+  localStorage.setItem(LS_KEY, JSON.stringify(d));
 }
 
 function deviceInfo(mac) {
-  const found = deviceCache.find(d => d.mac.toUpperCase() === mac.toUpperCase());
-  return found || { name: mac, product: '—' };
+  const f = deviceCache.find(d => d.mac.toUpperCase() === mac.toUpperCase());
+  return f || { name: mac, product: '—' };
 }
 
-// Busca dispositivos da planilha e atualiza cache
 async function fetchDevices() {
   try {
     const res  = await fetch(SCRIPT_URL + '?action=get_devices&t=' + Date.now());
     const data = await res.json();
     if (Array.isArray(data)) saveDeviceCache(data);
-  } catch(e) {
-    console.warn('Dispositivos: usando cache local.', e);
-  }
+  } catch(e) { console.warn('Dispositivos: usando cache.', e); }
 }
 
 // ══════════════════════════════════════════════════════
@@ -324,22 +356,22 @@ function openModal() {
   document.getElementById('modalBackdrop').classList.add('open');
 }
 
-function addDeviceRow(mac = '', name = '', product = '') {
+function addDeviceRow(mac='', name='', product='') {
   const list = document.getElementById('deviceList');
   const row  = document.createElement('div');
   row.className = 'device-row';
   row.innerHTML = `
     <input type="text" placeholder="A4CF1234ABCD" value="${mac}" maxlength="12" style="text-transform:uppercase">
-    <input type="text" placeholder="Palete 1" value="${name}">
-    <input type="text" placeholder="Bobinas" value="${product}">
+    <input type="text" placeholder="Palete 1"     value="${name}">
+    <input type="text" placeholder="Bobinas"      value="${product}">
     <button class="btn-remove" onclick="this.parentElement.remove()">×</button>`;
   list.appendChild(row);
 }
 
-function setModalStatus(msg, type = '') {
+function setModalStatus(msg, type='') {
   const el = document.getElementById('modalStatus');
   el.textContent = msg;
-  el.className = 'modal-status' + (type ? ' ' + type : '');
+  el.className = 'modal-status' + (type ? ' '+type : '');
 }
 
 async function saveDevices() {
@@ -347,7 +379,7 @@ async function saveDevices() {
   const devices = [];
   rows.forEach(row => {
     const inputs  = row.querySelectorAll('input');
-    const mac     = inputs[0].value.trim().toUpperCase().replace(/[^A-F0-9]/g, '');
+    const mac     = inputs[0].value.trim().toUpperCase().replace(/[^A-F0-9]/g,'');
     const name    = inputs[1].value.trim();
     const product = inputs[2].value.trim();
     if (mac.length === 12 && name) devices.push({ mac, name, product });
@@ -358,12 +390,8 @@ async function saveDevices() {
   setModalStatus('salvando...', '');
 
   try {
-    const res  = await fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify(devices)
-    });
+    const res  = await fetch(SCRIPT_URL, { method:'POST', body: JSON.stringify(devices) });
     const data = await res.json();
-
     if (data.status === 'ok') {
       saveDeviceCache(devices);
       setModalStatus('salvo com sucesso.', 'ok');
@@ -372,7 +400,7 @@ async function saveDevices() {
         renderAll(lastData);
       }, 800);
     } else {
-      setModalStatus('erro ao salvar: ' + data.message, 'error');
+      setModalStatus('erro: ' + data.message, 'error');
     }
   } catch(e) {
     setModalStatus('erro de conexão. tente novamente.', 'error');
@@ -388,191 +416,169 @@ document.getElementById('modalBackdrop').addEventListener('click', function(e) {
 // ══════════════════════════════════════════════════════
 //  DADOS
 // ══════════════════════════════════════════════════════
-let lastData      = [];
-let chartInstance = null;
+let lastData = [];
 
 function parseCSV(text) {
   return text.trim().split('\n').filter(l => l.trim()).map(line => {
-    const cols = []; let cur = '', inQ = false;
+    const cols=[]; let cur='', inQ=false;
     for (const ch of line) {
-      if (ch === '"') { inQ = !inQ; continue; }
-      if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
-      else cur += ch;
+      if (ch==='"') { inQ=!inQ; continue; }
+      if (ch===',' && !inQ) { cols.push(cur.trim()); cur=''; } else cur+=ch;
     }
-    cols.push(cur.trim());
-    return cols;
+    cols.push(cur.trim()); return cols;
   });
 }
 
-// Colunas planilha:
-// 0=data 1=hora 2=mac 3=c1 4=c2 5=c3 6=c4 7=presentes 8=repos 9=tempo 10=evento
+// cols: 0=data 1=hora 2=mac 3=c1 4=c2 5=c3 6=c4 7=presentes 8=repos 9=tempo 10=evento
 function groupByMac(rows) {
   const map = {};
   rows.forEach(r => {
-    const mac = (r[2] || 'DESCONHECIDO').toUpperCase();
+    const mac = (r[2]||'DESCONHECIDO').toUpperCase();
     if (!map[mac]) map[mac] = [];
     map[mac].push(r);
   });
   return map;
 }
 
+function calcStatus(presentes) {
+  if (presentes === 4) return 'cheio';
+  if (presentes === 0) return 'vazio';
+  if (presentes === 1) return 'baixo';
+  return 'parcial';
+}
+
+function tempoHuman(min) {
+  min = parseInt(min);
+  if (!min || min === 0) return '—';
+  if (min < 60) return min + ' min';
+  const h = Math.floor(min/60), m = min%60;
+  return h + 'h' + (m > 0 ? ' ' + m + 'min' : '');
+}
+
 // ══════════════════════════════════════════════════════
-//  RENDER CARDS
+//  SUMMARY BAR
+// ══════════════════════════════════════════════════════
+function renderSummary(grouped) {
+  const macs    = Object.keys(grouped);
+  let ok=0, warn=0, danger=0;
+  macs.forEach(mac => {
+    const last = grouped[mac][grouped[mac].length-1];
+    const p    = parseInt(last[7])||0;
+    if (p===4) ok++;
+    else if (p===0) danger++;
+    else warn++;
+  });
+  document.getElementById('sumTotal').textContent  = macs.length;
+  document.getElementById('sumOk').textContent     = ok;
+  document.getElementById('sumWarn').textContent   = warn;
+  document.getElementById('sumDanger').textContent = danger;
+}
+
+// ══════════════════════════════════════════════════════
+//  PALETE CARDS
 // ══════════════════════════════════════════════════════
 function renderPaletes(grouped) {
   const grid  = document.getElementById('paleteGrid');
   const empty = document.getElementById('emptyState');
   const macs  = Object.keys(grouped);
 
-  if (!macs.length) { empty.style.display = 'block'; return; }
+  if (!macs.length) { empty.style.display='block'; return; }
   empty.style.display = 'none';
 
-  // Ordena por ordem do cache, depois MACs novos
-  macs.sort((a, b) => {
-    const ai = deviceCache.findIndex(d => d.mac === a);
-    const bi = deviceCache.findIndex(d => d.mac === b);
-    if (ai === -1 && bi === -1) return 0;
-    if (ai === -1) return 1;
-    if (bi === -1) return -1;
-    return ai - bi;
+  macs.sort((a,b) => {
+    const ai = deviceCache.findIndex(d=>d.mac===a);
+    const bi = deviceCache.findIndex(d=>d.mac===b);
+    if (ai===-1&&bi===-1) return 0;
+    if (ai===-1) return 1; if (bi===-1) return -1;
+    return ai-bi;
   });
 
-  grid.querySelectorAll('.palete-card').forEach(el => el.remove());
+  grid.querySelectorAll('.palete-card').forEach(el=>el.remove());
 
   macs.forEach((mac, idx) => {
-    const rows = grouped[mac];
-    const last = rows[rows.length - 1];
-    const info = deviceInfo(mac);
+    const rows  = grouped[mac];
+    const last  = rows[rows.length-1];
+    const info  = deviceInfo(mac);
+    const c1    = parseInt(last[3]), c2=parseInt(last[4]), c3=parseInt(last[5]), c4=parseInt(last[6]);
+    const pres  = parseInt(last[7])||0;
+    const repos = parseInt(last[8])||0;
+    const tempo = last[9];
+    const ev    = (last[10]||'').toLowerCase();
+    const status = calcStatus(pres);
 
-    const c1 = parseInt(last[3]), c2 = parseInt(last[4]),
-          c3 = parseInt(last[5]), c4 = parseInt(last[6]);
-    const pres  = parseInt(last[7]) || 0;
-    const repos = last[8] || '0';
-    const tempo = last[9] || '—';
-    const ev    = (last[10] || '').toLowerCase();
+    const statusLabel = { cheio:'carga cheia', baixo:'carga baixa', vazio:'sem carga', parcial:'carga parcial' }[status];
+    const presClass   = { cheio:'accent', baixo:'warn', vazio:'danger', parcial:'warn' }[status];
+    const macShort    = mac.length===12 ? mac.slice(0,4)+'…'+mac.slice(-4) : mac;
+    const evText      = ev ? `último evento: ${ev} — ${last[0]} ${last[1]}` : '';
 
-    const presClass = pres === 4 ? 'accent' : pres === 0 ? 'danger' : 'warn';
-    const macShort  = mac.length === 12 ? mac.slice(0,4) + '…' + mac.slice(-4) : mac;
-    const evText    = ev ? `último evento: ${ev} — ${last[0]}` : '';
+    // última reposição
+    const ultimaRepos = rows.slice().reverse().find(r=>(r[10]||'').toLowerCase()==='reposto');
+    const ultimaReposTs = ultimaRepos ? ultimaRepos[0]+' '+ultimaRepos[1] : '—';
 
     const card = document.createElement('div');
     card.className = 'palete-card';
-    card.style.animationDelay = (idx * 0.06) + 's';
+    card.style.animationDelay = (idx*.07)+'s';
     card.innerHTML = `
-      <div class="palete-card-header">
-        <div class="palete-card-name">${info.name}</div>
-        <div class="palete-card-mac">${macShort}</div>
+      <div class="pc-header">
+        <div>
+          <div class="pc-name">${info.name}</div>
+          <div class="pc-mac">${macShort}</div>
+        </div>
+        <span class="pc-status ${status}">
+          <span class="pc-status-dot"></span>${statusLabel}
+        </span>
       </div>
-      <div class="palete-card-product">${info.product !== '—' ? info.product : ''}</div>
-      <div class="palete-status-bar">
-        ${[c1,c2,c3,c4].map((v,i) => `
+      ${info.product && info.product!=='—' ? `<div class="pc-product">${info.product}</div>` : ''}
+      <div class="pc-slots">
+        ${[c1,c2,c3,c4].map((v,i)=>`
           <div class="slot ${v===0?'present':'absent'}">
             <div class="slot-dot"></div>
             <div class="slot-label">C${i+1}</div>
           </div>`).join('')}
       </div>
-      <div class="palete-kpis">
-        <div class="mini-kpi">
-          <div class="mini-kpi-label">Presentes</div>
-          <div class="mini-kpi-value ${presClass}">${pres}/4</div>
+      <div class="pc-kpis">
+        <div class="kpi">
+          <div class="kpi-label">Carga total</div>
+          <div class="kpi-value ${presClass}">${pres}/4</div>
+          
         </div>
-        <div class="mini-kpi">
-          <div class="mini-kpi-label">Reposições</div>
-          <div class="mini-kpi-value">${repos}</div>
+        <div class="kpi">
+          <div class="kpi-label">Reposições</div>
+          <div class="kpi-value">${repos}</div>
+          <div class="kpi-sub">total</div>
         </div>
-        <div class="mini-kpi">
-          <div class="mini-kpi-label">T. Rep. (min)</div>
-          <div class="mini-kpi-value">${tempo}</div>
+        <div class="kpi">
+          <div class="kpi-label">Última repos.</div>
+          <div class="kpi-value" style="font-size:12px;padding-top:2px">${ultimaReposTs}</div>
         </div>
       </div>
-      ${evText ? `<div class="palete-evento">${evText}</div>` : ''}`;
+      ${evText ? `<div class="pc-evento">${evText}</div>` : ''}`;
     grid.appendChild(card);
   });
 }
 
 // ══════════════════════════════════════════════════════
-//  SELETORES
-// ══════════════════════════════════════════════════════
-function populateSelects(grouped) {
-  const macs = Object.keys(grouped);
-  ['chartSelect','tableSelect'].forEach(id => {
-    const sel  = document.getElementById(id);
-    const prev = sel.value;
-    sel.innerHTML = '<option value="__all__">Todos</option>'
-      + macs.map(m => `<option value="${m}">${deviceInfo(m).name}</option>`).join('');
-    if (prev && macs.includes(prev)) sel.value = prev;
-  });
-}
-
-// ══════════════════════════════════════════════════════
-//  CHART
-// ══════════════════════════════════════════════════════
-function updateChart() {
-  const sel     = document.getElementById('chartSelect').value;
-  const grouped = groupByMac(lastData);
-  const rows    = sel === '__all__' ? lastData : (grouped[sel] || []);
-  const slice   = rows.slice(-120);
-  const labels  = slice.map(r => r[1] || r[0]);
-  const data    = slice.map(r => parseInt(r[7]) || 0);
-  const ptColor = slice.map(r => {
-    const ev = (r[10]||'').toLowerCase();
-    if (ev==='reposto') return '#1a7a4a';
-    if (ev==='vazio')   return '#c0392b';
-    if (ev==='critico') return '#b06a00';
-    return 'transparent';
-  });
-  const ptRadius = slice.map(r => r[10] ? 5 : 2);
-
-  if (chartInstance) {
-    chartInstance.data.labels = labels;
-    chartInstance.data.datasets[0].data = data;
-    chartInstance.data.datasets[0].pointBackgroundColor = ptColor;
-    chartInstance.data.datasets[0].pointRadius = ptRadius;
-    chartInstance.update('none');
-  } else {
-    const ctx = document.getElementById('chartPaletes').getContext('2d');
-    chartInstance = new Chart(ctx, {
-      type: 'line',
-      data: { labels, datasets: [{
-        data, borderColor: '#1a7a4a', borderWidth: 1.5,
-        pointBackgroundColor: ptColor, pointBorderColor: 'transparent', pointRadius: ptRadius,
-        fill: true,
-        backgroundColor: c => {
-          const g = c.chart.ctx.createLinearGradient(0,0,0,200);
-          g.addColorStop(0,'rgba(26,122,74,.10)'); g.addColorStop(1,'rgba(26,122,74,.00)'); return g;
-        },
-        tension: 0.3
-      }]},
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false }, tooltip: {
-          backgroundColor:'#fff', borderColor:'#e0e2dc', borderWidth:1,
-          titleColor:'#8a9490', bodyColor:'#1a1c1a',
-          titleFont:{family:'DM Mono',size:10}, bodyFont:{family:'DM Mono',size:12},
-          callbacks: { title: i => i[0].label, label: i => ' presentes: '+i.raw }
-        }},
-        scales: {
-          x: { ticks:{color:'#8a9490',font:{family:'DM Mono',size:9},maxTicksLimit:12,maxRotation:0}, grid:{color:'#e0e2dc'} },
-          y: { min:0, max:4, ticks:{color:'#8a9490',font:{family:'DM Mono',size:10},stepSize:1}, grid:{color:'#e0e2dc'} }
-        }
-      }
-    });
-  }
-}
-
-// ══════════════════════════════════════════════════════
 //  TABLE
 // ══════════════════════════════════════════════════════
+function populateTableSelect(grouped) {
+  const sel  = document.getElementById('tableSelect');
+  const prev = sel.value;
+  const macs = Object.keys(grouped);
+  sel.innerHTML = '<option value="__all__">Todos</option>'
+    + macs.map(m=>`<option value="${m}">${deviceInfo(m).name}</option>`).join('');
+  if (prev && macs.includes(prev)) sel.value = prev;
+}
+
 function badgeHtml(ev) {
   if (!ev) return '<span class="badge normal">—</span>';
-  const cls = {reposto:'reposto',critico:'critico',vazio:'vazio'}[ev.toLowerCase()] || 'normal';
+  const cls = {reposto:'reposto',critico:'critico',vazio:'vazio'}[ev.toLowerCase()]||'normal';
   return `<span class="badge ${cls}">${ev}</span>`;
 }
 
 function updateTable() {
   const sel     = document.getElementById('tableSelect').value;
   const grouped = groupByMac(lastData);
-  const rows    = sel === '__all__' ? lastData : (grouped[sel] || []);
+  const rows    = sel==='__all__' ? lastData : (grouped[sel]||[]);
   const tbody   = document.getElementById('tableBody');
   const recent  = rows.slice(-30).reverse();
 
@@ -583,15 +589,16 @@ function updateTable() {
 
   const fmt = v => `<td class="${v===0?'':'muted'}">${v===0?'●':'○'}</td>`;
   tbody.innerHTML = recent.map(r => {
-    const info = deviceInfo((r[2]||'').toUpperCase());
+    const info   = deviceInfo((r[2]||'').toUpperCase());
+    const dataHora = (r[0]||'').trim() + ' ' + (r[1]||'').trim();
     return `<tr>
-      <td>${r[0]||'—'}</td>
+      <td>${dataHora}</td>
       <td>${info.name}</td>
       <td class="muted">${info.product}</td>
       ${fmt(parseInt(r[3]))}${fmt(parseInt(r[4]))}${fmt(parseInt(r[5]))}${fmt(parseInt(r[6]))}
       <td>${r[7]||'0'}</td>
       <td>${r[8]||'0'}</td>
-      <td>${r[9]||'—'}</td>
+      <td>${tempoHuman(r[9])}</td>
       <td>${badgeHtml(r[10])}</td>
     </tr>`;
   }).join('');
@@ -604,12 +611,12 @@ function renderAll(rows) {
   if (!rows.length) return;
   lastData = rows;
   const grouped = groupByMac(rows);
+  renderSummary(grouped);
   renderPaletes(grouped);
-  populateSelects(grouped);
-  updateChart();
+  populateTableSelect(grouped);
   updateTable();
   document.getElementById('lastUpdate').textContent =
-    'atualizado ' + new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
+    'atualizado ' + new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
 }
 
 // ══════════════════════════════════════════════════════
@@ -617,9 +624,9 @@ function renderAll(rows) {
 // ══════════════════════════════════════════════════════
 async function fetchData() {
   try {
-    const res  = await fetch(CSV_URL + '&t=' + Date.now());
+    const res  = await fetch(CSV_URL+'&t='+Date.now());
     const text = await res.text();
-    const rows = parseCSV(text).filter(r => !isNaN(parseInt(r[7])));
+    const rows = parseCSV(text).filter(r=>!isNaN(parseInt(r[7])));
     if (rows.length) renderAll(rows);
   } catch(err) {
     console.error(err);
@@ -633,7 +640,7 @@ function manualRefresh() {
   const btn = document.getElementById('btnRefresh');
   btn.classList.add('spinning'); btn.disabled = true;
   Promise.all([fetchData(), fetchDevices()]).finally(() => {
-    setTimeout(() => { btn.classList.remove('spinning'); btn.disabled = false; }, 600);
+    setTimeout(()=>{ btn.classList.remove('spinning'); btn.disabled=false; }, 600);
   });
 }
 
@@ -641,7 +648,7 @@ function manualRefresh() {
 //  INIT
 // ══════════════════════════════════════════════════════
 loadDeviceCache();
-Promise.all([fetchDevices(), fetchData()]).then(() => renderAll(lastData));
+Promise.all([fetchDevices(), fetchData()]).then(()=>renderAll(lastData));
 setInterval(fetchData, REFRESH_MS);
 </script>
 </body>
