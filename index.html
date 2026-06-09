@@ -134,9 +134,10 @@
   }
   .slot.present { border-color: var(--accent); background: rgba(26,122,74,.06); }
   .slot.absent  { border-color: rgba(192,57,43,.25); background: rgba(192,57,43,.04); }
-  .slot-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border); transition: background .3s; }
-  .slot.present .slot-dot { background: var(--accent); }
-  .slot.absent  .slot-dot { background: var(--danger); }
+  .slot-icon { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; }
+  .slot-icon svg { width: 14px; height: 14px; }
+  .slot.present .slot-icon svg { stroke: var(--accent); }
+  .slot.absent  .slot-icon svg { stroke: var(--danger); }
   .slot-label { font-family: var(--font-mono); font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
 
   /* kpis do card */
@@ -274,9 +275,9 @@
 <div class="page active" id="page-monitor">
 
   <div class="summary-bar">
-    <div class="summary-card"><div class="summary-label">Dispositivos</div><div class="summary-value" id="sumTotal">—</div></div>
-    <div class="summary-card"><div class="summary-label">Todas as cargas</div><div class="summary-value ok" id="sumOk">—</div></div>
-    <div class="summary-card"><div class="summary-label">Carga parcial</div><div class="summary-value warn" id="sumWarn">—</div></div>
+    <div class="summary-card"><div class="summary-label">Total de dispositivos</div><div class="summary-value" id="sumTotal">—</div></div>
+    <div class="summary-card"><div class="summary-label">Com carga completa</div><div class="summary-value ok" id="sumOk">—</div></div>
+    <div class="summary-card"><div class="summary-label">Com carga parcial</div><div class="summary-value warn" id="sumWarn">—</div></div>
     <div class="summary-card"><div class="summary-label">Sem carga</div><div class="summary-value danger" id="sumDanger">—</div></div>
   </div>
 
@@ -289,7 +290,7 @@
 
   <div class="card">
     <div class="section-header">
-      <div class="section-title">Últimos registros</div>
+      <div class="section-title">Histórico de leituras</div>
       <select class="chart-select" id="tableSelect" onchange="updateTable()"></select>
     </div>
     <table>
@@ -528,32 +529,14 @@ function renderPaletes(grouped) {
       <div class="pc-slots">
         ${[c1,c2,c3,c4].map((v,i)=>`
           <div class="slot ${v===0?'present':'absent'}">
-            <div class="slot-dot"></div>
+            <div class="slot-icon">
+              ${v===0
+                ? `<svg viewBox="0 0 14 14" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,7 5.5,10.5 12,3"/></svg>`
+                : `<svg viewBox="0 0 14 14" fill="none" stroke-width="2" stroke-linecap="round"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg>`
+              }
+            </div>
             <div class="slot-label">C${i+1}</div>
           </div>`).join('')}
-      </div>
-      <div style="display:flex;flex-direction:column;gap:4px">
-        <div class="pc-carga-grid">
-          ${[c1,c2,c3,c4].map((v,i)=>`
-            <div class="pc-carga-item">
-              <div class="pc-carga-label">C${i+1}</div>
-              ${cargaLabel(v)}
-            </div>`).join('')}
-        </div>
-      </div>
-      <div class="pc-kpis">
-        <div class="kpi">
-          <div class="kpi-label">Reposições</div>
-          <div class="kpi-value mono-lg">${repos}</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi-label">Última reposição</div>
-          <div class="kpi-value">${ultimaReposTs}</div>
-        </div>
-        <div class="kpi" style="grid-column:1/-1">
-          <div class="kpi-label">Último dado recebido</div>
-          <div class="kpi-value">${lastTsStr}</div>
-        </div>
       </div>`;
     grid.appendChild(card);
   });
@@ -620,7 +603,7 @@ function calcStats(rows) {
     .filter(Boolean)
     .sort((a,b)=>a-b);
 
-  // Tempo médio entre reposições (minutos)
+  // Intervalo médio entre reposições (minutos)
   let tempoMedioRepos = null;
   if (tsRepostos.length >= 2) {
     let soma = 0;
@@ -628,13 +611,13 @@ function calcStats(rows) {
     tempoMedioRepos = Math.round(soma / (tsRepostos.length-1) / 60000);
   }
 
-  // Tempo desde a última reposição
+  // Tempo decorrido desde a última reposição
   let tempoDesdeUltimaRepos = null;
   if (tsRepostos.length > 0) {
     tempoDesdeUltimaRepos = Math.round((Date.now() - tsRepostos[tsRepostos.length-1]) / 60000);
   }
 
-  // Tempo médio para repor após crítico (do evento crítico até próxima reposição)
+  // Tempo médio de reposição após alerta crítico (do evento crítico até próxima reposição)
   const tsCriticos  = eventos.filter(r=>(r[9]||'').toLowerCase()==='critico').map(r=>parseTS(r)).filter(Boolean);
   let tempoMedioRepoCritico = null;
   const intervalos = [];
@@ -646,7 +629,7 @@ function calcStats(rows) {
     tempoMedioRepoCritico = Math.round(intervalos.reduce((a,b)=>a+b,0) / intervalos.length);
   }
 
-  // Tempo médio para repor após vazio
+  // Tempo médio de reposição após palete vazio
   const tsVazios = eventos.filter(r=>(r[9]||'').toLowerCase()==='vazio').map(r=>parseTS(r)).filter(Boolean);
   let tempoMedioRepoVazio = null;
   const intervalosVazio = [];
@@ -658,7 +641,7 @@ function calcStats(rows) {
     tempoMedioRepoVazio = Math.round(intervalosVazio.reduce((a,b)=>a+b,0) / intervalosVazio.length);
   }
 
-  // Período monitorado
+  // Período total de monitoramento
   const primeiro = parseTS(rows[0]);
   const ultimo   = parseTS(rows[rows.length-1]);
   let periodoStr = '—';
@@ -738,11 +721,11 @@ function renderStats(rows) {
 
         <div class="stat-divider">Alertas</div>
         <div class="stat-row">
-          <span class="stat-row-label">Vezes em carga crítica (1 carga)</span>
+          <span class="stat-row-label">Alertas de carga crítica emitidos</span>
           <span class="stat-row-value warn">${s.totalCritico}</span>
         </div>
         <div class="stat-row">
-          <span class="stat-row-label">Vezes sem carga (palete vazio)</span>
+          <span class="stat-row-label">Alertas de palete vazio emitidos</span>
           <span class="stat-row-value danger">${s.totalVazio}</span>
         </div>
         <div class="stat-row">
@@ -760,7 +743,7 @@ function renderStats(rows) {
           <span class="stat-row-value">${s.periodoStr}</span>
         </div>
         <div class="stat-row">
-          <span class="stat-row-label">Total de registros</span>
+          <span class="stat-row-label">Leituras registradas na base</span>
           <span class="stat-row-value">${s.totalRegistros.toLocaleString('pt-BR')}</span>
         </div>
       </div>`;
