@@ -299,7 +299,7 @@
 </div>
 
 <script>
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbx3-oSMwFsA8ALT3vcKU7ZWjoSD1ExYO4uA3aBvkqBCyYZ8J02mYYjw3MBJtP5Lme4R/exec';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbzCusfnjv3YnqlBXwfa8dOJ3VSDdYAxsIHUqoFT3bVWWDZjuVaLXswzo-axQGTjeA/exec';
 const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vRAZD5ue759yWSG-rhT8pcyR1cLOK9ssciEPKoiR7hrhPpr2777ZtaxqxjEQqflXl63l-TDIzhqTvpA/pub?output=csv';
 const REFRESH_MS=60000;
 const LS_KEY='monitor_paletes_devices_v3';
@@ -396,9 +396,32 @@ function parseCSV(text){
 function groupByMac(rows){
   var map={};
   rows.forEach(function(r){var mac=(r[2]||'DESCONHECIDO').toUpperCase();if(!map[mac])map[mac]=[];map[mac].push(r);});
+  // Ordena cada grupo por timestamp real para garantir que o último seja o mais recente
+  Object.keys(map).forEach(function(mac){
+    map[mac].sort(function(a,b){
+      var ta=parseTS(a), tb=parseTS(b);
+      if(!ta&&!tb)return 0; if(!ta)return -1; if(!tb)return 1;
+      return ta-tb;
+    });
+  });
   return map;
 }
-function parseTS(r){try{return new Date((r[0]||'')+' '+(r[1]||''));}catch(e){return null;}}
+function parseTS(r){
+  try{
+    var d=new Date((r[0]||'')+' '+(r[1]||''));
+    return isNaN(d.getTime())?null:d;
+  }catch(e){return null;}
+}
+// Retorna a linha mais recente de um grupo por timestamp real
+function latestRow(rows){
+  var best=null, bestTs=null;
+  for(var i=rows.length-1;i>=0;i--){
+    var ts=parseTS(rows[i]);
+    if(ts&&(!bestTs||ts>bestTs)){bestTs=ts;best=rows[i];}
+  }
+  return best||rows[rows.length-1];
+}
+
 function sortedMacs(grouped){
   var macs=Object.keys(grouped);
   macs.sort(function(a,b){
@@ -472,7 +495,7 @@ function renderMonitor(grouped){
     var storeMacs=storeMap[store];
     var ok=0,warn=0,danger=0;
     storeMacs.forEach(function(mac){
-      var p=parseInt(grouped[mac][grouped[mac].length-1][7])||0;
+      var p=parseInt(latestRow(grouped[mac])[7])||0;
       if(p===4)ok++;else if(p===0)danger++;else warn++;
     });
 
@@ -507,7 +530,7 @@ function renderMonitor(grouped){
     if(!grid)return;
 
     storeMacs.forEach(function(mac,idx){
-      var rows=grouped[mac],last=rows[rows.length-1],info=deviceInfo(mac);
+      var rows=grouped[mac],last=latestRow(rows),info=deviceInfo(mac);
       var c1=parseInt(last[3]),c2=parseInt(last[4]),c3=parseInt(last[5]),c4=parseInt(last[6]);
       var pres=parseInt(last[7])||0,repos=parseInt(last[8])||0;
       var macShort=mac.length===12?mac.slice(0,4)+'…'+mac.slice(-4):mac;
@@ -615,7 +638,7 @@ function fmtMin(min){
 }
 function calcStats(rows){
   var eventos=rows.filter(function(r){return r[9]&&r[9].trim()!=='';});
-  var totalRepos=parseInt((rows[rows.length-1]||[])[8]||'0')||0;
+  var totalRepos=parseInt((latestRow(rows)||[])[8]||'0')||0;
   var totalVazio=eventos.filter(function(r){return (r[9]||'').toLowerCase()==='vazio';}).length;
   var totalCrit=eventos.filter(function(r){return (r[9]||'').toLowerCase()==='critico';}).length;
   var tsRepos=eventos.filter(function(r){return (r[9]||'').toLowerCase()==='reposto';}).map(parseTS).filter(Boolean).sort(function(a,b){return a-b;});
@@ -752,14 +775,25 @@ function renderAll(rows){
   updateTable();
   if(document.getElementById('page-stats').classList.contains('active'))renderStats(rows);
   if(document.getElementById('page-graficos').classList.contains('active'))renderCharts(rows);
-  document.getElementById('lastUpdate').textContent='atualizado '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  var now=new Date();
+  // Verifica se algum dispositivo tem dados muito antigos (>3min)
+  var grouped2=groupByMac(rows);
+  var temDesatualizado=Object.keys(grouped2).some(function(mac){
+    var last=latestRow(grouped2[mac]);
+    var ts=parseTS(last);
+    return ts && (now-ts)>180000;
+  });
+  var timeStr=now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  var luEl=document.getElementById('lastUpdate');
+  luEl.textContent='atualizado '+timeStr+(temDesatualizado?' · dados com atraso':'');
+  luEl.style.color=temDesatualizado?'var(--warn)':'var(--muted)';
 }
 
 // ── FETCH ──────────────────────────────────────────────
 function hideLoading(){document.getElementById('loadingOverlay').classList.add('hidden');}
 async function fetchData(){
   try{
-    var res=await fetch(CSV_URL+'&t='+Date.now());
+    var res=await fetch(CSV_URL+'&t='+Date.now(), {cache:'no-store', headers:{'Cache-Control':'no-cache, no-store, must-revalidate', 'Pragma':'no-cache'}});
     var text=await res.text();
     var rows=parseCSV(text).filter(function(r){return !isNaN(parseInt(r[7]));});
     if(rows.length)renderAll(rows);
