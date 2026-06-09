@@ -824,7 +824,7 @@ async function fetchData() {
     console.error(err);
     document.getElementById('lastUpdate').textContent = 'Erro na conexão';
   } finally {
-    document.getElementById('loadingOverlay').classList.add('hidden');
+    hideLoading();
   }
 }
 
@@ -839,8 +839,20 @@ function manualRefresh() {
 // ══════════════════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════════════════
+function hideLoading() {
+  document.getElementById('loadingOverlay').classList.add('hidden');
+}
+
 loadDeviceCache();
-Promise.all([fetchDevices(), fetchData()]).then(function() { renderAll(lastData); });
+
+// Timeout de segurança: remove o loading em até 8s independente do resultado
+setTimeout(hideLoading, 8000);
+
+Promise.all([fetchDevices(), fetchData()])
+  .then(function() { renderAll(lastData); })
+  .catch(function(err) { console.error('Init error:', err); })
+  .finally(hideLoading);
+
 setInterval(fetchData, REFRESH_MS);
 </script>
 </body>
