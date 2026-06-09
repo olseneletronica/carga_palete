@@ -376,7 +376,12 @@ async function saveDevices(){
     if(data.status==='ok'){
       saveDeviceCache(devices);
       setModalStatus('Cadastro salvo com sucesso.','ok');
-      setTimeout(function(){closeModal();renderAll(lastData);},900);
+      setTimeout(function(){
+        closeModal();
+        // Remove todos os cards e seções existentes para forçar recriação com nomes atualizados
+        document.getElementById('storeGroups').innerHTML='';
+        if(lastData.length) renderAll(lastData);
+      },900);
     }else{setModalStatus('Erro: '+data.message,'error');}
   }catch(e){setModalStatus('Falha na conexão. Tente novamente.','error');}
   finally{btn.disabled=false;}
@@ -850,17 +855,8 @@ function renderAll(rows){
   if(document.getElementById('page-stats').classList.contains('active'))renderStats(rows);
   if(document.getElementById('page-graficos').classList.contains('active'))renderCharts(rows);
   var now=new Date();
-  // Verifica se algum dispositivo tem dados muito antigos (>3min)
-  var grouped2=groupByMac(rows);
-  var temDesatualizado=Object.keys(grouped2).some(function(mac){
-    var last=latestRow(grouped2[mac]);
-    var ts=parseTS(last);
-    return ts && (now-ts)>180000;
-  });
   var timeStr=now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  var luEl=document.getElementById('lastUpdate');
-  luEl.textContent='atualizado '+timeStr+(temDesatualizado?' · dados com atraso':'');
-  luEl.style.color=temDesatualizado?'var(--warn)':'var(--muted)';
+  document.getElementById('lastUpdate').textContent='atualizado '+timeStr;
 }
 
 // ── FETCH ──────────────────────────────────────────────
