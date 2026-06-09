@@ -299,7 +299,7 @@
 </div>
 
 <script>
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbzCusfnjv3YnqlBXwfa8dOJ3VSDdYAxsIHUqoFT3bVWWDZjuVaLXswzo-axQGTjeA/exec';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbxD8LucIHm8EnEjT3jODg-Ih0dlRtIFmPKoq-EjL6Ss_kgB1HFBFE5weseHgemuhv9X/exec';
 const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vRAZD5ue759yWSG-rhT8pcyR1cLOK9ssciEPKoiR7hrhPpr2777ZtaxqxjEQqflXl63l-TDIzhqTvpA/pub?output=csv';
 const REFRESH_MS=60000;
 const LS_KEY='monitor_paletes_devices_v3';
@@ -747,8 +747,8 @@ function renderCharts(rows){
       '<div class="chart-wrapper"><canvas id="'+canvasId+'"></canvas></div>'+
       '<div class="chart-legend">'+
         '<div class="legend-item"><div class="legend-dot" style="background:#1a7a4a"></div>Reposição</div>'+
-        '<div class="legend-item"><div class="legend-dot" style="background:#e07b00"></div>Carga crítica</div>'+
-        '<div class="legend-item"><div class="legend-dot" style="background:#d42020"></div>Palete vazio</div>'+
+        '<div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div>Carga crítica</div>'+
+        '<div class="legend-item"><div class="legend-dot" style="background:#dc2626"></div>Palete vazio</div>'+
         '<div class="legend-item"><div class="legend-dot" style="background:#c8cec9;border:1px solid #b0b8b4"></div>Nível de carga</div>'+
       '</div>';
     grid.appendChild(card);
@@ -785,8 +785,8 @@ function renderCharts(rows){
           order:4
         },
         evDataset(dataR,'#1a7a4a','Reposição',1),
-        evDataset(dataC,'#e07b00','Carga crítica',2),
-        evDataset(dataV,'#d42020','Palete vazio',3)
+        evDataset(dataC,'#7c3aed','Carga crítica',2),
+        evDataset(dataV,'#dc2626','Palete vazio',3)
       ]},
       options:{
         responsive:true,maintainAspectRatio:false,
