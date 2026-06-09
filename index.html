@@ -17,7 +17,6 @@
     --accent:    #1a7a4a;
     --warn:      #b06a00;
     --danger:    #c0392b;
-    --offline:   #6b7280;
     --font-mono: 'DM Mono', monospace;
     --font-sans: 'DM Sans', sans-serif;
   }
@@ -35,6 +34,26 @@
   .header-title span { color: var(--accent); margin-right: 10px; }
   .header-right { display: flex; align-items: center; gap: 12px; }
   .last-update { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+
+  /* NAV TABS */
+  .nav-tabs {
+    display: flex; gap: 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    padding: 0 32px;
+  }
+  .nav-tab {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase;
+    padding: 12px 18px; cursor: pointer; color: var(--muted);
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+    transition: color .15s, border-color .15s; background: none; border-top: none; border-left: none; border-right: none;
+  }
+  .nav-tab:hover { color: var(--text); }
+  .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* PAGES */
+  .page { display: none; padding: 28px 32px; }
+  .page.active { display: flex; flex-direction: column; gap: 24px; }
 
   /* BUTTONS */
   .btn {
@@ -72,10 +91,10 @@
   .modal-status.ok    { color: var(--accent); }
   .modal-status.error { color: var(--danger); }
 
-  /* MAIN */
-  main { padding: 28px 32px; display: flex; flex-direction: column; gap: 24px; }
+  @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
 
-  /* SUMMARY BAR */
+  /* ── PAGE 1: MONITOR ── */
+
   .summary-bar { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
   .summary-card {
     background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
@@ -86,54 +105,25 @@
   .summary-card:nth-child(2){animation-delay:.05s}
   .summary-card:nth-child(3){animation-delay:.10s}
   .summary-card:nth-child(4){animation-delay:.15s}
-  @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
   .summary-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
   .summary-value { font-family: var(--font-mono); font-size: 32px; font-weight: 300; line-height: 1.1; color: var(--text); }
   .summary-value.ok     { color: var(--accent); }
   .summary-value.warn   { color: var(--warn); }
   .summary-value.danger { color: var(--danger); }
-  .summary-value.off    { color: var(--offline); }
 
-  /* PALETES GRID */
+  /* PALETE CARDS */
   .paletes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 16px; }
 
-  /* PALETE CARD */
   .palete-card {
     background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
     padding: 20px 22px; opacity: 0; transform: translateY(8px); animation: fadeUp .4s ease forwards;
     display: flex; flex-direction: column; gap: 14px;
-    transition: border-color .3s;
   }
-  .palete-card.offline { border-color: #d1d5db; background: #fafafa; }
 
-  /* card header */
   .pc-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
   .pc-name { font-family: var(--font-sans); font-size: 15px; font-weight: 600; color: var(--text); }
   .pc-mac  { font-family: var(--font-mono); font-size: 10px; color: var(--muted); margin-top: 2px; }
   .pc-product { font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-top: -8px; }
-
-  /* badges */
-  .pc-badges { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
-  .pc-status {
-    display: inline-flex; align-items: center; gap: 5px;
-    padding: 3px 9px; border-radius: 20px; font-family: var(--font-mono);
-    font-size: 10px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap;
-  }
-  .pc-status.cheio   { background: rgba(26,122,74,.10);  color: var(--accent); }
-  .pc-status.baixo   { background: rgba(176,106,0,.10);  color: var(--warn); }
-  .pc-status.vazio   { background: rgba(192,57,43,.10);  color: var(--danger); }
-  .pc-status.parcial { background: rgba(176,106,0,.08);  color: var(--warn); }
-  .pc-status.offline { background: rgba(107,114,128,.10); color: var(--offline); }
-  .pc-status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-  .pc-status-dot.blink { animation: blink 1.4s ease-in-out infinite; }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
-
-  .pc-online-badge {
-    font-family: var(--font-mono); font-size: 9px; letter-spacing: .05em;
-    text-transform: uppercase; color: var(--muted);
-  }
-  .pc-online-badge.online { color: var(--accent); }
-  .pc-online-badge.offline { color: var(--offline); }
 
   /* slots */
   .pc-slots { display: grid; grid-template-columns: repeat(4,1fr); gap: 7px; }
@@ -144,32 +134,30 @@
   }
   .slot.present { border-color: var(--accent); background: rgba(26,122,74,.06); }
   .slot.absent  { border-color: rgba(192,57,43,.25); background: rgba(192,57,43,.04); }
-  .slot.offline-slot { border-color: #e5e7eb; background: #f9fafb; }
   .slot-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border); transition: background .3s; }
   .slot.present .slot-dot { background: var(--accent); }
   .slot.absent  .slot-dot { background: var(--danger); }
-  .slot.offline-slot .slot-dot { background: #d1d5db; }
   .slot-label { font-family: var(--font-mono); font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
 
-  /* kpis */
-  .pc-kpis { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+  /* kpis do card */
+  .pc-kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .kpi { background: var(--bg); border-radius: 3px; padding: 10px 12px; }
-  .palete-card.offline .kpi { background: #f3f4f6; }
   .kpi-label { font-family: var(--font-mono); font-size: 9px; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; margin-bottom: 4px; }
-  .kpi-value { font-family: var(--font-mono); font-size: 18px; font-weight: 300; color: var(--text); line-height: 1.1; }
-  .kpi-value.accent { color: var(--accent); }
-  .kpi-value.warn   { color: var(--warn); }
-  .kpi-value.danger { color: var(--danger); }
-  .kpi-value.off    { color: var(--offline); }
-  .kpi-sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
+  .kpi-value { font-family: var(--font-mono); font-size: 13px; font-weight: 400; color: var(--text); line-height: 1.3; }
+  .kpi-value.mono-lg { font-size: 22px; font-weight: 300; }
 
-  .pc-evento { font-family: var(--font-mono); font-size: 10px; color: var(--muted); min-height: 13px; }
+  /* carga detail dentro do card */
+  .pc-carga-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; }
+  .pc-carga-item { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .pc-carga-label { font-family: var(--font-mono); font-size: 9px; color: var(--muted); text-transform: uppercase; }
+  .pc-carga-val { font-family: var(--font-mono); font-size: 11px; font-weight: 500; }
+  .pc-carga-val.present { color: var(--accent); }
+  .pc-carga-val.absent  { color: var(--danger); }
 
   /* TABLE */
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 22px 26px; }
   .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; gap: 12px; flex-wrap: wrap; }
   .section-title { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
-  .section-controls { display: flex; align-items: center; gap: 8px; }
   .chart-select { font-family: var(--font-mono); font-size: 11px; background: var(--bg); border: 1px solid var(--border); border-radius: 3px; padding: 4px 8px; color: var(--text); cursor: pointer; }
 
   table { width: 100%; border-collapse: collapse; }
@@ -177,20 +165,37 @@
   tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
   tbody tr:last-child { border-bottom: none; }
   tbody tr:hover { background: rgba(0,0,0,.018); }
-  tbody tr.row-critico { background: rgba(176,106,0,.04); }
-  tbody tr.row-critico:hover { background: rgba(176,106,0,.07); }
-  tbody tr.row-vazio   { background: rgba(192,57,43,.04); }
-  tbody tr.row-vazio:hover   { background: rgba(192,57,43,.07); }
-  tbody tr.row-reposto { background: rgba(26,122,74,.04); }
-  tbody tr.row-reposto:hover { background: rgba(26,122,74,.07); }
   tbody td { font-family: var(--font-mono); font-size: 11px; color: var(--text); padding: 9px 10px; white-space: nowrap; }
   tbody td.muted { color: var(--muted); }
 
-  .badge { display: inline-block; padding: 2px 7px; border-radius: 2px; font-size: 10px; letter-spacing: .05em; text-transform: uppercase; font-weight: 500; }
-  .badge.reposto { background: rgba(26,122,74,.12);  color: var(--accent); }
-  .badge.critico { background: rgba(176,106,0,.12);  color: var(--warn); }
-  .badge.vazio   { background: rgba(192,57,43,.12);  color: var(--danger); }
-  .badge.normal  { background: rgba(0,0,0,.05);      color: var(--muted); }
+  /* ── PAGE 2: ESTATÍSTICAS ── */
+
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px,1fr)); gap: 20px; }
+
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+    padding: 22px 24px; display: flex; flex-direction: column; gap: 18px;
+    opacity: 0; transform: translateY(8px); animation: fadeUp .4s ease forwards;
+  }
+
+  .stat-card-header { display: flex; align-items: flex-start; justify-content: space-between; }
+  .stat-card-name { font-family: var(--font-sans); font-size: 15px; font-weight: 600; }
+  .stat-card-product { font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .stat-card-mac { font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
+
+  .stat-rows { display: flex; flex-direction: column; gap: 0; }
+  .stat-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+  }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-row-label { font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: .04em; }
+  .stat-row-value { font-family: var(--font-mono); font-size: 13px; color: var(--text); font-weight: 500; text-align: right; }
+  .stat-row-value.accent { color: var(--accent); }
+  .stat-row-value.warn   { color: var(--warn); }
+  .stat-row-value.danger { color: var(--danger); }
+
+  .stat-divider { font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 6px 0 2px; }
 
   /* EMPTY */
   .empty-state { text-align: center; padding: 56px 20px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); letter-spacing: .06em; line-height: 2.2; }
@@ -204,10 +209,10 @@
   .loading-text { font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: .1em; }
 
   @media (max-width: 700px) {
-    header { padding: 14px 16px; }
-    main   { padding: 16px; gap: 16px; }
+    header, .nav-tabs { padding-left: 16px; padding-right: 16px; }
+    .page { padding: 16px; gap: 16px; }
     .summary-bar { grid-template-columns: repeat(2,1fr); }
-    .paletes-grid { grid-template-columns: 1fr; }
+    .paletes-grid, .stats-grid { grid-template-columns: 1fr; }
     .device-row { grid-template-columns: 1fr 1fr; }
     .device-row input:first-child { grid-column: 1/-1; }
   }
@@ -221,7 +226,7 @@
   <div class="loading-text">carregando dados</div>
 </div>
 
-<!-- MODAL -->
+<!-- MODAL DISPOSITIVOS -->
 <div class="modal-backdrop" id="modalBackdrop">
   <div class="modal">
     <div class="modal-title">Gerenciar Dispositivos</div>
@@ -259,16 +264,22 @@
   </div>
 </header>
 
-<main>
-  <!-- SUMMARY -->
-  <div class="summary-bar" id="summaryBar">
+<!-- NAV TABS -->
+<nav class="nav-tabs">
+  <button class="nav-tab active" onclick="showPage('monitor')">Monitor</button>
+  <button class="nav-tab" onclick="showPage('stats')">Estatísticas</button>
+</nav>
+
+<!-- PAGE 1: MONITOR -->
+<div class="page active" id="page-monitor">
+
+  <div class="summary-bar">
     <div class="summary-card"><div class="summary-label">Dispositivos</div><div class="summary-value" id="sumTotal">—</div></div>
     <div class="summary-card"><div class="summary-label">Todas as cargas</div><div class="summary-value ok" id="sumOk">—</div></div>
     <div class="summary-card"><div class="summary-label">Carga parcial</div><div class="summary-value warn" id="sumWarn">—</div></div>
-    <div class="summary-card"><div class="summary-label">Sem carga</div><div class="summary-value danger" id="sumOffline">—</div></div>
+    <div class="summary-card"><div class="summary-label">Sem carga</div><div class="summary-value danger" id="sumDanger">—</div></div>
   </div>
 
-  <!-- PALETES -->
   <div class="paletes-grid" id="paleteGrid">
     <div class="empty-state" id="emptyState">
       Aguardando dados dos dispositivos.<br>
@@ -276,13 +287,10 @@
     </div>
   </div>
 
-  <!-- TABLE -->
   <div class="card">
     <div class="section-header">
       <div class="section-title">Últimos registros</div>
-      <div class="section-controls">
-        <select class="chart-select" id="tableSelect" onchange="updateTable()"></select>
-      </div>
+      <select class="chart-select" id="tableSelect" onchange="updateTable()"></select>
     </div>
     <table>
       <thead>
@@ -299,17 +307,35 @@
       </tbody>
     </table>
   </div>
-</main>
+
+</div>
+
+<!-- PAGE 2: ESTATÍSTICAS -->
+<div class="page" id="page-stats">
+  <div class="stats-grid" id="statsGrid">
+    <div class="empty-state">Carregando estatísticas...</div>
+  </div>
+</div>
 
 <script>
 // ══════════════════════════════════════════════════════
 //  CONFIG
 // ══════════════════════════════════════════════════════
-const SCRIPT_URL  = 'https://script.google.com/macros/s/AKfycbzCusfnjv3YnqlBXwfa8dOJ3VSDdYAxsIHUqoFT3bVWWDZjuVaLXswzo-axQGTjeA/exec';
-const CSV_URL     = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRAZD5ue759yWSG-rhT8pcyR1cLOK9ssciEPKoiR7hrhPpr2777ZtaxqxjEQqflXl63l-TDIzhqTvpA/pub?output=csv';
-const REFRESH_MS  = 60000;
-const LS_KEY      = 'monitor_paletes_devices_v2';
-const OFFLINE_MS  = 3 * 60 * 1000; // 3 minutos sem dados = offline
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzCusfnjv3YnqlBXwfa8dOJ3VSDdYAxsIHUqoFT3bVWWDZjuVaLXswzo-axQGTjeA/exec';
+const CSV_URL    = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRAZD5ue759yWSG-rhT8pcyR1cLOK9ssciEPKoiR7hrhPpr2777ZtaxqxjEQqflXl63l-TDIzhqTvpA/pub?output=csv';
+const REFRESH_MS = 60000;
+const LS_KEY     = 'monitor_paletes_devices_v2';
+
+// ══════════════════════════════════════════════════════
+//  NAVEGAÇÃO
+// ══════════════════════════════════════════════════════
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  event.target.classList.add('active');
+  if (name === 'stats') renderStats(lastData);
+}
 
 // ══════════════════════════════════════════════════════
 //  DISPOSITIVOS
@@ -375,11 +401,9 @@ async function saveDevices() {
     const product = inputs[2].value.trim();
     if (mac.length === 12 && name) devices.push({ mac, name, product });
   });
-
   const btn = document.getElementById('btnSave');
   btn.disabled = true;
   setModalStatus('salvando...', '');
-
   try {
     const res  = await fetch(SCRIPT_URL, { method:'POST', body: JSON.stringify(devices) });
     const data = await res.json();
@@ -390,14 +414,9 @@ async function saveDevices() {
         document.getElementById('modalBackdrop').classList.remove('open');
         renderAll(lastData);
       }, 800);
-    } else {
-      setModalStatus('erro: ' + data.message, 'error');
-    }
-  } catch(e) {
-    setModalStatus('erro de conexão. tente novamente.', 'error');
-  } finally {
-    btn.disabled = false;
-  }
+    } else { setModalStatus('erro: ' + data.message, 'error'); }
+  } catch(e) { setModalStatus('erro de conexão. tente novamente.', 'error'); }
+  finally { btn.disabled = false; }
 }
 
 document.getElementById('modalBackdrop').addEventListener('click', function(e) {
@@ -405,7 +424,7 @@ document.getElementById('modalBackdrop').addEventListener('click', function(e) {
 });
 
 // ══════════════════════════════════════════════════════
-//  DADOS
+//  PARSE / AGRUPAMENTO
 // ══════════════════════════════════════════════════════
 let lastData = [];
 
@@ -431,26 +450,8 @@ function groupByMac(rows) {
   return map;
 }
 
-function parseTimestamp(dateStr, timeStr) {
-  // dateStr ex: "6/8/2026", timeStr ex: "21:35:06"
-  try {
-    return new Date(dateStr + ' ' + timeStr);
-  } catch(e) { return null; }
-}
-
-function isOffline(rows) {
-  if (!rows || !rows.length) return true;
-  const last = rows[rows.length - 1];
-  const ts   = parseTimestamp(last[0], last[1]);
-  if (!ts) return false;
-  return (Date.now() - ts.getTime()) > OFFLINE_MS;
-}
-
-function calcStatus(presentes) {
-  if (presentes === 4) return 'cheio';
-  if (presentes === 0) return 'vazio';
-  if (presentes === 1) return 'baixo';
-  return 'parcial';
+function parseTS(r) {
+  try { return new Date((r[0]||'') + ' ' + (r[1]||'')); } catch(e) { return null; }
 }
 
 // ══════════════════════════════════════════════════════
@@ -460,16 +461,13 @@ function renderSummary(grouped) {
   const macs = Object.keys(grouped);
   let ok=0, warn=0, empty=0;
   macs.forEach(mac => {
-    const last = grouped[mac][grouped[mac].length-1];
-    const p    = parseInt(last[7])||0;
-    if (p===4) ok++;
-    else if (p===0) empty++;
-    else warn++;
+    const p = parseInt(grouped[mac][grouped[mac].length-1][7])||0;
+    if (p===4) ok++; else if (p===0) empty++; else warn++;
   });
-  document.getElementById('sumTotal').textContent   = macs.length;
-  document.getElementById('sumOk').textContent      = ok;
-  document.getElementById('sumWarn').textContent    = warn;
-  document.getElementById('sumOffline').textContent = empty;
+  document.getElementById('sumTotal').textContent  = macs.length;
+  document.getElementById('sumOk').textContent     = ok;
+  document.getElementById('sumWarn').textContent   = warn;
+  document.getElementById('sumDanger').textContent = empty;
 }
 
 // ══════════════════════════════════════════════════════
@@ -484,32 +482,37 @@ function renderPaletes(grouped) {
   empty.style.display = 'none';
 
   macs.sort((a,b) => {
-    const ai = deviceCache.findIndex(d=>d.mac===a);
-    const bi = deviceCache.findIndex(d=>d.mac===b);
-    if (ai===-1&&bi===-1) return 0;
-    if (ai===-1) return 1; if (bi===-1) return -1;
-    return ai-bi;
+    const ai=deviceCache.findIndex(d=>d.mac===a), bi=deviceCache.findIndex(d=>d.mac===b);
+    if (ai===-1&&bi===-1) return 0; if (ai===-1) return 1; if (bi===-1) return -1; return ai-bi;
   });
 
   grid.querySelectorAll('.palete-card').forEach(el=>el.remove());
 
   macs.forEach((mac, idx) => {
-    const rows    = grouped[mac];
-    const last    = rows[rows.length-1];
-    const info    = deviceInfo(mac);
-    const offline = isOffline(rows);
+    const rows = grouped[mac];
+    const last = rows[rows.length-1];
+    const info = deviceInfo(mac);
 
-    const c1 = parseInt(last[3]), c2=parseInt(last[4]), c3=parseInt(last[5]), c4=parseInt(last[6]);
-    const pres  = parseInt(last[7])||0;
+    const c1=parseInt(last[3]), c2=parseInt(last[4]), c3=parseInt(last[5]), c4=parseInt(last[6]);
     const repos = parseInt(last[8])||0;
-    const ev    = (last[9]||'').toLowerCase();
-    const status = offline ? 'offline' : calcStatus(pres);
-
     const macShort = mac.length===12 ? mac.slice(0,4)+'…'+mac.slice(-4) : mac;
 
+    // Último dado recebido
+    const lastTs = parseTS(last);
+    const lastTsStr = lastTs
+      ? lastTs.toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'})
+      : '—';
+
     // Última reposição
-    const ultimaRepos   = rows.slice().reverse().find(r=>(r[9]||'').toLowerCase()==='reposto');
-    const ultimaReposTs = ultimaRepos ? ultimaRepos[0]+' '+ultimaRepos[1] : '—';
+    const ultimaReposRow = rows.slice().reverse().find(r=>(r[9]||'').toLowerCase()==='reposto');
+    const ultimaReposTs  = ultimaReposRow
+      ? (() => { const t=parseTS(ultimaReposRow); return t ? t.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '—'; })()
+      : '—';
+
+    // Labels de carga
+    const cargaLabel = v => v===0
+      ? '<span class="pc-carga-val present">●  presente</span>'
+      : '<span class="pc-carga-val absent">○  ausente</span>';
 
     const card = document.createElement('div');
     card.className = 'palete-card';
@@ -529,14 +532,27 @@ function renderPaletes(grouped) {
             <div class="slot-label">C${i+1}</div>
           </div>`).join('')}
       </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <div class="pc-carga-grid">
+          ${[c1,c2,c3,c4].map((v,i)=>`
+            <div class="pc-carga-item">
+              <div class="pc-carga-label">C${i+1}</div>
+              ${cargaLabel(v)}
+            </div>`).join('')}
+        </div>
+      </div>
       <div class="pc-kpis">
         <div class="kpi">
           <div class="kpi-label">Reposições</div>
-          <div class="kpi-value">${repos}</div>
+          <div class="kpi-value mono-lg">${repos}</div>
         </div>
-        <div class="kpi" style="grid-column:span 2">
+        <div class="kpi">
           <div class="kpi-label">Última reposição</div>
-          <div class="kpi-value" style="font-size:12px;padding-top:2px">${ultimaReposTs}</div>
+          <div class="kpi-value">${ultimaReposTs}</div>
+        </div>
+        <div class="kpi" style="grid-column:1/-1">
+          <div class="kpi-label">Último dado recebido</div>
+          <div class="kpi-value">${lastTsStr}</div>
         </div>
       </div>`;
     grid.appendChild(card);
@@ -555,12 +571,6 @@ function populateTableSelect(grouped) {
   if (prev && macs.includes(prev)) sel.value = prev;
 }
 
-function badgeHtml(ev) {
-  if (!ev) return '<span class="badge normal">—</span>';
-  const cls = {reposto:'reposto',critico:'critico',vazio:'vazio'}[ev.toLowerCase()]||'normal';
-  return `<span class="badge ${cls}">${ev}</span>`;
-}
-
 function updateTable() {
   const sel     = document.getElementById('tableSelect').value;
   const grouped = groupByMac(lastData);
@@ -575,9 +585,8 @@ function updateTable() {
 
   const fmt = v => `<td class="${v===0?'':'muted'}">${v===0?'●':'○'}</td>`;
   tbody.innerHTML = recent.map(r => {
-    const info    = deviceInfo((r[2]||'').toUpperCase());
+    const info     = deviceInfo((r[2]||'').toUpperCase());
     const dataHora = (r[0]||'').trim() + ' ' + (r[1]||'').trim();
-  
     return `<tr>
       <td>${dataHora}</td>
       <td>${info.name}</td>
@@ -586,6 +595,177 @@ function updateTable() {
       <td>${r[8]||'0'}</td>
     </tr>`;
   }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+//  ESTATÍSTICAS
+// ══════════════════════════════════════════════════════
+function calcStats(rows) {
+  // Eventos filtrados
+  const eventos = rows.filter(r => r[9] && r[9].trim() !== '');
+
+  // Total de reposições
+  const totalReposicoes = parseInt(rows[rows.length-1]?.[8]||'0');
+
+  // Total de vezes vazio
+  const totalVazio = eventos.filter(r=>(r[9]||'').toLowerCase()==='vazio').length;
+
+  // Total de vezes crítico
+  const totalCritico = eventos.filter(r=>(r[9]||'').toLowerCase()==='critico').length;
+
+  // Timestamps de reposição
+  const tsRepostos = eventos
+    .filter(r=>(r[9]||'').toLowerCase()==='reposto')
+    .map(r=>parseTS(r))
+    .filter(Boolean)
+    .sort((a,b)=>a-b);
+
+  // Tempo médio entre reposições (minutos)
+  let tempoMedioRepos = null;
+  if (tsRepostos.length >= 2) {
+    let soma = 0;
+    for (let i=1; i<tsRepostos.length; i++) soma += (tsRepostos[i]-tsRepostos[i-1]);
+    tempoMedioRepos = Math.round(soma / (tsRepostos.length-1) / 60000);
+  }
+
+  // Tempo desde a última reposição
+  let tempoDesdeUltimaRepos = null;
+  if (tsRepostos.length > 0) {
+    tempoDesdeUltimaRepos = Math.round((Date.now() - tsRepostos[tsRepostos.length-1]) / 60000);
+  }
+
+  // Tempo médio para repor após crítico (do evento crítico até próxima reposição)
+  const tsCriticos  = eventos.filter(r=>(r[9]||'').toLowerCase()==='critico').map(r=>parseTS(r)).filter(Boolean);
+  let tempoMedioRepoCritico = null;
+  const intervalos = [];
+  tsCriticos.forEach(tc => {
+    const proxRepo = tsRepostos.find(tr => tr > tc);
+    if (proxRepo) intervalos.push((proxRepo - tc) / 60000);
+  });
+  if (intervalos.length > 0) {
+    tempoMedioRepoCritico = Math.round(intervalos.reduce((a,b)=>a+b,0) / intervalos.length);
+  }
+
+  // Tempo médio para repor após vazio
+  const tsVazios = eventos.filter(r=>(r[9]||'').toLowerCase()==='vazio').map(r=>parseTS(r)).filter(Boolean);
+  let tempoMedioRepoVazio = null;
+  const intervalosVazio = [];
+  tsVazios.forEach(tv => {
+    const proxRepo = tsRepostos.find(tr => tr > tv);
+    if (proxRepo) intervalosVazio.push((proxRepo - tv) / 60000);
+  });
+  if (intervalosVazio.length > 0) {
+    tempoMedioRepoVazio = Math.round(intervalosVazio.reduce((a,b)=>a+b,0) / intervalosVazio.length);
+  }
+
+  // Período monitorado
+  const primeiro = parseTS(rows[0]);
+  const ultimo   = parseTS(rows[rows.length-1]);
+  let periodoStr = '—';
+  if (primeiro && ultimo) {
+    const diffMin = Math.round((ultimo - primeiro) / 60000);
+    periodoStr = diffMin < 60
+      ? diffMin + ' min'
+      : diffMin < 1440
+        ? Math.floor(diffMin/60) + 'h ' + (diffMin%60) + 'min'
+        : Math.floor(diffMin/1440) + 'd ' + Math.floor((diffMin%1440)/60) + 'h';
+  }
+
+  return {
+    totalReposicoes, totalVazio, totalCritico,
+    tempoMedioRepos, tempoDesdeUltimaRepos,
+    tempoMedioRepoCritico, tempoMedioRepoVazio,
+    periodoStr,
+    totalRegistros: rows.length
+  };
+}
+
+function fmtMin(min) {
+  if (min === null || min === undefined) return '—';
+  if (min < 60) return min + ' min';
+  return Math.floor(min/60) + 'h ' + (min%60) + 'min';
+}
+
+function renderStats(rows) {
+  const grid    = document.getElementById('statsGrid');
+  const grouped = groupByMac(rows);
+  const macs    = Object.keys(grouped);
+
+  grid.innerHTML = '';
+
+  if (!macs.length) {
+    grid.innerHTML = '<div class="empty-state">Sem dados para calcular estatísticas.</div>';
+    return;
+  }
+
+  macs.sort((a,b) => {
+    const ai=deviceCache.findIndex(d=>d.mac===a), bi=deviceCache.findIndex(d=>d.mac===b);
+    if (ai===-1&&bi===-1) return 0; if (ai===-1) return 1; if (bi===-1) return -1; return ai-bi;
+  });
+
+  macs.forEach((mac, idx) => {
+    const rows  = grouped[mac];
+    const info  = deviceInfo(mac);
+    const s     = calcStats(rows);
+    const macShort = mac.length===12 ? mac.slice(0,4)+'…'+mac.slice(-4) : mac;
+
+    const card = document.createElement('div');
+    card.className = 'stat-card';
+    card.style.animationDelay = (idx*.07)+'s';
+    card.innerHTML = `
+      <div class="stat-card-header">
+        <div>
+          <div class="stat-card-name">${info.name}</div>
+          <div class="stat-card-product">${info.product !== '—' ? info.product : ''}</div>
+        </div>
+        <div class="stat-card-mac">${macShort}</div>
+      </div>
+
+      <div class="stat-rows">
+        <div class="stat-divider">Reposições</div>
+        <div class="stat-row">
+          <span class="stat-row-label">Total de reposições</span>
+          <span class="stat-row-value accent">${s.totalReposicoes}</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-row-label">Tempo médio entre reposições</span>
+          <span class="stat-row-value">${fmtMin(s.tempoMedioRepos)}</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-row-label">Tempo desde a última reposição</span>
+          <span class="stat-row-value ${s.tempoDesdeUltimaRepos > 120 ? 'warn' : ''}">${fmtMin(s.tempoDesdeUltimaRepos)}</span>
+        </div>
+
+        <div class="stat-divider">Alertas</div>
+        <div class="stat-row">
+          <span class="stat-row-label">Vezes em carga crítica (1 carga)</span>
+          <span class="stat-row-value warn">${s.totalCritico}</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-row-label">Vezes sem carga (palete vazio)</span>
+          <span class="stat-row-value danger">${s.totalVazio}</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-row-label">Tempo médio para repor após crítico</span>
+          <span class="stat-row-value">${fmtMin(s.tempoMedioRepoCritico)}</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-row-label">Tempo médio para repor após vazio</span>
+          <span class="stat-row-value">${fmtMin(s.tempoMedioRepoVazio)}</span>
+        </div>
+
+        <div class="stat-divider">Monitoramento</div>
+        <div class="stat-row">
+          <span class="stat-row-label">Período monitorado</span>
+          <span class="stat-row-value">${s.periodoStr}</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-row-label">Total de registros</span>
+          <span class="stat-row-value">${s.totalRegistros.toLocaleString('pt-BR')}</span>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
 }
 
 // ══════════════════════════════════════════════════════
@@ -599,6 +779,8 @@ function renderAll(rows) {
   renderPaletes(grouped);
   populateTableSelect(grouped);
   updateTable();
+  // Atualiza stats se página estiver ativa
+  if (document.getElementById('page-stats').classList.contains('active')) renderStats(rows);
   document.getElementById('lastUpdate').textContent =
     'atualizado ' + new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
 }
