@@ -7,20 +7,22 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
   :root {
-    --bg:        #f4f5f2;
+    --bg:        #f2f3f0;
     --surface:   #ffffff;
     --border:    #e0e2dc;
     --text:      #1a1c1a;
-    --muted:     #8a9490;
+    --muted:     #7a8480;
     --accent:    #1a7a4a;
     --warn:      #b06a00;
     --danger:    #c0392b;
     --font-mono: 'DM Mono', monospace;
     --font-sans: 'DM Sans', sans-serif;
-    --radius:    4px;
-    --transition: 280ms ease;
+    --radius:    5px;
+    --shadow:    0 1px 4px rgba(0,0,0,.06);
+    --transition: 240ms ease;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,27 +31,25 @@
   /* ── HEADER ── */
   header {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 18px 32px; border-bottom: 1px solid var(--border);
+    padding: 16px 32px; border-bottom: 1px solid var(--border);
     background: var(--surface); position: sticky; top: 0; z-index: 50;
+    box-shadow: var(--shadow);
   }
-  .header-title { font-family: var(--font-mono); font-size: 12px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
-  .header-title span { color: var(--accent); margin-right: 10px; }
-  .header-right { display: flex; align-items: center; gap: 12px; }
+  .header-title { font-family: var(--font-mono); font-size: 12px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
+  .header-logo { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px rgba(26,122,74,.15); }
+  .header-right { display: flex; align-items: center; gap: 10px; }
   .last-update { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
 
   /* ── NAV TABS ── */
-  .nav-tabs {
-    display: flex; border-bottom: 1px solid var(--border);
-    background: var(--surface); padding: 0 32px;
-  }
+  .nav-tabs { display: flex; border-bottom: 1px solid var(--border); background: var(--surface); padding: 0 32px; }
   .nav-tab {
     font-family: var(--font-mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase;
-    padding: 12px 18px; cursor: pointer; color: var(--muted);
+    padding: 13px 20px; cursor: pointer; color: var(--muted);
     border: none; border-bottom: 2px solid transparent; margin-bottom: -1px;
     background: none; transition: color var(--transition), border-color var(--transition);
   }
   .nav-tab:hover { color: var(--text); }
-  .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 500; }
 
   /* ── PAGES ── */
   .page { display: none; padding: 28px 32px; }
@@ -60,136 +60,144 @@
     display: flex; align-items: center; gap: 6px;
     font-family: var(--font-mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase;
     background: transparent; border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 7px 13px; cursor: pointer; color: var(--accent);
-    transition: background var(--transition), border-color var(--transition);
+    padding: 8px 14px; cursor: pointer; color: var(--accent);
+    transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
   }
-  .btn:hover { background: rgba(26,122,74,.07); border-color: var(--accent); }
-  .btn:active { opacity: .7; }
-  .btn:disabled { opacity: .45; cursor: default; }
+  .btn:hover { background: rgba(26,122,74,.07); border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,122,74,.08); }
+  .btn:active { opacity: .75; }
+  .btn:disabled { opacity: .4; cursor: default; }
+
+  /* Botão dispositivos com mais destaque */
+  .btn-devices {
+    background: var(--accent); color: #fff; border-color: var(--accent);
+    box-shadow: 0 2px 8px rgba(26,122,74,.25);
+  }
+  .btn-devices:hover { background: #156040; border-color: #156040; box-shadow: 0 3px 12px rgba(26,122,74,.35); }
+  .btn-devices svg { stroke: #fff; }
+
   .btn.secondary { color: var(--muted); }
-  .btn.secondary:hover { background: rgba(0,0,0,.04); border-color: var(--muted); }
+  .btn.secondary:hover { background: rgba(0,0,0,.04); border-color: var(--muted); box-shadow: none; }
   .btn svg { transition: transform .5s; }
   .btn.spinning svg { animation: spin .6s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
   /* ── MODAL ── */
-  .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.32); z-index: 200; align-items: center; justify-content: center; }
+  .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 200; align-items: center; justify-content: center; }
   .modal-backdrop.open { display: flex; }
-  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; width: 580px; max-width: 96vw; padding: 28px; box-shadow: 0 8px 40px rgba(0,0,0,.10); max-height: 88vh; overflow-y: auto; }
-  .modal-title { font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
-  .modal-subtitle { font-size: 12px; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
-  .col-headers { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 8px; margin-bottom: 6px; }
-  .col-header { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; }
-  .device-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    width: 600px; max-width: 96vw; padding: 28px; box-shadow: 0 12px 48px rgba(0,0,0,.14);
+    max-height: 88vh; overflow-y: auto; position: relative;
+  }
+  .modal-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 6px; }
+  .modal-title { font-family: var(--font-sans); font-size: 16px; font-weight: 600; color: var(--text); }
+  .modal-subtitle { font-size: 13px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+  .modal-close {
+    background: none; border: none; cursor: pointer; color: var(--muted);
+    font-size: 20px; line-height: 1; padding: 2px 6px; border-radius: 3px;
+    transition: color var(--transition), background var(--transition);
+  }
+  .modal-close:hover { color: var(--danger); background: rgba(192,57,43,.08); }
+  .col-headers { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 8px; margin-bottom: 8px; }
+  .col-header { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; padding: 0 2px; }
+  .device-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
   .device-row { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 8px; align-items: center; }
-  .device-row input { font-family: var(--font-mono); font-size: 11px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 10px; color: var(--text); width: 100%; transition: border-color var(--transition); }
-  .device-row input:focus { outline: none; border-color: var(--accent); }
+  .device-row input {
+    font-family: var(--font-mono); font-size: 12px; background: var(--bg);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 9px 11px; color: var(--text); width: 100%;
+    transition: border-color var(--transition), box-shadow var(--transition);
+  }
+  .device-row input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,122,74,.1); }
   .device-row input::placeholder { color: var(--muted); }
-  .btn-remove { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 18px; line-height: 1; padding: 2px 5px; transition: color var(--transition); }
-  .btn-remove:hover { color: var(--danger); }
-  .modal-footer { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .btn-remove { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 18px; line-height: 1; padding: 2px 6px; border-radius: 3px; transition: color var(--transition), background var(--transition); }
+  .btn-remove:hover { color: var(--danger); background: rgba(192,57,43,.08); }
+  .modal-footer { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; padding-top: 4px; border-top: 1px solid var(--border); }
   .modal-status { font-family: var(--font-mono); font-size: 11px; color: var(--muted); min-height: 16px; transition: color .3s; }
   .modal-status.ok    { color: var(--accent); }
   .modal-status.error { color: var(--danger); }
 
   /* ── ANIMATIONS ── */
   @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
-
-  @keyframes flash-update {
-    0%   { box-shadow: 0 0 0 0 rgba(26,122,74,.5); }
-    50%  { box-shadow: 0 0 0 6px rgba(26,122,74,.0); }
-    100% { box-shadow: none; }
-  }
-
-  @keyframes flash-warn {
-    0%   { box-shadow: 0 0 0 0 rgba(176,106,0,.5); }
-    50%  { box-shadow: 0 0 0 6px rgba(176,106,0,.0); }
-    100% { box-shadow: none; }
-  }
-
-  @keyframes flash-danger {
-    0%   { box-shadow: 0 0 0 0 rgba(192,57,43,.5); }
-    50%  { box-shadow: 0 0 0 6px rgba(192,57,43,.0); }
-    100% { box-shadow: none; }
-  }
-
-  .flash-updated { animation: flash-update .8s ease-out forwards; }
-  .flash-warn    { animation: flash-warn   .8s ease-out forwards; }
-  .flash-danger  { animation: flash-danger .8s ease-out forwards; }
+  @keyframes flash-ok     { 0%{box-shadow:0 0 0 0 rgba(26,122,74,.5)}  60%{box-shadow:0 0 0 8px rgba(26,122,74,0)}  100%{box-shadow:none} }
+  @keyframes flash-warn   { 0%{box-shadow:0 0 0 0 rgba(176,106,0,.5)}  60%{box-shadow:0 0 0 8px rgba(176,106,0,0)}  100%{box-shadow:none} }
+  @keyframes flash-danger { 0%{box-shadow:0 0 0 0 rgba(192,57,43,.5)}  60%{box-shadow:0 0 0 8px rgba(192,57,43,0)}  100%{box-shadow:none} }
+  .flash-ok     { animation: flash-ok     .9s ease-out forwards; }
+  .flash-warn   { animation: flash-warn   .9s ease-out forwards; }
+  .flash-danger { animation: flash-danger .9s ease-out forwards; }
 
   /* ── SUMMARY BAR ── */
   .summary-bar { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
   .summary-card {
     background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 18px 20px; display: flex; flex-direction: column; gap: 4px;
+    padding: 20px 22px; display: flex; flex-direction: column; gap: 6px;
+    box-shadow: var(--shadow);
     opacity: 0; transform: translateY(8px); animation: fadeUp .35s ease forwards;
   }
   .summary-card:nth-child(1){animation-delay:.00s}
-  .summary-card:nth-child(2){animation-delay:.05s}
-  .summary-card:nth-child(3){animation-delay:.10s}
-  .summary-card:nth-child(4){animation-delay:.15s}
+  .summary-card:nth-child(2){animation-delay:.06s}
+  .summary-card:nth-child(3){animation-delay:.12s}
+  .summary-card:nth-child(4){animation-delay:.18s}
   .summary-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
-  .summary-value { font-family: var(--font-mono); font-size: 32px; font-weight: 300; line-height: 1.1; color: var(--text); }
+  .summary-value { font-family: var(--font-mono); font-size: 36px; font-weight: 300; line-height: 1; color: var(--text); }
   .summary-value.ok     { color: var(--accent); }
   .summary-value.warn   { color: var(--warn); }
   .summary-value.danger { color: var(--danger); }
 
   /* ── PALETES GRID ── */
-  .paletes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 16px; }
+  .paletes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px,1fr)); gap: 16px; }
 
   /* ── PALETE CARD ── */
   .palete-card {
     background: var(--surface); border: 1px solid var(--border);
-    border-left: 3px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px 22px;
+    border-left: 4px solid var(--border);
+    border-radius: var(--radius); padding: 20px 22px;
+    box-shadow: var(--shadow);
     opacity: 0; transform: translateY(8px); animation: fadeUp .4s ease forwards;
-    display: flex; flex-direction: column; gap: 14px;
+    display: flex; flex-direction: column; gap: 16px;
     transition: border-color var(--transition), box-shadow var(--transition);
   }
-  .palete-card.state-ok      { border-left-color: var(--accent); }
-  .palete-card.state-warn    { border-left-color: var(--warn); }
-  .palete-card.state-danger  { border-left-color: var(--danger); }
+  .palete-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.09); }
+  .palete-card.state-ok     { border-left-color: var(--accent); }
+  .palete-card.state-warn   { border-left-color: var(--warn); }
+  .palete-card.state-danger { border-left-color: var(--danger); }
 
   .pc-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
-  .pc-name { font-family: var(--font-sans); font-size: 15px; font-weight: 600; color: var(--text); }
-  .pc-mac  { font-family: var(--font-mono); font-size: 10px; color: var(--muted); margin-top: 2px; }
-  .pc-product { font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-top: -8px; }
+  .pc-name { font-family: var(--font-sans); font-size: 16px; font-weight: 600; color: var(--text); }
+  .pc-mac  { font-family: var(--font-mono); font-size: 10px; color: var(--muted); margin-top: 3px; }
+  .pc-product { font-family: var(--font-mono); font-size: 12px; color: var(--muted); margin-top: -10px; }
 
   /* ── SLOTS ── */
-  .pc-slots { display: grid; grid-template-columns: repeat(4,1fr); gap: 7px; }
+  .pc-slots { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; }
   .slot {
-    display: flex; flex-direction: column; align-items: center; gap: 5px;
-    padding: 10px 4px; border-radius: var(--radius); border: 1px solid var(--border);
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    padding: 11px 4px; border-radius: var(--radius); border: 1px solid var(--border);
     transition: border-color var(--transition), background var(--transition);
-    cursor: default;
   }
   .slot.present { border-color: var(--accent); background: rgba(26,122,74,.06); }
   .slot.absent  { border-color: rgba(192,57,43,.3); background: rgba(192,57,43,.04); }
-  .slot:hover { filter: brightness(.97); }
-
-  .slot-icon { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; }
-  .slot-icon svg { width: 14px; height: 14px; transition: stroke var(--transition); }
+  .slot-icon { width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; }
+  .slot-icon svg { width: 15px; height: 15px; transition: stroke var(--transition); }
   .slot.present .slot-icon svg { stroke: var(--accent); }
   .slot.absent  .slot-icon svg { stroke: var(--danger); }
   .slot-label { font-family: var(--font-mono); font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
 
   /* ── KPIs DO CARD ── */
   .pc-kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .kpi { background: var(--bg); border-radius: var(--radius); padding: 10px 12px; transition: background var(--transition); }
-  .kpi-label { font-family: var(--font-mono); font-size: 9px; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; margin-bottom: 4px; }
-  .kpi-value { font-family: var(--font-mono); font-size: 13px; font-weight: 400; color: var(--text); line-height: 1.3; }
-  .kpi-value.mono-lg { font-size: 22px; font-weight: 300; }
+  .kpi { background: var(--bg); border-radius: var(--radius); padding: 11px 13px; }
+  .kpi-label { font-family: var(--font-mono); font-size: 9px; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; margin-bottom: 5px; }
+  .kpi-value { font-family: var(--font-mono); font-size: 13px; color: var(--text); line-height: 1.3; }
+  .kpi-value.mono-lg { font-size: 24px; font-weight: 300; }
 
   /* ── TABLE ── */
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 26px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 26px; box-shadow: var(--shadow); }
   .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; gap: 12px; flex-wrap: wrap; }
-  .section-title { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
-  .chart-select { font-family: var(--font-mono); font-size: 11px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 5px 9px; color: var(--text); cursor: pointer; transition: border-color var(--transition); }
+  .section-title { font-family: var(--font-sans); font-size: 13px; font-weight: 600; color: var(--text); }
+  .chart-select { font-family: var(--font-mono); font-size: 11px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 10px; color: var(--text); cursor: pointer; transition: border-color var(--transition); }
   .chart-select:focus { outline: none; border-color: var(--accent); }
 
   table { width: 100%; border-collapse: collapse; }
-  thead th { font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 0 10px 12px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  thead th { font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 0 10px 13px; border-bottom: 1px solid var(--border); white-space: nowrap; }
   tbody tr { border-bottom: 1px solid var(--border); transition: background var(--transition); }
   tbody tr:last-child { border-bottom: none; }
   tbody tr:hover { background: rgba(0,0,0,.02); }
@@ -197,70 +205,91 @@
   tbody td.muted { color: var(--muted); }
 
   /* ── PAGE ESTATÍSTICAS ── */
-  .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px,1fr)); gap: 20px; }
-
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px,1fr)); gap: 20px; }
   .stat-card {
     background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 22px 24px; display: flex; flex-direction: column; gap: 18px;
+    padding: 24px; display: flex; flex-direction: column; gap: 20px;
+    box-shadow: var(--shadow);
     opacity: 0; transform: translateY(8px); animation: fadeUp .4s ease forwards;
   }
-
   .stat-card-header { display: flex; align-items: flex-start; justify-content: space-between; }
-  .stat-card-name { font-family: var(--font-sans); font-size: 15px; font-weight: 600; }
-  .stat-card-product { font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .stat-card-name { font-family: var(--font-sans); font-size: 16px; font-weight: 600; }
+  .stat-card-product { font-family: var(--font-mono); font-size: 12px; color: var(--muted); margin-top: 2px; }
   .stat-card-mac { font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
 
-  .stat-rows { display: flex; flex-direction: column; }
-  .stat-divider { font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 8px 0 4px; border-bottom: 1px solid var(--border); margin-bottom: 2px; }
-  .stat-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .stat-section { display: flex; flex-direction: column; gap: 0; }
+  .stat-section-title {
+    font-family: var(--font-sans); font-size: 11px; font-weight: 700;
+    letter-spacing: .06em; text-transform: uppercase; color: var(--text);
+    padding: 0 0 8px; border-bottom: 2px solid var(--border); margin-bottom: 2px;
+  }
+  .stat-row { display: flex; align-items: center; justify-content: space-between; padding: 11px 0; border-bottom: 1px solid var(--border); gap: 12px; }
   .stat-row:last-child { border-bottom: none; }
-  .stat-row-label { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
-  .stat-row-value { font-family: var(--font-mono); font-size: 13px; color: var(--text); font-weight: 500; }
+  .stat-row-label { font-family: var(--font-sans); font-size: 13px; color: var(--muted); }
+  .stat-row-value { font-family: var(--font-mono); font-size: 14px; color: var(--text); font-weight: 500; white-space: nowrap; }
   .stat-row-value.accent { color: var(--accent); }
   .stat-row-value.warn   { color: var(--warn); }
   .stat-row-value.danger { color: var(--danger); }
 
-  /* ── EMPTY / LOADING ── */
-  .empty-state { text-align: center; padding: 56px 20px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); letter-spacing: .06em; line-height: 2.4; }
-  .empty-state strong { display: block; color: var(--text); font-size: 13px; margin-bottom: 8px; }
+  /* ── PAGE GRÁFICOS ── */
+  .charts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(480px,1fr)); gap: 20px; }
+  .chart-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 24px; box-shadow: var(--shadow);
+    opacity: 0; transform: translateY(8px); animation: fadeUp .4s ease forwards;
+  }
+  .chart-card-header { margin-bottom: 8px; }
+  .chart-card-name { font-family: var(--font-sans); font-size: 15px; font-weight: 600; color: var(--text); }
+  .chart-card-sub { font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .chart-wrapper { position: relative; height: 220px; margin-top: 20px; }
 
-  .loading-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; z-index: 100; transition: opacity .4s; }
+  /* Legenda */
+  .chart-legend { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* ── EMPTY / LOADING ── */
+  .empty-state { text-align: center; padding: 60px 20px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); letter-spacing: .05em; line-height: 2.4; }
+  .empty-state strong { display: block; font-family: var(--font-sans); font-size: 14px; color: var(--text); font-weight: 600; margin-bottom: 8px; }
+
+  .loading-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; z-index: 100; transition: opacity .5s; }
   .loading-overlay.hidden { opacity: 0; pointer-events: none; }
-  .loading-bar { width: 140px; height: 1px; background: var(--border); position: relative; overflow: hidden; }
-  .loading-bar::after { content: ''; position: absolute; left: -40%; top: 0; width: 40%; height: 100%; background: var(--accent); animation: slide 1s ease-in-out infinite; }
+  .loading-bar { width: 140px; height: 2px; background: var(--border); border-radius: 2px; position: relative; overflow: hidden; }
+  .loading-bar::after { content: ''; position: absolute; left: -40%; top: 0; width: 40%; height: 100%; background: var(--accent); border-radius: 2px; animation: slide 1s ease-in-out infinite; }
   @keyframes slide { to { left: 100%; } }
   .loading-text { font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: .1em; }
 
-  @media (max-width: 700px) {
+  @media (max-width: 720px) {
     header, .nav-tabs { padding-left: 16px; padding-right: 16px; }
     .page { padding: 16px; gap: 16px; }
     .summary-bar { grid-template-columns: repeat(2,1fr); }
-    .paletes-grid, .stats-grid { grid-template-columns: 1fr; }
+    .paletes-grid, .stats-grid, .charts-grid { grid-template-columns: 1fr; }
     .device-row { grid-template-columns: 1fr 1fr; }
     .device-row input:first-child { grid-column: 1/-1; }
   }
-
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
   }
 </style>
 </head>
 <body>
 
-<!-- LOADING -->
 <div class="loading-overlay" id="loadingOverlay">
   <div class="loading-bar"></div>
   <div class="loading-text">carregando dados</div>
 </div>
 
-<!-- MODAL DISPOSITIVOS -->
+<!-- MODAL -->
 <div class="modal-backdrop" id="modalBackdrop">
   <div class="modal">
-    <div class="modal-title">Gerenciar Dispositivos</div>
-    <div class="modal-subtitle">Cadastre o MAC de cada ESP32 com nome e produto. Essas informações aparecem nos alertas por e-mail e no dashboard.</div>
+    <div class="modal-header">
+      <div class="modal-title">Cadastro de Paletes</div>
+      <button class="modal-close" onclick="closeModal()" title="Fechar">×</button>
+    </div>
+    <div class="modal-subtitle">Vincule o endereço MAC de cada ESP32 a um nome e produto. Essas informações identificam o palete nos alertas por e-mail e em todo o dashboard.</div>
     <div class="col-headers">
-      <div class="col-header">MAC</div>
-      <div class="col-header">Nome</div>
+      <div class="col-header">Endereço MAC</div>
+      <div class="col-header">Nome do palete</div>
       <div class="col-header">Produto</div>
       <div></div>
     </div>
@@ -268,8 +297,8 @@
     <div class="modal-footer">
       <div class="modal-status" id="modalStatus"></div>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn secondary" onclick="addDeviceRow()">+ Adicionar</button>
-        <button class="btn" id="btnSave" onclick="saveDevices()">Salvar</button>
+        <button class="btn secondary" onclick="addDeviceRow()">+ Novo palete</button>
+        <button class="btn" id="btnSave" onclick="saveDevices()">Salvar cadastro</button>
       </div>
     </div>
   </div>
@@ -277,43 +306,43 @@
 
 <!-- HEADER -->
 <header>
-  <div class="header-title"><span>◆</span>monitor / paletes</div>
+  <div class="header-title">
+    <div class="header-logo"></div>
+    monitor / paletes
+  </div>
   <div class="header-right">
-    <button class="btn secondary" onclick="openModal()">
+    <button class="btn btn-devices" onclick="openModal()">
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="6" r="2"/><circle cx="6" cy="6" r="5"/></svg>
-      dispositivos
+      Dispositivos
     </button>
-    <button class="btn" id="btnRefresh" onclick="manualRefresh()">
+    <button class="btn secondary" id="btnRefresh" onclick="manualRefresh()">
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 2A5 5 0 1 0 11 6"/><polyline points="8 0 10.5 2 8.5 4.5"/></svg>
-      atualizar
+      Atualizar
     </button>
     <span class="last-update" id="lastUpdate">—</span>
   </div>
 </header>
 
-<!-- NAV TABS -->
 <nav class="nav-tabs">
   <button class="nav-tab active" onclick="showPage('monitor', this)">Monitor</button>
   <button class="nav-tab" onclick="showPage('stats', this)">Estatísticas</button>
+  <button class="nav-tab" onclick="showPage('graficos', this)">Gráficos</button>
 </nav>
 
-<!-- PAGE 1: MONITOR -->
+<!-- PAGE MONITOR -->
 <div class="page active" id="page-monitor">
-
   <div class="summary-bar">
     <div class="summary-card"><div class="summary-label">Total de dispositivos</div><div class="summary-value" id="sumTotal">—</div></div>
     <div class="summary-card"><div class="summary-label">Com carga completa</div><div class="summary-value ok" id="sumOk">—</div></div>
     <div class="summary-card"><div class="summary-label">Com carga parcial</div><div class="summary-value warn" id="sumWarn">—</div></div>
     <div class="summary-card"><div class="summary-label">Sem carga</div><div class="summary-value danger" id="sumDanger">—</div></div>
   </div>
-
   <div class="paletes-grid" id="paleteGrid">
     <div class="empty-state" id="emptyState">
       <strong>Nenhum dispositivo encontrado</strong>
-      Adicione um ESP32 em "dispositivos" para começar o monitoramento.
+      Clique em "Dispositivos" para cadastrar um ESP32 e iniciar o monitoramento.
     </div>
   </div>
-
   <div class="card">
     <div class="section-header">
       <div class="section-title">Histórico de leituras</div>
@@ -321,13 +350,7 @@
     </div>
     <table>
       <thead>
-        <tr>
-          <th>Data / Hora</th>
-          <th>Dispositivo</th>
-          <th>Produto</th>
-          <th>C1</th><th>C2</th><th>C3</th><th>C4</th>
-          <th>Reposições</th>
-        </tr>
+        <tr><th>Data / Hora</th><th>Dispositivo</th><th>Produto</th><th>C1</th><th>C2</th><th>C3</th><th>C4</th><th>Reposições</th></tr>
       </thead>
       <tbody id="tableBody">
         <tr><td colspan="8" class="muted" style="text-align:center;padding:24px">Aguardando dados...</td></tr>
@@ -336,523 +359,502 @@
   </div>
 </div>
 
-<!-- PAGE 2: ESTATÍSTICAS -->
+<!-- PAGE ESTATÍSTICAS -->
 <div class="page" id="page-stats">
   <div class="stats-grid" id="statsGrid">
-    <div class="empty-state">
-      <strong>Carregando estatísticas</strong>
-      Os dados serão exibidos assim que houver leituras suficientes.
-    </div>
+    <div class="empty-state"><strong>Carregando estatísticas</strong>Os dados aparecem assim que houver leituras suficientes.</div>
+  </div>
+</div>
+
+<!-- PAGE GRÁFICOS -->
+<div class="page" id="page-graficos">
+  <div class="charts-grid" id="chartsGrid">
+    <div class="empty-state"><strong>Carregando gráficos</strong>Os gráficos aparecem assim que houver eventos registrados.</div>
   </div>
 </div>
 
 <script>
-// ══════════════════════════════════════════════════════
-//  CONFIG
-// ══════════════════════════════════════════════════════
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzCusfnjv3YnqlBXwfa8dOJ3VSDdYAxsIHUqoFT3bVWWDZjuVaLXswzo-axQGTjeA/exec';
 const CSV_URL    = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRAZD5ue759yWSG-rhT8pcyR1cLOK9ssciEPKoiR7hrhPpr2777ZtaxqxjEQqflXl63l-TDIzhqTvpA/pub?output=csv';
 const REFRESH_MS = 60000;
 const LS_KEY     = 'monitor_paletes_devices_v2';
 
-// ══════════════════════════════════════════════════════
-//  NAVEGAÇÃO
-// ══════════════════════════════════════════════════════
+// ── NAVEGAÇÃO ──────────────────────────────────────────
 function showPage(name, btn) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.nav-tab').forEach(function(t) { t.classList.remove('active'); });
   document.getElementById('page-' + name).classList.add('active');
   btn.classList.add('active');
   if (name === 'stats') renderStats(lastData);
+  if (name === 'graficos') renderCharts(lastData);
 }
 
-// ══════════════════════════════════════════════════════
-//  DISPOSITIVOS
-// ══════════════════════════════════════════════════════
-let deviceCache = [];
+// ── DISPOSITIVOS ───────────────────────────────────────
+var deviceCache = [];
 
 function loadDeviceCache() {
-  try { deviceCache = JSON.parse(localStorage.getItem(LS_KEY)) || []; }
-  catch(e) { deviceCache = []; }
+  try { deviceCache = JSON.parse(localStorage.getItem(LS_KEY)) || []; } catch(e) { deviceCache = []; }
 }
-
 function saveDeviceCache(d) { deviceCache = d; localStorage.setItem(LS_KEY, JSON.stringify(d)); }
-
 function deviceInfo(mac) {
-  const f = deviceCache.find(d => d.mac.toUpperCase() === mac.toUpperCase());
+  var f = deviceCache.find(function(d) { return d.mac.toUpperCase() === mac.toUpperCase(); });
   return f || { name: mac, product: '—' };
 }
-
 async function fetchDevices() {
   try {
-    const res  = await fetch(SCRIPT_URL + '?action=get_devices&t=' + Date.now());
-    const data = await res.json();
+    var res  = await fetch(SCRIPT_URL + '?action=get_devices&t=' + Date.now());
+    var data = await res.json();
     if (Array.isArray(data)) saveDeviceCache(data);
-  } catch(e) { console.warn('Dispositivos: usando cache local.', e); }
+  } catch(e) { console.warn('Cache local em uso.', e); }
 }
 
-// ══════════════════════════════════════════════════════
-//  MODAL
-// ══════════════════════════════════════════════════════
+// ── MODAL ──────────────────────────────────────────────
 function openModal() {
-  const list = document.getElementById('deviceList');
+  var list = document.getElementById('deviceList');
   list.innerHTML = '';
-  deviceCache.forEach(d => addDeviceRow(d.mac, d.name, d.product));
+  deviceCache.forEach(function(d) { addDeviceRow(d.mac, d.name, d.product); });
   setModalStatus('');
   document.getElementById('modalBackdrop').classList.add('open');
 }
-
+function closeModal() {
+  document.getElementById('modalBackdrop').classList.remove('open');
+}
 function addDeviceRow(mac, name, product) {
-  mac = mac || ''; name = name || ''; product = product || '';
-  const list = document.getElementById('deviceList');
-  const row  = document.createElement('div');
+  mac = mac||''; name = name||''; product = product||'';
+  var list = document.getElementById('deviceList');
+  var row  = document.createElement('div');
   row.className = 'device-row';
   row.innerHTML =
-    '<input type="text" placeholder="A4CF1234ABCD" value="' + mac + '" maxlength="12" style="text-transform:uppercase">' +
-    '<input type="text" placeholder="Palete 1" value="' + name + '">' +
-    '<input type="text" placeholder="Bobinas" value="' + product + '">' +
-    '<button class="btn-remove" onclick="this.parentElement.remove()">×</button>';
+    '<input type="text" placeholder="Ex: A4CF1234ABCD" value="' + mac + '" maxlength="12" style="text-transform:uppercase">' +
+    '<input type="text" placeholder="Ex: Palete 1" value="' + name + '">' +
+    '<input type="text" placeholder="Ex: Bobinas" value="' + product + '">' +
+    '<button class="btn-remove" onclick="this.parentElement.remove()" title="Remover">×</button>';
   list.appendChild(row);
 }
-
 function setModalStatus(msg, type) {
-  const el = document.getElementById('modalStatus');
+  var el = document.getElementById('modalStatus');
   el.textContent = msg;
   el.className = 'modal-status' + (type ? ' ' + type : '');
 }
-
 async function saveDevices() {
-  const rows = document.querySelectorAll('#deviceList .device-row');
-  const devices = [];
+  var rows = document.querySelectorAll('#deviceList .device-row');
+  var devices = [];
   rows.forEach(function(row) {
-    const inputs  = row.querySelectorAll('input');
-    const mac     = inputs[0].value.trim().toUpperCase().replace(/[^A-F0-9]/g,'');
-    const name    = inputs[1].value.trim();
-    const product = inputs[2].value.trim();
-    if (mac.length === 12 && name) devices.push({ mac: mac, name: name, product: product });
+    var inputs = row.querySelectorAll('input');
+    var mac = inputs[0].value.trim().toUpperCase().replace(/[^A-F0-9]/g,'');
+    var name = inputs[1].value.trim();
+    var product = inputs[2].value.trim();
+    if (mac.length === 12 && name) devices.push({ mac:mac, name:name, product:product });
   });
-  const btn = document.getElementById('btnSave');
+  var btn = document.getElementById('btnSave');
   btn.disabled = true;
   setModalStatus('Salvando...', '');
   try {
-    const res  = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(devices) });
-    const data = await res.json();
+    var res  = await fetch(SCRIPT_URL, { method:'POST', body:JSON.stringify(devices) });
+    var data = await res.json();
     if (data.status === 'ok') {
       saveDeviceCache(devices);
-      setModalStatus('Salvo com sucesso.', 'ok');
-      setTimeout(function() {
-        document.getElementById('modalBackdrop').classList.remove('open');
-        renderAll(lastData);
-      }, 800);
-    } else {
-      setModalStatus('Erro: ' + data.message, 'error');
-    }
-  } catch(e) {
-    setModalStatus('Erro de conexão. Tente novamente.', 'error');
-  } finally {
-    btn.disabled = false;
-  }
+      setModalStatus('Cadastro salvo com sucesso.', 'ok');
+      setTimeout(function() { closeModal(); renderAll(lastData); }, 900);
+    } else { setModalStatus('Erro ao salvar: ' + data.message, 'error'); }
+  } catch(e) { setModalStatus('Falha na conexão. Tente novamente.', 'error'); }
+  finally { btn.disabled = false; }
 }
-
 document.getElementById('modalBackdrop').addEventListener('click', function(e) {
-  if (e.target === this) this.classList.remove('open');
+  if (e.target === this) closeModal();
 });
 
-// ══════════════════════════════════════════════════════
-//  PARSE / AGRUPAMENTO
-// ══════════════════════════════════════════════════════
-let lastData    = [];
-let prevStateMap = {}; // mac -> presentes anterior (para detectar mudança)
+// ── PARSE / AGRUPAMENTO ────────────────────────────────
+var lastData = [];
+var prevStateMap = {};
 
 function parseCSV(text) {
   return text.trim().split('\n').filter(function(l) { return l.trim(); }).map(function(line) {
-    var cols = [], cur = '', inQ = false;
-    for (var i = 0; i < line.length; i++) {
-      var ch = line[i];
-      if (ch === '"') { inQ = !inQ; continue; }
-      if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; } else cur += ch;
+    var cols=[], cur='', inQ=false;
+    for (var i=0; i<line.length; i++) {
+      var ch=line[i];
+      if (ch==='"'){inQ=!inQ;continue;}
+      if (ch===','&&!inQ){cols.push(cur.trim());cur='';}else cur+=ch;
     }
-    cols.push(cur.trim());
-    return cols;
+    cols.push(cur.trim()); return cols;
   });
 }
-
-// Colunas: 0=data 1=hora 2=mac 3=c1 4=c2 5=c3 6=c4 7=presentes 8=repos 9=evento
 function groupByMac(rows) {
-  var map = {};
-  rows.forEach(function(r) {
-    var mac = (r[2] || 'DESCONHECIDO').toUpperCase();
-    if (!map[mac]) map[mac] = [];
+  var map={};
+  rows.forEach(function(r){
+    var mac=(r[2]||'DESCONHECIDO').toUpperCase();
+    if(!map[mac])map[mac]=[];
     map[mac].push(r);
   });
   return map;
 }
-
 function parseTS(r) {
-  try { return new Date((r[0] || '') + ' ' + (r[1] || '')); } catch(e) { return null; }
+  try { return new Date((r[0]||'')+' '+(r[1]||'')); } catch(e) { return null; }
 }
-
 function sortedMacs(grouped) {
-  var macs = Object.keys(grouped);
-  macs.sort(function(a, b) {
-    var ai = deviceCache.findIndex(function(d) { return d.mac === a; });
-    var bi = deviceCache.findIndex(function(d) { return d.mac === b; });
-    if (ai === -1 && bi === -1) return 0;
-    if (ai === -1) return 1;
-    if (bi === -1) return -1;
-    return ai - bi;
+  var macs=Object.keys(grouped);
+  macs.sort(function(a,b){
+    var ai=deviceCache.findIndex(function(d){return d.mac===a;});
+    var bi=deviceCache.findIndex(function(d){return d.mac===b;});
+    if(ai===-1&&bi===-1)return 0; if(ai===-1)return 1; if(bi===-1)return -1; return ai-bi;
   });
   return macs;
 }
 
-// ══════════════════════════════════════════════════════
-//  FLASH — feedback de atualização no card
-// ══════════════════════════════════════════════════════
-function flashCard(cardEl, presentes) {
-  cardEl.classList.remove('flash-updated', 'flash-warn', 'flash-danger');
-  void cardEl.offsetWidth; // reflow
-  if (presentes === 4)     cardEl.classList.add('flash-updated');
-  else if (presentes === 0) cardEl.classList.add('flash-danger');
-  else                     cardEl.classList.add('flash-warn');
-  setTimeout(function() {
-    cardEl.classList.remove('flash-updated', 'flash-warn', 'flash-danger');
-  }, 900);
+// ── FLASH ──────────────────────────────────────────────
+function flashCard(el, pres) {
+  el.classList.remove('flash-ok','flash-warn','flash-danger');
+  void el.offsetWidth;
+  if(pres===4) el.classList.add('flash-ok');
+  else if(pres===0) el.classList.add('flash-danger');
+  else el.classList.add('flash-warn');
+  setTimeout(function(){el.classList.remove('flash-ok','flash-warn','flash-danger');},1000);
 }
 
-// ══════════════════════════════════════════════════════
-//  SUMMARY
-// ══════════════════════════════════════════════════════
+// ── SUMMARY ────────────────────────────────────────────
 function renderSummary(grouped) {
-  var macs = Object.keys(grouped);
-  var ok = 0, warn = 0, empty = 0;
-  macs.forEach(function(mac) {
-    var p = parseInt(grouped[mac][grouped[mac].length - 1][7]) || 0;
-    if (p === 4) ok++;
-    else if (p === 0) empty++;
-    else warn++;
+  var macs=Object.keys(grouped), ok=0, warn=0, empty=0;
+  macs.forEach(function(mac){
+    var p=parseInt(grouped[mac][grouped[mac].length-1][7])||0;
+    if(p===4)ok++; else if(p===0)empty++; else warn++;
   });
-  document.getElementById('sumTotal').textContent  = macs.length;
-  document.getElementById('sumOk').textContent     = ok;
-  document.getElementById('sumWarn').textContent   = warn;
-  document.getElementById('sumDanger').textContent = empty;
+  document.getElementById('sumTotal').textContent=macs.length;
+  document.getElementById('sumOk').textContent=ok;
+  document.getElementById('sumWarn').textContent=warn;
+  document.getElementById('sumDanger').textContent=empty;
 }
 
-// ══════════════════════════════════════════════════════
-//  PALETE CARDS
-// ══════════════════════════════════════════════════════
-var ICON_CHECK = '<svg viewBox="0 0 14 14" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,7 5.5,10.5 12,3"/></svg>';
-var ICON_X     = '<svg viewBox="0 0 14 14" fill="none" stroke-width="2" stroke-linecap="round"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg>';
+// ── PALETE CARDS ───────────────────────────────────────
+var ICON_CHECK='<svg viewBox="0 0 14 14" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,7 5.5,10.5 12,3"/></svg>';
+var ICON_X='<svg viewBox="0 0 14 14" fill="none" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg>';
 
 function renderPaletes(grouped) {
-  var grid  = document.getElementById('paleteGrid');
-  var empty = document.getElementById('emptyState');
-  var macs  = sortedMacs(grouped);
+  var grid=document.getElementById('paleteGrid');
+  var empty=document.getElementById('emptyState');
+  var macs=sortedMacs(grouped);
+  if(!macs.length){empty.style.display='block';return;}
+  empty.style.display='none';
 
-  if (!macs.length) { empty.style.display = 'block'; return; }
-  empty.style.display = 'none';
+  macs.forEach(function(mac,idx){
+    var rows=grouped[mac], last=rows[rows.length-1], info=deviceInfo(mac);
+    var c1=parseInt(last[3]),c2=parseInt(last[4]),c3=parseInt(last[5]),c4=parseInt(last[6]);
+    var pres=parseInt(last[7])||0, repos=parseInt(last[8])||0;
+    var macShort=mac.length===12?mac.slice(0,4)+'…'+mac.slice(-4):mac;
+    var stateClass=pres===4?'state-ok':pres===0?'state-danger':'state-warn';
 
-  macs.forEach(function(mac, idx) {
-    var rows = grouped[mac];
-    var last = rows[rows.length - 1];
-    var info = deviceInfo(mac);
+    var lastTs=parseTS(last);
+    var lastTsStr=lastTs?lastTs.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'}):'—';
 
-    var c1 = parseInt(last[3]), c2 = parseInt(last[4]),
-        c3 = parseInt(last[5]), c4 = parseInt(last[6]);
-    var pres  = parseInt(last[7]) || 0;
-    var repos = parseInt(last[8]) || 0;
-    var macShort = mac.length === 12 ? mac.slice(0,4) + '…' + mac.slice(-4) : mac;
+    var ultimaReposRow=null;
+    for(var i=rows.length-1;i>=0;i--){if((rows[i][9]||'').toLowerCase()==='reposto'){ultimaReposRow=rows[i];break;}}
+    var ultimaReposTs='—';
+    if(ultimaReposRow){var t=parseTS(ultimaReposRow);if(t)ultimaReposTs=t.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});}
 
-    // Timestamps
-    var lastTs    = parseTS(last);
-    var lastTsStr = lastTs
-      ? lastTs.toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'})
-      : '—';
-
-    var ultimaReposRow = null;
-    for (var i = rows.length - 1; i >= 0; i--) {
-      if ((rows[i][9] || '').toLowerCase() === 'reposto') { ultimaReposRow = rows[i]; break; }
-    }
-    var ultimaReposTs = '—';
-    if (ultimaReposRow) {
-      var t = parseTS(ultimaReposRow);
-      if (t) ultimaReposTs = t.toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
-    }
-
-    // Classe de estado para borda esquerda
-    var stateClass = pres === 4 ? 'state-ok' : pres === 0 ? 'state-danger' : 'state-warn';
-
-    // Monta slots
-    var slotsHtml = [c1,c2,c3,c4].map(function(v, i) {
-      return '<div class="slot ' + (v === 0 ? 'present' : 'absent') + '">' +
-        '<div class="slot-icon">' + (v === 0 ? ICON_CHECK : ICON_X) + '</div>' +
-        '<div class="slot-label">C' + (i+1) + '</div>' +
-        '</div>';
+    var slotsHtml=[c1,c2,c3,c4].map(function(v,i){
+      return '<div class="slot '+(v===0?'present':'absent')+'">' +
+        '<div class="slot-icon">'+(v===0?ICON_CHECK:ICON_X)+'</div>' +
+        '<div class="slot-label">C'+(i+1)+'</div></div>';
     }).join('');
 
-    var existingCard = document.getElementById('card-' + mac);
-
-    if (existingCard) {
-      // Atualiza card existente — verifica se houve mudança
-      var prevPres = prevStateMap[mac];
-      if (prevPres !== undefined && prevPres !== pres) {
-        flashCard(existingCard, pres);
-      }
-
-      // Atualiza slots
-      var slotEls = existingCard.querySelectorAll('.slot');
-      [c1,c2,c3,c4].forEach(function(v, i) {
-        slotEls[i].className = 'slot ' + (v === 0 ? 'present' : 'absent');
-        slotEls[i].querySelector('.slot-icon').innerHTML = v === 0 ? ICON_CHECK : ICON_X;
+    var existing=document.getElementById('card-'+mac);
+    if(existing){
+      var prev=prevStateMap[mac];
+      if(prev!==undefined&&prev!==pres)flashCard(existing,pres);
+      var slotEls=existing.querySelectorAll('.slot');
+      [c1,c2,c3,c4].forEach(function(v,i){
+        slotEls[i].className='slot '+(v===0?'present':'absent');
+        slotEls[i].querySelector('.slot-icon').innerHTML=v===0?ICON_CHECK:ICON_X;
       });
-
-      // Atualiza borda
-      existingCard.className = 'palete-card ' + stateClass;
-
-      // Atualiza KPIs
-      var kpiVals = existingCard.querySelectorAll('.kpi-value');
-      if (kpiVals[0]) kpiVals[0].textContent = repos;
-      if (kpiVals[1]) kpiVals[1].textContent = ultimaReposTs;
-      if (kpiVals[2]) kpiVals[2].textContent = lastTsStr;
-
+      existing.className='palete-card '+stateClass;
+      var kpiVals=existing.querySelectorAll('.kpi-value');
+      if(kpiVals[0])kpiVals[0].textContent=repos;
+      if(kpiVals[1])kpiVals[1].textContent=ultimaReposTs;
+      if(kpiVals[2])kpiVals[2].textContent=lastTsStr;
     } else {
-      // Cria novo card
-      var card = document.createElement('div');
-      card.className = 'palete-card ' + stateClass;
-      card.id = 'card-' + mac;
-      card.style.animationDelay = (idx * .07) + 's';
-      card.innerHTML =
-        '<div class="pc-header">' +
-          '<div>' +
-            '<div class="pc-name">' + info.name + '</div>' +
-            '<div class="pc-mac">' + macShort + '</div>' +
-          '</div>' +
-        '</div>' +
-        (info.product && info.product !== '—' ? '<div class="pc-product">' + info.product + '</div>' : '') +
-        '<div class="pc-slots">' + slotsHtml + '</div>' +
-        '<div class="pc-kpis">' +
-          '<div class="kpi"><div class="kpi-label">Total de reposições</div><div class="kpi-value mono-lg">' + repos + '</div></div>' +
-          '<div class="kpi"><div class="kpi-label">Última reposição em</div><div class="kpi-value">' + ultimaReposTs + '</div></div>' +
-          '<div class="kpi" style="grid-column:1/-1"><div class="kpi-label">Última leitura recebida</div><div class="kpi-value">' + lastTsStr + '</div></div>' +
+      var card=document.createElement('div');
+      card.className='palete-card '+stateClass;
+      card.id='card-'+mac;
+      card.style.animationDelay=(idx*.07)+'s';
+      card.innerHTML=
+        '<div class="pc-header"><div>' +
+          '<div class="pc-name">'+info.name+'</div>' +
+          '<div class="pc-mac">'+macShort+'</div>' +
+        '</div></div>' +
+        (info.product&&info.product!=='—'?'<div class="pc-product">'+info.product+'</div>':'')+
+        '<div class="pc-slots">'+slotsHtml+'</div>'+
+        '<div class="pc-kpis">'+
+          '<div class="kpi"><div class="kpi-label">Total de reposições</div><div class="kpi-value mono-lg">'+repos+'</div></div>'+
+          '<div class="kpi"><div class="kpi-label">Última reposição em</div><div class="kpi-value">'+ultimaReposTs+'</div></div>'+
+          '<div class="kpi" style="grid-column:1/-1"><div class="kpi-label">Última leitura recebida</div><div class="kpi-value">'+lastTsStr+'</div></div>'+
         '</div>';
       grid.appendChild(card);
     }
-
-    prevStateMap[mac] = pres;
+    prevStateMap[mac]=pres;
   });
 }
 
-// ══════════════════════════════════════════════════════
-//  TABLE
-// ══════════════════════════════════════════════════════
+// ── TABLE ──────────────────────────────────────────────
 function populateTableSelect(grouped) {
-  var sel  = document.getElementById('tableSelect');
-  var prev = sel.value;
-  var macs = Object.keys(grouped);
-  sel.innerHTML = '<option value="__all__">Todos os dispositivos</option>' +
-    macs.map(function(m) { return '<option value="' + m + '">' + deviceInfo(m).name + '</option>'; }).join('');
-  if (prev && macs.indexOf(prev) !== -1) sel.value = prev;
+  var sel=document.getElementById('tableSelect'), prev=sel.value, macs=Object.keys(grouped);
+  sel.innerHTML='<option value="__all__">Todos os dispositivos</option>'+
+    macs.map(function(m){return '<option value="'+m+'">'+deviceInfo(m).name+'</option>';}).join('');
+  if(prev&&macs.indexOf(prev)!==-1)sel.value=prev;
 }
-
 function updateTable() {
-  var sel     = document.getElementById('tableSelect').value;
-  var grouped = groupByMac(lastData);
-  var rows    = sel === '__all__' ? lastData : (grouped[sel] || []);
-  var tbody   = document.getElementById('tableBody');
-  var recent  = rows.slice(-50).reverse();
-
-  if (!recent.length) {
-    tbody.innerHTML = '<tr><td colspan="8" class="muted" style="text-align:center;padding:20px">Nenhum registro encontrado.</td></tr>';
-    return;
-  }
-
-  var fmt = function(v) { return '<td class="' + (v === 0 ? '' : 'muted') + '">' + (v === 0 ? '●' : '○') + '</td>'; };
-  tbody.innerHTML = recent.map(function(r) {
-    var info     = deviceInfo((r[2] || '').toUpperCase());
-    var dataHora = (r[0] || '').trim() + ' ' + (r[1] || '').trim();
-    return '<tr>' +
-      '<td>' + dataHora + '</td>' +
-      '<td>' + info.name + '</td>' +
-      '<td class="muted">' + info.product + '</td>' +
-      fmt(parseInt(r[3])) + fmt(parseInt(r[4])) + fmt(parseInt(r[5])) + fmt(parseInt(r[6])) +
-      '<td>' + (r[8] || '0') + '</td>' +
-      '</tr>';
+  var sel=document.getElementById('tableSelect').value;
+  var grouped=groupByMac(lastData);
+  var rows=sel==='__all__'?lastData:(grouped[sel]||[]);
+  var tbody=document.getElementById('tableBody');
+  var recent=rows.slice(-50).reverse();
+  if(!recent.length){tbody.innerHTML='<tr><td colspan="8" class="muted" style="text-align:center;padding:20px">Nenhum registro encontrado.</td></tr>';return;}
+  var fmt=function(v){return '<td class="'+(v===0?'':'muted')+'">'+(v===0?'●':'○')+'</td>';};
+  tbody.innerHTML=recent.map(function(r){
+    var info=deviceInfo((r[2]||'').toUpperCase());
+    var dh=(r[0]||'').trim()+' '+(r[1]||'').trim();
+    return '<tr><td>'+dh+'</td><td>'+info.name+'</td><td class="muted">'+info.product+'</td>'+
+      fmt(parseInt(r[3]))+fmt(parseInt(r[4]))+fmt(parseInt(r[5]))+fmt(parseInt(r[6]))+
+      '<td>'+(r[8]||'0')+'</td></tr>';
   }).join('');
 }
 
-// ══════════════════════════════════════════════════════
-//  ESTATÍSTICAS
-// ══════════════════════════════════════════════════════
-function calcStats(rows) {
-  var eventos = rows.filter(function(r) { return r[9] && r[9].trim() !== ''; });
-
-  var totalReposicoes = parseInt(rows[rows.length-1] ? rows[rows.length-1][8] : '0') || 0;
-  var totalVazio   = eventos.filter(function(r) { return (r[9]||'').toLowerCase() === 'vazio'; }).length;
-  var totalCritico = eventos.filter(function(r) { return (r[9]||'').toLowerCase() === 'critico'; }).length;
-
-  var tsRepostos = eventos
-    .filter(function(r) { return (r[9]||'').toLowerCase() === 'reposto'; })
-    .map(parseTS).filter(Boolean)
-    .sort(function(a,b) { return a-b; });
-
-  var tempoMedioRepos = null;
-  if (tsRepostos.length >= 2) {
-    var soma = 0;
-    for (var i = 1; i < tsRepostos.length; i++) soma += (tsRepostos[i] - tsRepostos[i-1]);
-    tempoMedioRepos = Math.round(soma / (tsRepostos.length - 1) / 60000);
-  }
-
-  var tempoDesdeUltima = null;
-  if (tsRepostos.length > 0) {
-    tempoDesdeUltima = Math.round((Date.now() - tsRepostos[tsRepostos.length-1]) / 60000);
-  }
-
-  var tsCriticos = eventos.filter(function(r) { return (r[9]||'').toLowerCase() === 'critico'; }).map(parseTS).filter(Boolean);
-  var tsVazios   = eventos.filter(function(r) { return (r[9]||'').toLowerCase() === 'vazio';   }).map(parseTS).filter(Boolean);
-
-  function tempoMedioAteRepo(tsArray) {
-    var intervals = [];
-    tsArray.forEach(function(t) {
-      var prox = tsRepostos.find(function(tr) { return tr > t; });
-      if (prox) intervals.push((prox - t) / 60000);
-    });
-    return intervals.length ? Math.round(intervals.reduce(function(a,b){return a+b;},0) / intervals.length) : null;
-  }
-
-  var primeiro = parseTS(rows[0]);
-  var ultimo   = parseTS(rows[rows.length-1]);
-  var periodoStr = '—';
-  if (primeiro && ultimo) {
-    var diffMin = Math.round((ultimo - primeiro) / 60000);
-    periodoStr = diffMin < 60 ? diffMin + ' min'
-               : diffMin < 1440 ? Math.floor(diffMin/60) + 'h ' + (diffMin%60) + 'min'
-               : Math.floor(diffMin/1440) + 'd ' + Math.floor((diffMin%1440)/60) + 'h';
-  }
-
-  return {
-    totalReposicoes: totalReposicoes,
-    totalVazio: totalVazio,
-    totalCritico: totalCritico,
-    tempoMedioRepos: tempoMedioRepos,
-    tempoDesdeUltima: tempoDesdeUltima,
-    tempoMedioCritico: tempoMedioAteRepo(tsCriticos),
-    tempoMedioVazio: tempoMedioAteRepo(tsVazios),
-    periodoStr: periodoStr,
-    totalRegistros: rows.length
-  };
-}
-
+// ── ESTATÍSTICAS ───────────────────────────────────────
 function fmtMin(min) {
-  if (min === null || min === undefined) return '—';
-  if (min < 60) return min + ' min';
-  return Math.floor(min/60) + 'h ' + (min%60) + 'min';
+  if(min===null||min===undefined)return '—';
+  if(min<60)return min+' min';
+  return Math.floor(min/60)+'h '+(min%60)+'min';
 }
-
-function renderStats(rows) {
-  var grid    = document.getElementById('statsGrid');
-  var grouped = groupByMac(rows);
-  var macs    = sortedMacs(grouped);
-
-  grid.innerHTML = '';
-
-  if (!macs.length) {
-    grid.innerHTML = '<div class="empty-state"><strong>Sem dados suficientes</strong>Aguarde leituras com eventos para calcular as estatísticas.</div>';
-    return;
+function calcStats(rows) {
+  var eventos=rows.filter(function(r){return r[9]&&r[9].trim()!=='';});
+  var totalRepos=parseInt((rows[rows.length-1]||[])[8]||'0')||0;
+  var totalVazio=eventos.filter(function(r){return (r[9]||'').toLowerCase()==='vazio';}).length;
+  var totalCrit=eventos.filter(function(r){return (r[9]||'').toLowerCase()==='critico';}).length;
+  var tsRepos=eventos.filter(function(r){return (r[9]||'').toLowerCase()==='reposto';}).map(parseTS).filter(Boolean).sort(function(a,b){return a-b;});
+  var tempoMedioRepos=null;
+  if(tsRepos.length>=2){var soma=0;for(var i=1;i<tsRepos.length;i++)soma+=(tsRepos[i]-tsRepos[i-1]);tempoMedioRepos=Math.round(soma/(tsRepos.length-1)/60000);}
+  var tempoDesde=tsRepos.length>0?Math.round((Date.now()-tsRepos[tsRepos.length-1])/60000):null;
+  function tmAteRepo(tsArr){
+    var ivs=[];
+    tsArr.forEach(function(t){var p=tsRepos.find(function(tr){return tr>t;});if(p)ivs.push((p-t)/60000);});
+    return ivs.length?Math.round(ivs.reduce(function(a,b){return a+b;},0)/ivs.length):null;
   }
+  var tsCrit=eventos.filter(function(r){return (r[9]||'').toLowerCase()==='critico';}).map(parseTS).filter(Boolean);
+  var tsVaz=eventos.filter(function(r){return (r[9]||'').toLowerCase()==='vazio';}).map(parseTS).filter(Boolean);
+  var prim=parseTS(rows[0]), ult=parseTS(rows[rows.length-1]), periodoStr='—';
+  if(prim&&ult){var dm=Math.round((ult-prim)/60000);periodoStr=dm<60?dm+' min':dm<1440?Math.floor(dm/60)+'h '+(dm%60)+'min':Math.floor(dm/1440)+'d '+Math.floor((dm%1440)/60)+'h';}
+  return {totalRepos:totalRepos,totalVazio:totalVazio,totalCrit:totalCrit,tempoMedioRepos:tempoMedioRepos,tempoDesde:tempoDesde,tmCrit:tmAteRepo(tsCrit),tmVaz:tmAteRepo(tsVaz),periodoStr:periodoStr,totalReg:rows.length};
+}
+function renderStats(rows) {
+  var grid=document.getElementById('statsGrid'), grouped=groupByMac(rows), macs=sortedMacs(grouped);
+  grid.innerHTML='';
+  if(!macs.length){grid.innerHTML='<div class="empty-state"><strong>Sem dados suficientes</strong>Aguarde eventos para calcular as estatísticas.</div>';return;}
+  macs.forEach(function(mac,idx){
+    var info=deviceInfo(mac), s=calcStats(grouped[mac]);
+    var macShort=mac.length===12?mac.slice(0,4)+'…'+mac.slice(-4):mac;
+    var warnClass=s.tempoDesde!==null&&s.tempoDesde>120?'warn':'';
+    var card=document.createElement('div');
+    card.className='stat-card'; card.style.animationDelay=(idx*.07)+'s';
+    card.innerHTML=
+      '<div class="stat-card-header"><div><div class="stat-card-name">'+info.name+'</div>'+
+      (info.product!=='—'?'<div class="stat-card-product">'+info.product+'</div>':'')+
+      '</div><div class="stat-card-mac">'+macShort+'</div></div>'+
 
-  macs.forEach(function(mac, idx) {
-    var info = deviceInfo(mac);
-    var s    = calcStats(grouped[mac]);
-    var macShort = mac.length === 12 ? mac.slice(0,4) + '…' + mac.slice(-4) : mac;
+      '<div class="stat-section"><div class="stat-section-title">Reposições</div>'+
+      '<div class="stat-row"><span class="stat-row-label">Reposições realizadas</span><span class="stat-row-value accent">'+s.totalRepos+'</span></div>'+
+      '<div class="stat-row"><span class="stat-row-label">Intervalo médio entre reposições</span><span class="stat-row-value">'+fmtMin(s.tempoMedioRepos)+'</span></div>'+
+      '<div class="stat-row"><span class="stat-row-label">Tempo decorrido desde a última reposição</span><span class="stat-row-value '+warnClass+'">'+fmtMin(s.tempoDesde)+'</span></div></div>'+
 
-    var warnClass = s.tempoDesdeUltima !== null && s.tempoDesdeUltima > 120 ? 'warn' : '';
+      '<div class="stat-section"><div class="stat-section-title">Alertas</div>'+
+      '<div class="stat-row"><span class="stat-row-label">Alertas de carga crítica emitidos</span><span class="stat-row-value warn">'+s.totalCrit+'</span></div>'+
+      '<div class="stat-row"><span class="stat-row-label">Alertas de palete vazio emitidos</span><span class="stat-row-value danger">'+s.totalVazio+'</span></div>'+
+      '<div class="stat-row"><span class="stat-row-label">Tempo médio de reposição após crítico</span><span class="stat-row-value">'+fmtMin(s.tmCrit)+'</span></div>'+
+      '<div class="stat-row"><span class="stat-row-label">Tempo médio de reposição após vazio</span><span class="stat-row-value">'+fmtMin(s.tmVaz)+'</span></div></div>'+
 
-    var card = document.createElement('div');
-    card.className = 'stat-card';
-    card.style.animationDelay = (idx * .07) + 's';
-    card.innerHTML =
-      '<div class="stat-card-header">' +
-        '<div>' +
-          '<div class="stat-card-name">' + info.name + '</div>' +
-          '<div class="stat-card-product">' + (info.product !== '—' ? info.product : '') + '</div>' +
-        '</div>' +
-        '<div class="stat-card-mac">' + macShort + '</div>' +
-      '</div>' +
-      '<div class="stat-rows">' +
-        '<div class="stat-divider">Reposições</div>' +
-        '<div class="stat-row"><span class="stat-row-label">Reposições realizadas</span><span class="stat-row-value accent">' + s.totalReposicoes + '</span></div>' +
-        '<div class="stat-row"><span class="stat-row-label">Intervalo médio entre reposições</span><span class="stat-row-value">' + fmtMin(s.tempoMedioRepos) + '</span></div>' +
-        '<div class="stat-row"><span class="stat-row-label">Tempo decorrido desde a última reposição</span><span class="stat-row-value ' + warnClass + '">' + fmtMin(s.tempoDesdeUltima) + '</span></div>' +
-        '<div class="stat-divider">Alertas</div>' +
-        '<div class="stat-row"><span class="stat-row-label">Alertas de carga crítica emitidos</span><span class="stat-row-value warn">' + s.totalCritico + '</span></div>' +
-        '<div class="stat-row"><span class="stat-row-label">Alertas de palete vazio emitidos</span><span class="stat-row-value danger">' + s.totalVazio + '</span></div>' +
-        '<div class="stat-row"><span class="stat-row-label">Tempo médio de reposição após crítico</span><span class="stat-row-value">' + fmtMin(s.tempoMedioCritico) + '</span></div>' +
-        '<div class="stat-row"><span class="stat-row-label">Tempo médio de reposição após vazio</span><span class="stat-row-value">' + fmtMin(s.tempoMedioVazio) + '</span></div>' +
-        '<div class="stat-divider">Monitoramento</div>' +
-        '<div class="stat-row"><span class="stat-row-label">Período total de monitoramento</span><span class="stat-row-value">' + s.periodoStr + '</span></div>' +
-        '<div class="stat-row"><span class="stat-row-label">Leituras registradas na base</span><span class="stat-row-value">' + s.totalRegistros.toLocaleString('pt-BR') + '</span></div>' +
-      '</div>';
+      '<div class="stat-section"><div class="stat-section-title">Monitoramento</div>'+
+      '<div class="stat-row"><span class="stat-row-label">Período total de monitoramento</span><span class="stat-row-value">'+s.periodoStr+'</span></div>'+
+      '<div class="stat-row"><span class="stat-row-label">Leituras registradas na base</span><span class="stat-row-value">'+s.totalReg.toLocaleString('pt-BR')+'</span></div></div>';
     grid.appendChild(card);
   });
 }
 
-// ══════════════════════════════════════════════════════
-//  RENDER ALL
-// ══════════════════════════════════════════════════════
+// ── GRÁFICOS ───────────────────────────────────────────
+var chartInstances = {};
+
+function renderCharts(rows) {
+  var grid=document.getElementById('chartsGrid'), grouped=groupByMac(rows), macs=sortedMacs(grouped);
+  if(!macs.length){grid.innerHTML='<div class="empty-state"><strong>Sem dados</strong>Aguarde eventos para exibir os gráficos.</div>';return;}
+
+  // Limpa cards antigos mas preserva instâncias de chart
+  grid.innerHTML='';
+
+  macs.forEach(function(mac, idx) {
+    var rows=grouped[mac], info=deviceInfo(mac);
+    var macShort=mac.length===12?mac.slice(0,4)+'…'+mac.slice(-4):mac;
+
+    // Filtra só linhas com evento
+    var eventos=rows.filter(function(r){return r[9]&&r[9].trim()!=='';});
+
+    // Prepara dados para o gráfico de dispersão de eventos
+    var dataC={label:'Carga crítica',color:'#b06a00',points:[]};
+    var dataV={label:'Palete vazio',color:'#c0392b',points:[]};
+    var dataR={label:'Reposição',color:'#1a7a4a',points:[]};
+
+    eventos.forEach(function(r){
+      var ts=parseTS(r); if(!ts)return;
+      var ev=(r[9]||'').toLowerCase();
+      var pt={x:ts,y:parseInt(r[7])||0};
+      if(ev==='critico')dataC.points.push(pt);
+      else if(ev==='vazio')dataV.points.push(pt);
+      else if(ev==='reposto')dataR.points.push(pt);
+    });
+
+    // Linha de histórico de carga (todos os pontos)
+    var histPoints=rows.slice(-200).map(function(r){return {x:parseTS(r),y:parseInt(r[7])||0};}).filter(function(p){return p.x;});
+
+    var canvasId='chart-'+mac;
+    var card=document.createElement('div');
+    card.className='chart-card'; card.style.animationDelay=(idx*.08)+'s';
+    card.innerHTML=
+      '<div class="chart-card-header">'+
+        '<div class="chart-card-name">'+info.name+'</div>'+
+        '<div class="chart-card-sub">'+
+          (info.product!=='—'?info.product+' · ':'')+macShort+
+          ' · '+eventos.length+' evento'+(eventos.length!==1?'s':'')+
+        '</div>'+
+      '</div>'+
+      '<div class="chart-wrapper"><canvas id="'+canvasId+'"></canvas></div>'+
+      '<div class="chart-legend">'+
+        '<div class="legend-item"><div class="legend-dot" style="background:#1a7a4a"></div>Reposição</div>'+
+        '<div class="legend-item"><div class="legend-dot" style="background:#b06a00"></div>Carga crítica</div>'+
+        '<div class="legend-item"><div class="legend-dot" style="background:#c0392b"></div>Palete vazio</div>'+
+        '<div class="legend-item"><div class="legend-dot" style="background:#c8cec9;border:1px solid #b0b8b4"></div>Nível de carga</div>'+
+      '</div>';
+    grid.appendChild(card);
+
+    // Destrói instância anterior se existir
+    if(chartInstances[mac]){chartInstances[mac].destroy();delete chartInstances[mac];}
+
+    // Cria gráfico
+    var ctx=document.getElementById(canvasId).getContext('2d');
+    chartInstances[mac]=new Chart(ctx,{
+      type:'scatter',
+      data:{
+        datasets:[
+          {
+            label:'Nível de carga',
+            data:histPoints,
+            type:'line',
+            borderColor:'#c8cec9',
+            borderWidth:1.5,
+            pointRadius:0,
+            fill:false,
+            tension:0.2,
+            order:4
+          },
+          {
+            label:'Reposição',
+            data:dataR.points,
+            backgroundColor:'#1a7a4a',
+            pointRadius:7,
+            pointHoverRadius:9,
+            order:1
+          },
+          {
+            label:'Carga crítica',
+            data:dataC.points,
+            backgroundColor:'#b06a00',
+            pointRadius:7,
+            pointHoverRadius:9,
+            order:2
+          },
+          {
+            label:'Palete vazio',
+            data:dataV.points,
+            backgroundColor:'#c0392b',
+            pointRadius:7,
+            pointHoverRadius:9,
+            order:3
+          }
+        ]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{
+          legend:{display:false},
+          tooltip:{
+            backgroundColor:'#fff',borderColor:'#e0e2dc',borderWidth:1,
+            titleColor:'#7a8480',bodyColor:'#1a1c1a',
+            titleFont:{family:'DM Mono',size:10},
+            bodyFont:{family:'DM Mono',size:12},
+            callbacks:{
+              title:function(items){return items[0].raw.x?items[0].raw.x.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';},
+              label:function(item){return ' '+item.dataset.label+': '+item.raw.y+'/4 cargas';}
+            }
+          }
+        },
+        scales:{
+          x:{
+            type:'time',
+            time:{unit:'hour',displayFormats:{hour:'dd/MM HH:mm'}},
+            ticks:{color:'#7a8480',font:{family:'DM Mono',size:9},maxTicksLimit:8,maxRotation:0},
+            grid:{color:'#e8eae6'}
+          },
+          y:{
+            min:0,max:4,
+            ticks:{color:'#7a8480',font:{family:'DM Mono',size:10},stepSize:1},
+            grid:{color:'#e8eae6'}
+          }
+        }
+      }
+    });
+  });
+}
+
+// ── RENDER ALL ─────────────────────────────────────────
 function renderAll(rows) {
-  if (!rows.length) return;
-  lastData = rows;
-  var grouped = groupByMac(rows);
+  if(!rows.length)return;
+  lastData=rows;
+  var grouped=groupByMac(rows);
   renderSummary(grouped);
   renderPaletes(grouped);
   populateTableSelect(grouped);
   updateTable();
-  if (document.getElementById('page-stats').classList.contains('active')) renderStats(rows);
-  document.getElementById('lastUpdate').textContent =
-    'atualizado ' + new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+  var statsActive=document.getElementById('page-stats').classList.contains('active');
+  var chartsActive=document.getElementById('page-graficos').classList.contains('active');
+  if(statsActive)renderStats(rows);
+  if(chartsActive)renderCharts(rows);
+  document.getElementById('lastUpdate').textContent='atualizado '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
 }
 
-// ══════════════════════════════════════════════════════
-//  FETCH
-// ══════════════════════════════════════════════════════
+// ── FETCH ──────────────────────────────────────────────
+function hideLoading(){document.getElementById('loadingOverlay').classList.add('hidden');}
+
 async function fetchData() {
   try {
-    const res  = await fetch(CSV_URL + '&t=' + Date.now());
-    const text = await res.text();
-    const rows = parseCSV(text).filter(function(r) { return !isNaN(parseInt(r[7])); });
-    if (rows.length) renderAll(rows);
-  } catch(err) {
+    var res=await fetch(CSV_URL+'&t='+Date.now());
+    var text=await res.text();
+    var rows=parseCSV(text).filter(function(r){return !isNaN(parseInt(r[7]));});
+    if(rows.length)renderAll(rows);
+  } catch(err){
     console.error(err);
-    document.getElementById('lastUpdate').textContent = 'Erro na conexão';
-  } finally {
-    hideLoading();
-  }
+    document.getElementById('lastUpdate').textContent='Erro na conexão';
+  } finally { hideLoading(); }
 }
 
-function manualRefresh() {
-  const btn = document.getElementById('btnRefresh');
-  btn.classList.add('spinning'); btn.disabled = true;
-  Promise.all([fetchData(), fetchDevices()]).finally(function() {
-    setTimeout(function() { btn.classList.remove('spinning'); btn.disabled = false; }, 600);
+function manualRefresh(){
+  var btn=document.getElementById('btnRefresh');
+  btn.classList.add('spinning'); btn.disabled=true;
+  Promise.all([fetchData(),fetchDevices()]).finally(function(){
+    setTimeout(function(){btn.classList.remove('spinning');btn.disabled=false;},600);
   });
 }
 
-// ══════════════════════════════════════════════════════
-//  INIT
-// ══════════════════════════════════════════════════════
-function hideLoading() {
-  document.getElementById('loadingOverlay').classList.add('hidden');
-}
-
+// ── INIT ───────────────────────────────────────────────
 loadDeviceCache();
-
-// Timeout de segurança: remove o loading em até 8s independente do resultado
 setTimeout(hideLoading, 8000);
-
-Promise.all([fetchDevices(), fetchData()])
-  .then(function() { renderAll(lastData); })
-  .catch(function(err) { console.error('Init error:', err); })
+Promise.all([fetchDevices(),fetchData()])
+  .then(function(){renderAll(lastData);})
+  .catch(function(e){console.error(e);})
   .finally(hideLoading);
-
 setInterval(fetchData, REFRESH_MS);
 </script>
 </body>
