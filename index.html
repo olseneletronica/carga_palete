@@ -338,6 +338,14 @@ function openModal(){
   setModalStatus('');
   document.getElementById('modalBackdrop').classList.add('open');
 }
+function confirmarRemocao(btn){
+  var row=btn.parentElement;
+  var inputs=row.querySelectorAll('input');
+  var nome=inputs[1]?inputs[1].value.trim():'este palete';
+  var msg=nome?'Remover "'+nome+'" do cadastro?':'Remover este palete do cadastro?';
+  if(window.confirm(msg)) row.remove();
+}
+
 function closeModal(){document.getElementById('modalBackdrop').classList.remove('open');}
 function addDeviceRow(mac,name,product,store){
   mac=mac||'';name=name||'';product=product||'';store=store||'';
@@ -349,7 +357,7 @@ function addDeviceRow(mac,name,product,store){
     '<input type="text" placeholder="Palete 1" value="'+name+'">'+
     '<input type="text" placeholder="Bobinas" value="'+product+'">'+
     '<input type="text" placeholder="Loja Centro" value="'+store+'">'+
-    '<button class="btn-remove" onclick="this.parentElement.remove()" title="Remover">×</button>';
+    '<button class="btn-remove" onclick="confirmarRemocao(this)" title="Remover">×</button>';
   list.appendChild(row);
 }
 function setModalStatus(msg,type){
