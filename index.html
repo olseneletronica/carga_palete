@@ -17,6 +17,7 @@
     --accent:    #1a7a4a;
     --warn:      #b06a00;
     --danger:    #c0392b;
+    --offline:   #6b7280;
     --font-mono: 'DM Mono', monospace;
     --font-sans: 'DM Sans', sans-serif;
   }
@@ -24,7 +25,7 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: var(--font-sans); font-size: 14px; min-height: 100vh; }
 
-  /* ── HEADER ── */
+  /* HEADER */
   header {
     display: flex; align-items: center; justify-content: space-between;
     padding: 18px 32px; border-bottom: 1px solid var(--border);
@@ -35,7 +36,7 @@
   .header-right { display: flex; align-items: center; gap: 12px; }
   .last-update { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
 
-  /* ── BUTTONS ── */
+  /* BUTTONS */
   .btn {
     display: flex; align-items: center; gap: 6px;
     font-family: var(--font-mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase;
@@ -51,7 +52,7 @@
   .btn.spinning svg { animation: spin .6s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ── MODAL ── */
+  /* MODAL */
   .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.32); z-index: 200; align-items: center; justify-content: center; }
   .modal-backdrop.open { display: flex; }
   .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; width: 580px; max-width: 96vw; padding: 28px; box-shadow: 0 8px 40px rgba(0,0,0,.10); max-height: 88vh; overflow-y: auto; }
@@ -71,67 +72,68 @@
   .modal-status.ok    { color: var(--accent); }
   .modal-status.error { color: var(--danger); }
 
-  /* ── MAIN ── */
+  /* MAIN */
   main { padding: 28px 32px; display: flex; flex-direction: column; gap: 24px; }
 
-  /* ── SUMMARY BAR ── */
-  .summary-bar {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-  }
-
+  /* SUMMARY BAR */
+  .summary-bar { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
   .summary-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 18px 20px;
-    display: flex; flex-direction: column; gap: 6px;
-    opacity: 0; transform: translateY(8px);
-    animation: fadeUp .35s ease forwards;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+    padding: 18px 20px; display: flex; flex-direction: column; gap: 4px;
+    opacity: 0; transform: translateY(8px); animation: fadeUp .35s ease forwards;
   }
-
-  .summary-card:nth-child(1) { animation-delay: .00s; }
-  .summary-card:nth-child(2) { animation-delay: .05s; }
-  .summary-card:nth-child(3) { animation-delay: .10s; }
-  .summary-card:nth-child(4) { animation-delay: .15s; }
-
+  .summary-card:nth-child(1){animation-delay:.00s}
+  .summary-card:nth-child(2){animation-delay:.05s}
+  .summary-card:nth-child(3){animation-delay:.10s}
+  .summary-card:nth-child(4){animation-delay:.15s}
   @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
-
   .summary-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
-  .summary-value { font-family: var(--font-mono); font-size: 32px; font-weight: 300; line-height: 1; color: var(--text); }
+  .summary-value { font-family: var(--font-mono); font-size: 32px; font-weight: 300; line-height: 1.1; color: var(--text); }
   .summary-value.ok     { color: var(--accent); }
   .summary-value.warn   { color: var(--warn); }
   .summary-value.danger { color: var(--danger); }
-  .summary-sub { font-size: 11px; color: var(--muted); }
+  .summary-value.off    { color: var(--offline); }
 
-  /* ── PALETES GRID ── */
-  .paletes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  /* PALETES GRID */
+  .paletes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 16px; }
 
-  /* ── PALETE CARD ── */
+  /* PALETE CARD */
   .palete-card {
     background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
     padding: 20px 22px; opacity: 0; transform: translateY(8px); animation: fadeUp .4s ease forwards;
     display: flex; flex-direction: column; gap: 14px;
+    transition: border-color .3s;
   }
+  .palete-card.offline { border-color: #d1d5db; background: #fafafa; }
 
-  .pc-header { display: flex; align-items: flex-start; justify-content: space-between; }
+  /* card header */
+  .pc-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
   .pc-name { font-family: var(--font-sans); font-size: 15px; font-weight: 600; color: var(--text); }
   .pc-mac  { font-family: var(--font-mono); font-size: 10px; color: var(--muted); margin-top: 2px; }
   .pc-product { font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-top: -8px; }
 
-  /* status pill */
+  /* badges */
+  .pc-badges { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
   .pc-status {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 4px 10px; border-radius: 20px; font-family: var(--font-mono);
-    font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase;
-    align-self: flex-start;
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 9px; border-radius: 20px; font-family: var(--font-mono);
+    font-size: 10px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap;
   }
-  .pc-status.cheio  { background: rgba(26,122,74,.10);  color: var(--accent); }
-  .pc-status.baixo  { background: rgba(176,106,0,.10);  color: var(--warn); }
-  .pc-status.vazio  { background: rgba(192,57,43,.10);  color: var(--danger); }
-  .pc-status.parcial{ background: rgba(176,106,0,.08);  color: var(--warn); }
+  .pc-status.cheio   { background: rgba(26,122,74,.10);  color: var(--accent); }
+  .pc-status.baixo   { background: rgba(176,106,0,.10);  color: var(--warn); }
+  .pc-status.vazio   { background: rgba(192,57,43,.10);  color: var(--danger); }
+  .pc-status.parcial { background: rgba(176,106,0,.08);  color: var(--warn); }
+  .pc-status.offline { background: rgba(107,114,128,.10); color: var(--offline); }
   .pc-status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .pc-status-dot.blink { animation: blink 1.4s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+  .pc-online-badge {
+    font-family: var(--font-mono); font-size: 9px; letter-spacing: .05em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  .pc-online-badge.online { color: var(--accent); }
+  .pc-online-badge.offline { color: var(--offline); }
 
   /* slots */
   .pc-slots { display: grid; grid-template-columns: repeat(4,1fr); gap: 7px; }
@@ -142,27 +144,32 @@
   }
   .slot.present { border-color: var(--accent); background: rgba(26,122,74,.06); }
   .slot.absent  { border-color: rgba(192,57,43,.25); background: rgba(192,57,43,.04); }
+  .slot.offline-slot { border-color: #e5e7eb; background: #f9fafb; }
   .slot-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border); transition: background .3s; }
   .slot.present .slot-dot { background: var(--accent); }
   .slot.absent  .slot-dot { background: var(--danger); }
+  .slot.offline-slot .slot-dot { background: #d1d5db; }
   .slot-label { font-family: var(--font-mono); font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
 
   /* kpis */
   .pc-kpis { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
   .kpi { background: var(--bg); border-radius: 3px; padding: 10px 12px; }
+  .palete-card.offline .kpi { background: #f3f4f6; }
   .kpi-label { font-family: var(--font-mono); font-size: 9px; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; margin-bottom: 4px; }
   .kpi-value { font-family: var(--font-mono); font-size: 18px; font-weight: 300; color: var(--text); line-height: 1.1; }
   .kpi-value.accent { color: var(--accent); }
   .kpi-value.warn   { color: var(--warn); }
   .kpi-value.danger { color: var(--danger); }
+  .kpi-value.off    { color: var(--offline); }
   .kpi-sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
 
   .pc-evento { font-family: var(--font-mono); font-size: 10px; color: var(--muted); min-height: 13px; }
 
-  /* ── TABLE ── */
+  /* TABLE */
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 22px 26px; }
-  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; gap: 12px; flex-wrap: wrap; }
   .section-title { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .section-controls { display: flex; align-items: center; gap: 8px; }
   .chart-select { font-family: var(--font-mono); font-size: 11px; background: var(--bg); border: 1px solid var(--border); border-radius: 3px; padding: 4px 8px; color: var(--text); cursor: pointer; }
 
   table { width: 100%; border-collapse: collapse; }
@@ -170,19 +177,25 @@
   tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
   tbody tr:last-child { border-bottom: none; }
   tbody tr:hover { background: rgba(0,0,0,.018); }
+  tbody tr.row-critico { background: rgba(176,106,0,.04); }
+  tbody tr.row-critico:hover { background: rgba(176,106,0,.07); }
+  tbody tr.row-vazio   { background: rgba(192,57,43,.04); }
+  tbody tr.row-vazio:hover   { background: rgba(192,57,43,.07); }
+  tbody tr.row-reposto { background: rgba(26,122,74,.04); }
+  tbody tr.row-reposto:hover { background: rgba(26,122,74,.07); }
   tbody td { font-family: var(--font-mono); font-size: 11px; color: var(--text); padding: 9px 10px; white-space: nowrap; }
   tbody td.muted { color: var(--muted); }
 
   .badge { display: inline-block; padding: 2px 7px; border-radius: 2px; font-size: 10px; letter-spacing: .05em; text-transform: uppercase; font-weight: 500; }
-  .badge.reposto { background: rgba(26,122,74,.10);  color: var(--accent); }
-  .badge.critico { background: rgba(176,106,0,.10);  color: var(--warn); }
-  .badge.vazio   { background: rgba(192,57,43,.10);  color: var(--danger); }
+  .badge.reposto { background: rgba(26,122,74,.12);  color: var(--accent); }
+  .badge.critico { background: rgba(176,106,0,.12);  color: var(--warn); }
+  .badge.vazio   { background: rgba(192,57,43,.12);  color: var(--danger); }
   .badge.normal  { background: rgba(0,0,0,.05);      color: var(--muted); }
 
-  /* ── EMPTY ── */
+  /* EMPTY */
   .empty-state { text-align: center; padding: 56px 20px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); letter-spacing: .06em; line-height: 2.2; }
 
-  /* ── LOADING ── */
+  /* LOADING */
   .loading-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; z-index: 100; transition: opacity .4s; }
   .loading-overlay.hidden { opacity: 0; pointer-events: none; }
   .loading-bar { width: 140px; height: 1px; background: var(--border); position: relative; overflow: hidden; }
@@ -190,7 +203,6 @@
   @keyframes slide { to { left: 100%; } }
   .loading-text { font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: .1em; }
 
-  /* ── RESPONSIVE ── */
   @media (max-width: 700px) {
     header { padding: 14px 16px; }
     main   { padding: 16px; gap: 16px; }
@@ -248,29 +260,12 @@
 </header>
 
 <main>
-
-  <!-- SUMMARY BAR -->
+  <!-- SUMMARY -->
   <div class="summary-bar" id="summaryBar">
-    <div class="summary-card">
-      <div class="summary-label">Dispositivos</div>
-      <div class="summary-value" id="sumTotal">—</div>
-      
-    </div>
-    <div class="summary-card">
-      <div class="summary-label">Carga cheia</div>
-      <div class="summary-value ok" id="sumOk">—</div>
-      
-    </div>
-    <div class="summary-card">
-      <div class="summary-label">Carga baixa</div>
-      <div class="summary-value warn" id="sumWarn">—</div>
-      
-    </div>
-    <div class="summary-card">
-      <div class="summary-label">Sem carga</div>
-      <div class="summary-value danger" id="sumDanger">—</div>
-      
-    </div>
+    <div class="summary-card"><div class="summary-label">Dispositivos</div><div class="summary-value" id="sumTotal">—</div></div>
+    <div class="summary-card"><div class="summary-label">Carga cheia</div><div class="summary-value ok" id="sumOk">—</div></div>
+    <div class="summary-card"><div class="summary-label">Carga baixa</div><div class="summary-value warn" id="sumWarn">—</div></div>
+    <div class="summary-card"><div class="summary-label">Offline</div><div class="summary-value off" id="sumOffline">—</div></div>
   </div>
 
   <!-- PALETES -->
@@ -285,7 +280,9 @@
   <div class="card">
     <div class="section-header">
       <div class="section-title">Últimos registros</div>
-      <select class="chart-select" id="tableSelect" onchange="updateTable()"></select>
+      <div class="section-controls">
+        <select class="chart-select" id="tableSelect" onchange="updateTable()"></select>
+      </div>
     </div>
     <table>
       <thead>
@@ -296,26 +293,25 @@
           <th>C1</th><th>C2</th><th>C3</th><th>C4</th>
           <th>Presentes</th>
           <th>Reposições</th>
-          <th>T. Rep. (min)</th>
           <th>Evento</th>
         </tr>
       </thead>
       <tbody id="tableBody">
-        <tr><td colspan="11" class="muted" style="text-align:center;padding:24px">carregando...</td></tr>
+        <tr><td colspan="10" class="muted" style="text-align:center;padding:24px">carregando...</td></tr>
       </tbody>
     </table>
   </div>
-
 </main>
 
 <script>
 // ══════════════════════════════════════════════════════
 //  CONFIG
 // ══════════════════════════════════════════════════════
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxpSCcIj_Hn5LAkb3hjNkHJdWnl7Gymn-3efUnQcyQy6L9iq6yRIvvCMoustLs_qkkv/exec';
-const CSV_URL    = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRAZD5ue759yWSG-rhT8pcyR1cLOK9ssciEPKoiR7hrhPpr2777ZtaxqxjEQqflXl63l-TDIzhqTvpA/pub?output=csv';
-const REFRESH_MS = 60000;
-const LS_KEY     = 'monitor_paletes_devices_v2';
+const SCRIPT_URL  = 'https://script.google.com/macros/s/AKfycbzCusfnjv3YnqlBXwfa8dOJ3VSDdYAxsIHUqoFT3bVWWDZjuVaLXswzo-axQGTjeA/exec';
+const CSV_URL     = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRAZD5ue759yWSG-rhT8pcyR1cLOK9ssciEPKoiR7hrhPpr2777ZtaxqxjEQqflXl63l-TDIzhqTvpA/pub?output=csv';
+const REFRESH_MS  = 60000;
+const LS_KEY      = 'monitor_paletes_devices_v2';
+const OFFLINE_MS  = 3 * 60 * 1000; // 3 minutos sem dados = offline
 
 // ══════════════════════════════════════════════════════
 //  DISPOSITIVOS
@@ -327,10 +323,7 @@ function loadDeviceCache() {
   catch(e) { deviceCache = []; }
 }
 
-function saveDeviceCache(d) {
-  deviceCache = d;
-  localStorage.setItem(LS_KEY, JSON.stringify(d));
-}
+function saveDeviceCache(d) { deviceCache = d; localStorage.setItem(LS_KEY, JSON.stringify(d)); }
 
 function deviceInfo(mac) {
   const f = deviceCache.find(d => d.mac.toUpperCase() === mac.toUpperCase());
@@ -429,7 +422,7 @@ function parseCSV(text) {
   });
 }
 
-// cols: 0=data 1=hora 2=mac 3=c1 4=c2 5=c3 6=c4 7=presentes 8=repos 9=tempo 10=evento
+// Colunas: 0=data 1=hora 2=mac 3=c1 4=c2 5=c3 6=c4 7=presentes 8=repos 9=evento
 function groupByMac(rows) {
   const map = {};
   rows.forEach(r => {
@@ -440,6 +433,21 @@ function groupByMac(rows) {
   return map;
 }
 
+function parseTimestamp(dateStr, timeStr) {
+  // dateStr ex: "6/8/2026", timeStr ex: "21:35:06"
+  try {
+    return new Date(dateStr + ' ' + timeStr);
+  } catch(e) { return null; }
+}
+
+function isOffline(rows) {
+  if (!rows || !rows.length) return true;
+  const last = rows[rows.length - 1];
+  const ts   = parseTimestamp(last[0], last[1]);
+  if (!ts) return false;
+  return (Date.now() - ts.getTime()) > OFFLINE_MS;
+}
+
 function calcStatus(presentes) {
   if (presentes === 4) return 'cheio';
   if (presentes === 0) return 'vazio';
@@ -447,31 +455,22 @@ function calcStatus(presentes) {
   return 'parcial';
 }
 
-function tempoHuman(min) {
-  min = parseInt(min);
-  if (!min || min === 0) return '—';
-  if (min < 60) return min + ' min';
-  const h = Math.floor(min/60), m = min%60;
-  return h + 'h' + (m > 0 ? ' ' + m + 'min' : '');
-}
-
 // ══════════════════════════════════════════════════════
-//  SUMMARY BAR
+//  SUMMARY
 // ══════════════════════════════════════════════════════
 function renderSummary(grouped) {
-  const macs    = Object.keys(grouped);
-  let ok=0, warn=0, danger=0;
+  const macs = Object.keys(grouped);
+  let ok=0, warn=0, offline=0;
   macs.forEach(mac => {
+    if (isOffline(grouped[mac])) { offline++; return; }
     const last = grouped[mac][grouped[mac].length-1];
     const p    = parseInt(last[7])||0;
-    if (p===4) ok++;
-    else if (p===0) danger++;
-    else warn++;
+    if (p===4) ok++; else warn++;
   });
-  document.getElementById('sumTotal').textContent  = macs.length;
-  document.getElementById('sumOk').textContent     = ok;
-  document.getElementById('sumWarn').textContent   = warn;
-  document.getElementById('sumDanger').textContent = danger;
+  document.getElementById('sumTotal').textContent   = macs.length;
+  document.getElementById('sumOk').textContent      = ok;
+  document.getElementById('sumWarn').textContent    = warn;
+  document.getElementById('sumOffline').textContent = offline;
 }
 
 // ══════════════════════════════════════════════════════
@@ -496,27 +495,34 @@ function renderPaletes(grouped) {
   grid.querySelectorAll('.palete-card').forEach(el=>el.remove());
 
   macs.forEach((mac, idx) => {
-    const rows  = grouped[mac];
-    const last  = rows[rows.length-1];
-    const info  = deviceInfo(mac);
-    const c1    = parseInt(last[3]), c2=parseInt(last[4]), c3=parseInt(last[5]), c4=parseInt(last[6]);
+    const rows    = grouped[mac];
+    const last    = rows[rows.length-1];
+    const info    = deviceInfo(mac);
+    const offline = isOffline(rows);
+
+    const c1 = parseInt(last[3]), c2=parseInt(last[4]), c3=parseInt(last[5]), c4=parseInt(last[6]);
     const pres  = parseInt(last[7])||0;
     const repos = parseInt(last[8])||0;
-    const tempo = last[9];
-    const ev    = (last[10]||'').toLowerCase();
-    const status = calcStatus(pres);
+    const ev    = (last[9]||'').toLowerCase();
+    const status = offline ? 'offline' : calcStatus(pres);
 
-    const statusLabel = { cheio:'carga cheia', baixo:'carga baixa', vazio:'sem carga', parcial:'carga parcial' }[status];
-    const presClass   = { cheio:'accent', baixo:'warn', vazio:'danger', parcial:'warn' }[status];
+    const statusLabel = { cheio:'carga cheia', baixo:'carga baixa', vazio:'sem carga', parcial:'carga parcial', offline:'offline' }[status];
+    const presClass   = offline ? 'off' : { cheio:'accent', baixo:'warn', vazio:'danger', parcial:'warn' }[status];
     const macShort    = mac.length===12 ? mac.slice(0,4)+'…'+mac.slice(-4) : mac;
     const evText      = ev ? `último evento: ${ev} — ${last[0]} ${last[1]}` : '';
 
-    // última reposição
-    const ultimaRepos = rows.slice().reverse().find(r=>(r[10]||'').toLowerCase()==='reposto');
+    // Última reposição
+    const ultimaRepos   = rows.slice().reverse().find(r=>(r[9]||'').toLowerCase()==='reposto');
     const ultimaReposTs = ultimaRepos ? ultimaRepos[0]+' '+ultimaRepos[1] : '—';
 
+    // Online/offline label
+    const onlineLabelClass = offline ? 'offline' : 'online';
+    const onlineLabelText  = offline ? 'offline' : 'online';
+
+    const slotClass = v => offline ? 'offline-slot' : (v===0 ? 'present' : 'absent');
+
     const card = document.createElement('div');
-    card.className = 'palete-card';
+    card.className = 'palete-card' + (offline ? ' offline' : '');
     card.style.animationDelay = (idx*.07)+'s';
     card.innerHTML = `
       <div class="pc-header">
@@ -524,14 +530,17 @@ function renderPaletes(grouped) {
           <div class="pc-name">${info.name}</div>
           <div class="pc-mac">${macShort}</div>
         </div>
-        <span class="pc-status ${status}">
-          <span class="pc-status-dot"></span>${statusLabel}
-        </span>
+        <div class="pc-badges">
+          <span class="pc-status ${status}">
+            <span class="pc-status-dot${offline?'':' blink'}"></span>${statusLabel}
+          </span>
+          <span class="pc-online-badge ${onlineLabelClass}">${onlineLabelText}</span>
+        </div>
       </div>
       ${info.product && info.product!=='—' ? `<div class="pc-product">${info.product}</div>` : ''}
       <div class="pc-slots">
         ${[c1,c2,c3,c4].map((v,i)=>`
-          <div class="slot ${v===0?'present':'absent'}">
+          <div class="slot ${slotClass(v)}">
             <div class="slot-dot"></div>
             <div class="slot-label">C${i+1}</div>
           </div>`).join('')}
@@ -539,13 +548,11 @@ function renderPaletes(grouped) {
       <div class="pc-kpis">
         <div class="kpi">
           <div class="kpi-label">Carga total</div>
-          <div class="kpi-value ${presClass}">${pres}/4</div>
-          
+          <div class="kpi-value ${presClass}">${offline?'—':pres+'/4'}</div>
         </div>
         <div class="kpi">
           <div class="kpi-label">Reposições</div>
           <div class="kpi-value">${repos}</div>
-          <div class="kpi-sub">total</div>
         </div>
         <div class="kpi">
           <div class="kpi-label">Última repos.</div>
@@ -580,26 +587,27 @@ function updateTable() {
   const grouped = groupByMac(lastData);
   const rows    = sel==='__all__' ? lastData : (grouped[sel]||[]);
   const tbody   = document.getElementById('tableBody');
-  const recent  = rows.slice(-30).reverse();
+  const recent  = rows.slice(-50).reverse();
 
   if (!recent.length) {
-    tbody.innerHTML = '<tr><td colspan="11" class="muted" style="text-align:center;padding:20px">sem dados</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10" class="muted" style="text-align:center;padding:20px">sem dados</td></tr>';
     return;
   }
 
   const fmt = v => `<td class="${v===0?'':'muted'}">${v===0?'●':'○'}</td>`;
   tbody.innerHTML = recent.map(r => {
-    const info   = deviceInfo((r[2]||'').toUpperCase());
+    const info    = deviceInfo((r[2]||'').toUpperCase());
     const dataHora = (r[0]||'').trim() + ' ' + (r[1]||'').trim();
-    return `<tr>
+    const ev       = (r[9]||'').toLowerCase();
+    const rowClass = ev ? 'row-'+ev : '';
+    return `<tr class="${rowClass}">
       <td>${dataHora}</td>
       <td>${info.name}</td>
       <td class="muted">${info.product}</td>
       ${fmt(parseInt(r[3]))}${fmt(parseInt(r[4]))}${fmt(parseInt(r[5]))}${fmt(parseInt(r[6]))}
       <td>${r[7]||'0'}</td>
       <td>${r[8]||'0'}</td>
-      <td>${tempoHuman(r[9])}</td>
-      <td>${badgeHtml(r[10])}</td>
+      <td>${badgeHtml(r[9])}</td>
     </tr>`;
   }).join('');
 }
