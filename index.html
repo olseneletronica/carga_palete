@@ -527,7 +527,21 @@ function renderPaletes(grouped) {
             </div>
             <div class="slot-label">C${i+1}</div>
           </div>`).join('')}
-      </div>`;
+      </div>
+      <div class="pc-kpis">
+        <div class="kpi">
+          <div class="kpi-label">Total de reposições</div>
+          <div class="kpi-value mono-lg">${repos}</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Última reposição em</div>
+          <div class="kpi-value">${ultimaReposTs}</div>
+        </div>
+        <div class="kpi" style="grid-column:1/-1">
+          <div class="kpi-label">Última leitura recebida</div>
+          <div class="kpi-value">${lastTsStr}</div>
+        </div>
+      </div>\`;
     grid.appendChild(card);
   });
 }
