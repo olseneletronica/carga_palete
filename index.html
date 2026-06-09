@@ -747,8 +747,8 @@ function renderCharts(rows){
       '<div class="chart-wrapper"><canvas id="'+canvasId+'"></canvas></div>'+
       '<div class="chart-legend">'+
         '<div class="legend-item"><div class="legend-dot" style="background:#1a7a4a"></div>Reposição</div>'+
-        '<div class="legend-item"><div class="legend-dot" style="background:#b06a00"></div>Carga crítica</div>'+
-        '<div class="legend-item"><div class="legend-dot" style="background:#c0392b"></div>Palete vazio</div>'+
+        '<div class="legend-item"><div class="legend-dot" style="background:#e07b00"></div>Carga crítica</div>'+
+        '<div class="legend-item"><div class="legend-dot" style="background:#d42020"></div>Palete vazio</div>'+
         '<div class="legend-item"><div class="legend-dot" style="background:#c8cec9;border:1px solid #b0b8b4"></div>Nível de carga</div>'+
       '</div>';
     grid.appendChild(card);
@@ -785,8 +785,8 @@ function renderCharts(rows){
           order:4
         },
         evDataset(dataR,'#1a7a4a','Reposição',1),
-        evDataset(dataC,'#b06a00','Carga crítica',2),
-        evDataset(dataV,'#c0392b','Palete vazio',3)
+        evDataset(dataC,'#e07b00','Carga crítica',2),
+        evDataset(dataV,'#d42020','Palete vazio',3)
       ]},
       options:{
         responsive:true,maintainAspectRatio:false,
@@ -823,12 +823,12 @@ function renderCharts(rows){
             grid:{color:'rgba(224,226,220,.6)'}
           },
           y:{
-            min:0,max:4,
+            min:0,max:5,
             ticks:{
               color:'#7a8480',
               font:{family:'DM Mono',size:10},
               stepSize:1,
-              callback:function(v){return v+'';}
+              callback:function(v){return v<=4?v+'':'';}
             },
             grid:{color:'rgba(224,226,220,.6)'}
           }
