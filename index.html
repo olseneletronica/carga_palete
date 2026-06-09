@@ -148,12 +148,6 @@
   .kpi-value.mono-lg { font-size: 22px; font-weight: 300; }
 
   /* carga detail dentro do card */
-  .pc-carga-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; }
-  .pc-carga-item { display: flex; flex-direction: column; align-items: center; gap: 3px; }
-  .pc-carga-label { font-family: var(--font-mono); font-size: 9px; color: var(--muted); text-transform: uppercase; }
-  .pc-carga-val { font-family: var(--font-mono); font-size: 11px; font-weight: 500; }
-  .pc-carga-val.present { color: var(--accent); }
-  .pc-carga-val.absent  { color: var(--danger); }
 
   /* TABLE */
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 22px 26px; }
@@ -510,10 +504,6 @@ function renderPaletes(grouped) {
       ? (() => { const t=parseTS(ultimaReposRow); return t ? t.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '—'; })()
       : '—';
 
-    // Labels de carga
-    const cargaLabel = v => v===0
-      ? '<span class="pc-carga-val present">●  presente</span>'
-      : '<span class="pc-carga-val absent">○  ausente</span>';
 
     const card = document.createElement('div');
     card.className = 'palete-card';
