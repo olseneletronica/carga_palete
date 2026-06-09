@@ -19,12 +19,14 @@
     --danger:    #c0392b;
     --font-mono: 'DM Mono', monospace;
     --font-sans: 'DM Sans', sans-serif;
+    --radius:    4px;
+    --transition: 280ms ease;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: var(--font-sans); font-size: 14px; min-height: 100vh; }
 
-  /* HEADER */
+  /* ── HEADER ── */
   header {
     display: flex; align-items: center; justify-content: space-between;
     padding: 18px 32px; border-bottom: 1px solid var(--border);
@@ -35,32 +37,31 @@
   .header-right { display: flex; align-items: center; gap: 12px; }
   .last-update { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
 
-  /* NAV TABS */
+  /* ── NAV TABS ── */
   .nav-tabs {
-    display: flex; gap: 0;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-    padding: 0 32px;
+    display: flex; border-bottom: 1px solid var(--border);
+    background: var(--surface); padding: 0 32px;
   }
   .nav-tab {
     font-family: var(--font-mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase;
     padding: 12px 18px; cursor: pointer; color: var(--muted);
-    border-bottom: 2px solid transparent; margin-bottom: -1px;
-    transition: color .15s, border-color .15s; background: none; border-top: none; border-left: none; border-right: none;
+    border: none; border-bottom: 2px solid transparent; margin-bottom: -1px;
+    background: none; transition: color var(--transition), border-color var(--transition);
   }
   .nav-tab:hover { color: var(--text); }
   .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 
-  /* PAGES */
+  /* ── PAGES ── */
   .page { display: none; padding: 28px 32px; }
   .page.active { display: flex; flex-direction: column; gap: 24px; }
 
-  /* BUTTONS */
+  /* ── BUTTONS ── */
   .btn {
     display: flex; align-items: center; gap: 6px;
     font-family: var(--font-mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase;
-    background: transparent; border: 1px solid var(--border); border-radius: 3px;
-    padding: 7px 13px; cursor: pointer; transition: background .15s, border-color .15s; color: var(--accent);
+    background: transparent; border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 7px 13px; cursor: pointer; color: var(--accent);
+    transition: background var(--transition), border-color var(--transition);
   }
   .btn:hover { background: rgba(26,122,74,.07); border-color: var(--accent); }
   .btn:active { opacity: .7; }
@@ -71,33 +72,55 @@
   .btn.spinning svg { animation: spin .6s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* MODAL */
+  /* ── MODAL ── */
   .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.32); z-index: 200; align-items: center; justify-content: center; }
   .modal-backdrop.open { display: flex; }
   .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; width: 580px; max-width: 96vw; padding: 28px; box-shadow: 0 8px 40px rgba(0,0,0,.10); max-height: 88vh; overflow-y: auto; }
   .modal-title { font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
   .modal-subtitle { font-size: 12px; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
   .col-headers { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 8px; margin-bottom: 6px; }
-  .col-header { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; padding: 0 2px; }
+  .col-header { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; }
   .device-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
   .device-row { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 8px; align-items: center; }
-  .device-row input { font-family: var(--font-mono); font-size: 11px; background: var(--bg); border: 1px solid var(--border); border-radius: 3px; padding: 8px 10px; color: var(--text); width: 100%; }
+  .device-row input { font-family: var(--font-mono); font-size: 11px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 10px; color: var(--text); width: 100%; transition: border-color var(--transition); }
   .device-row input:focus { outline: none; border-color: var(--accent); }
   .device-row input::placeholder { color: var(--muted); }
-  .btn-remove { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 18px; line-height: 1; padding: 2px 5px; transition: color .15s; }
+  .btn-remove { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 18px; line-height: 1; padding: 2px 5px; transition: color var(--transition); }
   .btn-remove:hover { color: var(--danger); }
   .modal-footer { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
   .modal-status { font-family: var(--font-mono); font-size: 11px; color: var(--muted); min-height: 16px; transition: color .3s; }
   .modal-status.ok    { color: var(--accent); }
   .modal-status.error { color: var(--danger); }
 
+  /* ── ANIMATIONS ── */
   @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
 
-  /* ── PAGE 1: MONITOR ── */
+  @keyframes flash-update {
+    0%   { box-shadow: 0 0 0 0 rgba(26,122,74,.5); }
+    50%  { box-shadow: 0 0 0 6px rgba(26,122,74,.0); }
+    100% { box-shadow: none; }
+  }
 
+  @keyframes flash-warn {
+    0%   { box-shadow: 0 0 0 0 rgba(176,106,0,.5); }
+    50%  { box-shadow: 0 0 0 6px rgba(176,106,0,.0); }
+    100% { box-shadow: none; }
+  }
+
+  @keyframes flash-danger {
+    0%   { box-shadow: 0 0 0 0 rgba(192,57,43,.5); }
+    50%  { box-shadow: 0 0 0 6px rgba(192,57,43,.0); }
+    100% { box-shadow: none; }
+  }
+
+  .flash-updated { animation: flash-update .8s ease-out forwards; }
+  .flash-warn    { animation: flash-warn   .8s ease-out forwards; }
+  .flash-danger  { animation: flash-danger .8s ease-out forwards; }
+
+  /* ── SUMMARY BAR ── */
   .summary-bar { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
   .summary-card {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
     padding: 18px 20px; display: flex; flex-direction: column; gap: 4px;
     opacity: 0; transform: translateY(8px); animation: fadeUp .35s ease forwards;
   }
@@ -111,64 +134,73 @@
   .summary-value.warn   { color: var(--warn); }
   .summary-value.danger { color: var(--danger); }
 
-  /* PALETE CARDS */
+  /* ── PALETES GRID ── */
   .paletes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 16px; }
 
+  /* ── PALETE CARD ── */
   .palete-card {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
-    padding: 20px 22px; opacity: 0; transform: translateY(8px); animation: fadeUp .4s ease forwards;
+    background: var(--surface); border: 1px solid var(--border);
+    border-left: 3px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    opacity: 0; transform: translateY(8px); animation: fadeUp .4s ease forwards;
     display: flex; flex-direction: column; gap: 14px;
+    transition: border-color var(--transition), box-shadow var(--transition);
   }
+  .palete-card.state-ok      { border-left-color: var(--accent); }
+  .palete-card.state-warn    { border-left-color: var(--warn); }
+  .palete-card.state-danger  { border-left-color: var(--danger); }
 
   .pc-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
   .pc-name { font-family: var(--font-sans); font-size: 15px; font-weight: 600; color: var(--text); }
   .pc-mac  { font-family: var(--font-mono); font-size: 10px; color: var(--muted); margin-top: 2px; }
   .pc-product { font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-top: -8px; }
 
-  /* slots */
+  /* ── SLOTS ── */
   .pc-slots { display: grid; grid-template-columns: repeat(4,1fr); gap: 7px; }
   .slot {
     display: flex; flex-direction: column; align-items: center; gap: 5px;
-    padding: 9px 4px; border-radius: 3px; border: 1px solid var(--border);
-    transition: border-color .3s, background .3s;
+    padding: 10px 4px; border-radius: var(--radius); border: 1px solid var(--border);
+    transition: border-color var(--transition), background var(--transition);
+    cursor: default;
   }
   .slot.present { border-color: var(--accent); background: rgba(26,122,74,.06); }
-  .slot.absent  { border-color: rgba(192,57,43,.25); background: rgba(192,57,43,.04); }
+  .slot.absent  { border-color: rgba(192,57,43,.3); background: rgba(192,57,43,.04); }
+  .slot:hover { filter: brightness(.97); }
+
   .slot-icon { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; }
-  .slot-icon svg { width: 14px; height: 14px; }
+  .slot-icon svg { width: 14px; height: 14px; transition: stroke var(--transition); }
   .slot.present .slot-icon svg { stroke: var(--accent); }
   .slot.absent  .slot-icon svg { stroke: var(--danger); }
   .slot-label { font-family: var(--font-mono); font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
 
-  /* kpis do card */
+  /* ── KPIs DO CARD ── */
   .pc-kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .kpi { background: var(--bg); border-radius: 3px; padding: 10px 12px; }
+  .kpi { background: var(--bg); border-radius: var(--radius); padding: 10px 12px; transition: background var(--transition); }
   .kpi-label { font-family: var(--font-mono); font-size: 9px; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; margin-bottom: 4px; }
   .kpi-value { font-family: var(--font-mono); font-size: 13px; font-weight: 400; color: var(--text); line-height: 1.3; }
   .kpi-value.mono-lg { font-size: 22px; font-weight: 300; }
 
-  /* carga detail dentro do card */
-
-  /* TABLE */
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 22px 26px; }
+  /* ── TABLE ── */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 26px; }
   .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; gap: 12px; flex-wrap: wrap; }
   .section-title { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
-  .chart-select { font-family: var(--font-mono); font-size: 11px; background: var(--bg); border: 1px solid var(--border); border-radius: 3px; padding: 4px 8px; color: var(--text); cursor: pointer; }
+  .chart-select { font-family: var(--font-mono); font-size: 11px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 5px 9px; color: var(--text); cursor: pointer; transition: border-color var(--transition); }
+  .chart-select:focus { outline: none; border-color: var(--accent); }
 
   table { width: 100%; border-collapse: collapse; }
-  thead th { font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 0 10px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
-  tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+  thead th { font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 0 10px 12px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background var(--transition); }
   tbody tr:last-child { border-bottom: none; }
-  tbody tr:hover { background: rgba(0,0,0,.018); }
-  tbody td { font-family: var(--font-mono); font-size: 11px; color: var(--text); padding: 9px 10px; white-space: nowrap; }
+  tbody tr:hover { background: rgba(0,0,0,.02); }
+  tbody td { font-family: var(--font-mono); font-size: 11px; color: var(--text); padding: 10px 10px; white-space: nowrap; }
   tbody td.muted { color: var(--muted); }
 
-  /* ── PAGE 2: ESTATÍSTICAS ── */
-
+  /* ── PAGE ESTATÍSTICAS ── */
   .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px,1fr)); gap: 20px; }
 
   .stat-card {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
     padding: 22px 24px; display: flex; flex-direction: column; gap: 18px;
     opacity: 0; transform: translateY(8px); animation: fadeUp .4s ease forwards;
   }
@@ -178,24 +210,20 @@
   .stat-card-product { font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-top: 2px; }
   .stat-card-mac { font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
 
-  .stat-rows { display: flex; flex-direction: column; gap: 0; }
-  .stat-row {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 0; border-bottom: 1px solid var(--border);
-  }
+  .stat-rows { display: flex; flex-direction: column; }
+  .stat-divider { font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 8px 0 4px; border-bottom: 1px solid var(--border); margin-bottom: 2px; }
+  .stat-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
   .stat-row:last-child { border-bottom: none; }
-  .stat-row-label { font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: .04em; }
-  .stat-row-value { font-family: var(--font-mono); font-size: 13px; color: var(--text); font-weight: 500; text-align: right; }
+  .stat-row-label { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+  .stat-row-value { font-family: var(--font-mono); font-size: 13px; color: var(--text); font-weight: 500; }
   .stat-row-value.accent { color: var(--accent); }
   .stat-row-value.warn   { color: var(--warn); }
   .stat-row-value.danger { color: var(--danger); }
 
-  .stat-divider { font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 6px 0 2px; }
+  /* ── EMPTY / LOADING ── */
+  .empty-state { text-align: center; padding: 56px 20px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); letter-spacing: .06em; line-height: 2.4; }
+  .empty-state strong { display: block; color: var(--text); font-size: 13px; margin-bottom: 8px; }
 
-  /* EMPTY */
-  .empty-state { text-align: center; padding: 56px 20px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); letter-spacing: .06em; line-height: 2.2; }
-
-  /* LOADING */
   .loading-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; z-index: 100; transition: opacity .4s; }
   .loading-overlay.hidden { opacity: 0; pointer-events: none; }
   .loading-bar { width: 140px; height: 1px; background: var(--border); position: relative; overflow: hidden; }
@@ -211,6 +239,10 @@
     .device-row { grid-template-columns: 1fr 1fr; }
     .device-row input:first-child { grid-column: 1/-1; }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
 </style>
 </head>
 <body>
@@ -225,7 +257,7 @@
 <div class="modal-backdrop" id="modalBackdrop">
   <div class="modal">
     <div class="modal-title">Gerenciar Dispositivos</div>
-    <div class="modal-subtitle">Cadastre o MAC de cada ESP32 com nome e produto. Essas informações serão usadas nos alertas por e-mail.</div>
+    <div class="modal-subtitle">Cadastre o MAC de cada ESP32 com nome e produto. Essas informações aparecem nos alertas por e-mail e no dashboard.</div>
     <div class="col-headers">
       <div class="col-header">MAC</div>
       <div class="col-header">Nome</div>
@@ -261,8 +293,8 @@
 
 <!-- NAV TABS -->
 <nav class="nav-tabs">
-  <button class="nav-tab active" onclick="showPage('monitor')">Monitor</button>
-  <button class="nav-tab" onclick="showPage('stats')">Estatísticas</button>
+  <button class="nav-tab active" onclick="showPage('monitor', this)">Monitor</button>
+  <button class="nav-tab" onclick="showPage('stats', this)">Estatísticas</button>
 </nav>
 
 <!-- PAGE 1: MONITOR -->
@@ -277,8 +309,8 @@
 
   <div class="paletes-grid" id="paleteGrid">
     <div class="empty-state" id="emptyState">
-      Aguardando dados dos dispositivos.<br>
-      Cadastre os ESP32 em "dispositivos" para identificar cada palete.
+      <strong>Nenhum dispositivo encontrado</strong>
+      Adicione um ESP32 em "dispositivos" para começar o monitoramento.
     </div>
   </div>
 
@@ -298,17 +330,19 @@
         </tr>
       </thead>
       <tbody id="tableBody">
-        <tr><td colspan="8" class="muted" style="text-align:center;padding:24px">carregando...</td></tr>
+        <tr><td colspan="8" class="muted" style="text-align:center;padding:24px">Aguardando dados...</td></tr>
       </tbody>
     </table>
   </div>
-
 </div>
 
 <!-- PAGE 2: ESTATÍSTICAS -->
 <div class="page" id="page-stats">
   <div class="stats-grid" id="statsGrid">
-    <div class="empty-state">Carregando estatísticas...</div>
+    <div class="empty-state">
+      <strong>Carregando estatísticas</strong>
+      Os dados serão exibidos assim que houver leituras suficientes.
+    </div>
   </div>
 </div>
 
@@ -324,11 +358,11 @@ const LS_KEY     = 'monitor_paletes_devices_v2';
 // ══════════════════════════════════════════════════════
 //  NAVEGAÇÃO
 // ══════════════════════════════════════════════════════
-function showPage(name) {
+function showPage(name, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
-  event.target.classList.add('active');
+  btn.classList.add('active');
   if (name === 'stats') renderStats(lastData);
 }
 
@@ -354,7 +388,7 @@ async function fetchDevices() {
     const res  = await fetch(SCRIPT_URL + '?action=get_devices&t=' + Date.now());
     const data = await res.json();
     if (Array.isArray(data)) saveDeviceCache(data);
-  } catch(e) { console.warn('Dispositivos: usando cache.', e); }
+  } catch(e) { console.warn('Dispositivos: usando cache local.', e); }
 }
 
 // ══════════════════════════════════════════════════════
@@ -368,50 +402,56 @@ function openModal() {
   document.getElementById('modalBackdrop').classList.add('open');
 }
 
-function addDeviceRow(mac='', name='', product='') {
+function addDeviceRow(mac, name, product) {
+  mac = mac || ''; name = name || ''; product = product || '';
   const list = document.getElementById('deviceList');
   const row  = document.createElement('div');
   row.className = 'device-row';
-  row.innerHTML = `
-    <input type="text" placeholder="A4CF1234ABCD" value="${mac}" maxlength="12" style="text-transform:uppercase">
-    <input type="text" placeholder="Palete 1"     value="${name}">
-    <input type="text" placeholder="Bobinas"      value="${product}">
-    <button class="btn-remove" onclick="this.parentElement.remove()">×</button>`;
+  row.innerHTML =
+    '<input type="text" placeholder="A4CF1234ABCD" value="' + mac + '" maxlength="12" style="text-transform:uppercase">' +
+    '<input type="text" placeholder="Palete 1" value="' + name + '">' +
+    '<input type="text" placeholder="Bobinas" value="' + product + '">' +
+    '<button class="btn-remove" onclick="this.parentElement.remove()">×</button>';
   list.appendChild(row);
 }
 
-function setModalStatus(msg, type='') {
+function setModalStatus(msg, type) {
   const el = document.getElementById('modalStatus');
   el.textContent = msg;
-  el.className = 'modal-status' + (type ? ' '+type : '');
+  el.className = 'modal-status' + (type ? ' ' + type : '');
 }
 
 async function saveDevices() {
-  const rows    = document.querySelectorAll('#deviceList .device-row');
+  const rows = document.querySelectorAll('#deviceList .device-row');
   const devices = [];
-  rows.forEach(row => {
+  rows.forEach(function(row) {
     const inputs  = row.querySelectorAll('input');
     const mac     = inputs[0].value.trim().toUpperCase().replace(/[^A-F0-9]/g,'');
     const name    = inputs[1].value.trim();
     const product = inputs[2].value.trim();
-    if (mac.length === 12 && name) devices.push({ mac, name, product });
+    if (mac.length === 12 && name) devices.push({ mac: mac, name: name, product: product });
   });
   const btn = document.getElementById('btnSave');
   btn.disabled = true;
-  setModalStatus('salvando...', '');
+  setModalStatus('Salvando...', '');
   try {
-    const res  = await fetch(SCRIPT_URL, { method:'POST', body: JSON.stringify(devices) });
+    const res  = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(devices) });
     const data = await res.json();
     if (data.status === 'ok') {
       saveDeviceCache(devices);
-      setModalStatus('salvo com sucesso.', 'ok');
-      setTimeout(() => {
+      setModalStatus('Salvo com sucesso.', 'ok');
+      setTimeout(function() {
         document.getElementById('modalBackdrop').classList.remove('open');
         renderAll(lastData);
       }, 800);
-    } else { setModalStatus('erro: ' + data.message, 'error'); }
-  } catch(e) { setModalStatus('erro de conexão. tente novamente.', 'error'); }
-  finally { btn.disabled = false; }
+    } else {
+      setModalStatus('Erro: ' + data.message, 'error');
+    }
+  } catch(e) {
+    setModalStatus('Erro de conexão. Tente novamente.', 'error');
+  } finally {
+    btn.disabled = false;
+  }
 }
 
 document.getElementById('modalBackdrop').addEventListener('click', function(e) {
@@ -421,24 +461,27 @@ document.getElementById('modalBackdrop').addEventListener('click', function(e) {
 // ══════════════════════════════════════════════════════
 //  PARSE / AGRUPAMENTO
 // ══════════════════════════════════════════════════════
-let lastData = [];
+let lastData    = [];
+let prevStateMap = {}; // mac -> presentes anterior (para detectar mudança)
 
 function parseCSV(text) {
-  return text.trim().split('\n').filter(l => l.trim()).map(line => {
-    const cols=[]; let cur='', inQ=false;
-    for (const ch of line) {
-      if (ch==='"') { inQ=!inQ; continue; }
-      if (ch===',' && !inQ) { cols.push(cur.trim()); cur=''; } else cur+=ch;
+  return text.trim().split('\n').filter(function(l) { return l.trim(); }).map(function(line) {
+    var cols = [], cur = '', inQ = false;
+    for (var i = 0; i < line.length; i++) {
+      var ch = line[i];
+      if (ch === '"') { inQ = !inQ; continue; }
+      if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; } else cur += ch;
     }
-    cols.push(cur.trim()); return cols;
+    cols.push(cur.trim());
+    return cols;
   });
 }
 
 // Colunas: 0=data 1=hora 2=mac 3=c1 4=c2 5=c3 6=c4 7=presentes 8=repos 9=evento
 function groupByMac(rows) {
-  const map = {};
-  rows.forEach(r => {
-    const mac = (r[2]||'DESCONHECIDO').toUpperCase();
+  var map = {};
+  rows.forEach(function(r) {
+    var mac = (r[2] || 'DESCONHECIDO').toUpperCase();
     if (!map[mac]) map[mac] = [];
     map[mac].push(r);
   });
@@ -446,18 +489,47 @@ function groupByMac(rows) {
 }
 
 function parseTS(r) {
-  try { return new Date((r[0]||'') + ' ' + (r[1]||'')); } catch(e) { return null; }
+  try { return new Date((r[0] || '') + ' ' + (r[1] || '')); } catch(e) { return null; }
+}
+
+function sortedMacs(grouped) {
+  var macs = Object.keys(grouped);
+  macs.sort(function(a, b) {
+    var ai = deviceCache.findIndex(function(d) { return d.mac === a; });
+    var bi = deviceCache.findIndex(function(d) { return d.mac === b; });
+    if (ai === -1 && bi === -1) return 0;
+    if (ai === -1) return 1;
+    if (bi === -1) return -1;
+    return ai - bi;
+  });
+  return macs;
+}
+
+// ══════════════════════════════════════════════════════
+//  FLASH — feedback de atualização no card
+// ══════════════════════════════════════════════════════
+function flashCard(cardEl, presentes) {
+  cardEl.classList.remove('flash-updated', 'flash-warn', 'flash-danger');
+  void cardEl.offsetWidth; // reflow
+  if (presentes === 4)     cardEl.classList.add('flash-updated');
+  else if (presentes === 0) cardEl.classList.add('flash-danger');
+  else                     cardEl.classList.add('flash-warn');
+  setTimeout(function() {
+    cardEl.classList.remove('flash-updated', 'flash-warn', 'flash-danger');
+  }, 900);
 }
 
 // ══════════════════════════════════════════════════════
 //  SUMMARY
 // ══════════════════════════════════════════════════════
 function renderSummary(grouped) {
-  const macs = Object.keys(grouped);
-  let ok=0, warn=0, empty=0;
-  macs.forEach(mac => {
-    const p = parseInt(grouped[mac][grouped[mac].length-1][7])||0;
-    if (p===4) ok++; else if (p===0) empty++; else warn++;
+  var macs = Object.keys(grouped);
+  var ok = 0, warn = 0, empty = 0;
+  macs.forEach(function(mac) {
+    var p = parseInt(grouped[mac][grouped[mac].length - 1][7]) || 0;
+    if (p === 4) ok++;
+    else if (p === 0) empty++;
+    else warn++;
   });
   document.getElementById('sumTotal').textContent  = macs.length;
   document.getElementById('sumOk').textContent     = ok;
@@ -468,81 +540,104 @@ function renderSummary(grouped) {
 // ══════════════════════════════════════════════════════
 //  PALETE CARDS
 // ══════════════════════════════════════════════════════
-function renderPaletes(grouped) {
-  const grid  = document.getElementById('paleteGrid');
-  const empty = document.getElementById('emptyState');
-  const macs  = Object.keys(grouped);
+var ICON_CHECK = '<svg viewBox="0 0 14 14" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,7 5.5,10.5 12,3"/></svg>';
+var ICON_X     = '<svg viewBox="0 0 14 14" fill="none" stroke-width="2" stroke-linecap="round"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg>';
 
-  if (!macs.length) { empty.style.display='block'; return; }
+function renderPaletes(grouped) {
+  var grid  = document.getElementById('paleteGrid');
+  var empty = document.getElementById('emptyState');
+  var macs  = sortedMacs(grouped);
+
+  if (!macs.length) { empty.style.display = 'block'; return; }
   empty.style.display = 'none';
 
-  macs.sort((a,b) => {
-    const ai=deviceCache.findIndex(d=>d.mac===a), bi=deviceCache.findIndex(d=>d.mac===b);
-    if (ai===-1&&bi===-1) return 0; if (ai===-1) return 1; if (bi===-1) return -1; return ai-bi;
-  });
+  macs.forEach(function(mac, idx) {
+    var rows = grouped[mac];
+    var last = rows[rows.length - 1];
+    var info = deviceInfo(mac);
 
-  grid.querySelectorAll('.palete-card').forEach(el=>el.remove());
+    var c1 = parseInt(last[3]), c2 = parseInt(last[4]),
+        c3 = parseInt(last[5]), c4 = parseInt(last[6]);
+    var pres  = parseInt(last[7]) || 0;
+    var repos = parseInt(last[8]) || 0;
+    var macShort = mac.length === 12 ? mac.slice(0,4) + '…' + mac.slice(-4) : mac;
 
-  macs.forEach((mac, idx) => {
-    const rows = grouped[mac];
-    const last = rows[rows.length-1];
-    const info = deviceInfo(mac);
-
-    const c1=parseInt(last[3]), c2=parseInt(last[4]), c3=parseInt(last[5]), c4=parseInt(last[6]);
-    const repos = parseInt(last[8])||0;
-    const macShort = mac.length===12 ? mac.slice(0,4)+'…'+mac.slice(-4) : mac;
-
-    // Último dado recebido
-    const lastTs = parseTS(last);
-    const lastTsStr = lastTs
+    // Timestamps
+    var lastTs    = parseTS(last);
+    var lastTsStr = lastTs
       ? lastTs.toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'})
       : '—';
 
-    // Última reposição
-    const ultimaReposRow = rows.slice().reverse().find(r=>(r[9]||'').toLowerCase()==='reposto');
-    const ultimaReposTs  = ultimaReposRow
-      ? (() => { const t=parseTS(ultimaReposRow); return t ? t.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '—'; })()
-      : '—';
+    var ultimaReposRow = null;
+    for (var i = rows.length - 1; i >= 0; i--) {
+      if ((rows[i][9] || '').toLowerCase() === 'reposto') { ultimaReposRow = rows[i]; break; }
+    }
+    var ultimaReposTs = '—';
+    if (ultimaReposRow) {
+      var t = parseTS(ultimaReposRow);
+      if (t) ultimaReposTs = t.toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    }
 
+    // Classe de estado para borda esquerda
+    var stateClass = pres === 4 ? 'state-ok' : pres === 0 ? 'state-danger' : 'state-warn';
 
-    const card = document.createElement('div');
-    card.className = 'palete-card';
-    card.style.animationDelay = (idx*.07)+'s';
-    card.innerHTML = `
-      <div class="pc-header">
-        <div>
-          <div class="pc-name">${info.name}</div>
-          <div class="pc-mac">${macShort}</div>
-        </div>
-      </div>
-      ${info.product && info.product!=='—' ? `<div class="pc-product">${info.product}</div>` : ''}
-      <div class="pc-slots">
-        ${[c1,c2,c3,c4].map((v,i)=>`
-          <div class="slot ${v===0?'present':'absent'}">
-            <div class="slot-icon">
-              ${v===0
-                ? `<svg viewBox="0 0 14 14" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,7 5.5,10.5 12,3"/></svg>`
-                : `<svg viewBox="0 0 14 14" fill="none" stroke-width="2" stroke-linecap="round"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg>`
-              }
-            </div>
-            <div class="slot-label">C${i+1}</div>
-          </div>`).join('')}
-      </div>
-      <div class="pc-kpis">
-        <div class="kpi">
-          <div class="kpi-label">Total de reposições</div>
-          <div class="kpi-value mono-lg">${repos}</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi-label">Última reposição em</div>
-          <div class="kpi-value">${ultimaReposTs}</div>
-        </div>
-        <div class="kpi" style="grid-column:1/-1">
-          <div class="kpi-label">Última leitura recebida</div>
-          <div class="kpi-value">${lastTsStr}</div>
-        </div>
-      </div>\`;
-    grid.appendChild(card);
+    // Monta slots
+    var slotsHtml = [c1,c2,c3,c4].map(function(v, i) {
+      return '<div class="slot ' + (v === 0 ? 'present' : 'absent') + '">' +
+        '<div class="slot-icon">' + (v === 0 ? ICON_CHECK : ICON_X) + '</div>' +
+        '<div class="slot-label">C' + (i+1) + '</div>' +
+        '</div>';
+    }).join('');
+
+    var existingCard = document.getElementById('card-' + mac);
+
+    if (existingCard) {
+      // Atualiza card existente — verifica se houve mudança
+      var prevPres = prevStateMap[mac];
+      if (prevPres !== undefined && prevPres !== pres) {
+        flashCard(existingCard, pres);
+      }
+
+      // Atualiza slots
+      var slotEls = existingCard.querySelectorAll('.slot');
+      [c1,c2,c3,c4].forEach(function(v, i) {
+        slotEls[i].className = 'slot ' + (v === 0 ? 'present' : 'absent');
+        slotEls[i].querySelector('.slot-icon').innerHTML = v === 0 ? ICON_CHECK : ICON_X;
+      });
+
+      // Atualiza borda
+      existingCard.className = 'palete-card ' + stateClass;
+
+      // Atualiza KPIs
+      var kpiVals = existingCard.querySelectorAll('.kpi-value');
+      if (kpiVals[0]) kpiVals[0].textContent = repos;
+      if (kpiVals[1]) kpiVals[1].textContent = ultimaReposTs;
+      if (kpiVals[2]) kpiVals[2].textContent = lastTsStr;
+
+    } else {
+      // Cria novo card
+      var card = document.createElement('div');
+      card.className = 'palete-card ' + stateClass;
+      card.id = 'card-' + mac;
+      card.style.animationDelay = (idx * .07) + 's';
+      card.innerHTML =
+        '<div class="pc-header">' +
+          '<div>' +
+            '<div class="pc-name">' + info.name + '</div>' +
+            '<div class="pc-mac">' + macShort + '</div>' +
+          '</div>' +
+        '</div>' +
+        (info.product && info.product !== '—' ? '<div class="pc-product">' + info.product + '</div>' : '') +
+        '<div class="pc-slots">' + slotsHtml + '</div>' +
+        '<div class="pc-kpis">' +
+          '<div class="kpi"><div class="kpi-label">Total de reposições</div><div class="kpi-value mono-lg">' + repos + '</div></div>' +
+          '<div class="kpi"><div class="kpi-label">Última reposição em</div><div class="kpi-value">' + ultimaReposTs + '</div></div>' +
+          '<div class="kpi" style="grid-column:1/-1"><div class="kpi-label">Última leitura recebida</div><div class="kpi-value">' + lastTsStr + '</div></div>' +
+        '</div>';
+      grid.appendChild(card);
+    }
+
+    prevStateMap[mac] = pres;
   });
 }
 
@@ -550,37 +645,37 @@ function renderPaletes(grouped) {
 //  TABLE
 // ══════════════════════════════════════════════════════
 function populateTableSelect(grouped) {
-  const sel  = document.getElementById('tableSelect');
-  const prev = sel.value;
-  const macs = Object.keys(grouped);
-  sel.innerHTML = '<option value="__all__">Todos</option>'
-    + macs.map(m=>`<option value="${m}">${deviceInfo(m).name}</option>`).join('');
-  if (prev && macs.includes(prev)) sel.value = prev;
+  var sel  = document.getElementById('tableSelect');
+  var prev = sel.value;
+  var macs = Object.keys(grouped);
+  sel.innerHTML = '<option value="__all__">Todos os dispositivos</option>' +
+    macs.map(function(m) { return '<option value="' + m + '">' + deviceInfo(m).name + '</option>'; }).join('');
+  if (prev && macs.indexOf(prev) !== -1) sel.value = prev;
 }
 
 function updateTable() {
-  const sel     = document.getElementById('tableSelect').value;
-  const grouped = groupByMac(lastData);
-  const rows    = sel==='__all__' ? lastData : (grouped[sel]||[]);
-  const tbody   = document.getElementById('tableBody');
-  const recent  = rows.slice(-50).reverse();
+  var sel     = document.getElementById('tableSelect').value;
+  var grouped = groupByMac(lastData);
+  var rows    = sel === '__all__' ? lastData : (grouped[sel] || []);
+  var tbody   = document.getElementById('tableBody');
+  var recent  = rows.slice(-50).reverse();
 
   if (!recent.length) {
-    tbody.innerHTML = '<tr><td colspan="8" class="muted" style="text-align:center;padding:20px">sem dados</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" class="muted" style="text-align:center;padding:20px">Nenhum registro encontrado.</td></tr>';
     return;
   }
 
-  const fmt = v => `<td class="${v===0?'':'muted'}">${v===0?'●':'○'}</td>`;
-  tbody.innerHTML = recent.map(r => {
-    const info     = deviceInfo((r[2]||'').toUpperCase());
-    const dataHora = (r[0]||'').trim() + ' ' + (r[1]||'').trim();
-    return `<tr>
-      <td>${dataHora}</td>
-      <td>${info.name}</td>
-      <td class="muted">${info.product}</td>
-      ${fmt(parseInt(r[3]))}${fmt(parseInt(r[4]))}${fmt(parseInt(r[5]))}${fmt(parseInt(r[6]))}
-      <td>${r[8]||'0'}</td>
-    </tr>`;
+  var fmt = function(v) { return '<td class="' + (v === 0 ? '' : 'muted') + '">' + (v === 0 ? '●' : '○') + '</td>'; };
+  tbody.innerHTML = recent.map(function(r) {
+    var info     = deviceInfo((r[2] || '').toUpperCase());
+    var dataHora = (r[0] || '').trim() + ' ' + (r[1] || '').trim();
+    return '<tr>' +
+      '<td>' + dataHora + '</td>' +
+      '<td>' + info.name + '</td>' +
+      '<td class="muted">' + info.product + '</td>' +
+      fmt(parseInt(r[3])) + fmt(parseInt(r[4])) + fmt(parseInt(r[5])) + fmt(parseInt(r[6])) +
+      '<td>' + (r[8] || '0') + '</td>' +
+      '</tr>';
   }).join('');
 }
 
@@ -588,81 +683,60 @@ function updateTable() {
 //  ESTATÍSTICAS
 // ══════════════════════════════════════════════════════
 function calcStats(rows) {
-  // Eventos filtrados
-  const eventos = rows.filter(r => r[9] && r[9].trim() !== '');
+  var eventos = rows.filter(function(r) { return r[9] && r[9].trim() !== ''; });
 
-  // Total de reposições
-  const totalReposicoes = parseInt(rows[rows.length-1]?.[8]||'0');
+  var totalReposicoes = parseInt(rows[rows.length-1] ? rows[rows.length-1][8] : '0') || 0;
+  var totalVazio   = eventos.filter(function(r) { return (r[9]||'').toLowerCase() === 'vazio'; }).length;
+  var totalCritico = eventos.filter(function(r) { return (r[9]||'').toLowerCase() === 'critico'; }).length;
 
-  // Total de vezes vazio
-  const totalVazio = eventos.filter(r=>(r[9]||'').toLowerCase()==='vazio').length;
+  var tsRepostos = eventos
+    .filter(function(r) { return (r[9]||'').toLowerCase() === 'reposto'; })
+    .map(parseTS).filter(Boolean)
+    .sort(function(a,b) { return a-b; });
 
-  // Total de vezes crítico
-  const totalCritico = eventos.filter(r=>(r[9]||'').toLowerCase()==='critico').length;
-
-  // Timestamps de reposição
-  const tsRepostos = eventos
-    .filter(r=>(r[9]||'').toLowerCase()==='reposto')
-    .map(r=>parseTS(r))
-    .filter(Boolean)
-    .sort((a,b)=>a-b);
-
-  // Intervalo médio entre reposições (minutos)
-  let tempoMedioRepos = null;
+  var tempoMedioRepos = null;
   if (tsRepostos.length >= 2) {
-    let soma = 0;
-    for (let i=1; i<tsRepostos.length; i++) soma += (tsRepostos[i]-tsRepostos[i-1]);
-    tempoMedioRepos = Math.round(soma / (tsRepostos.length-1) / 60000);
+    var soma = 0;
+    for (var i = 1; i < tsRepostos.length; i++) soma += (tsRepostos[i] - tsRepostos[i-1]);
+    tempoMedioRepos = Math.round(soma / (tsRepostos.length - 1) / 60000);
   }
 
-  // Tempo decorrido desde a última reposição
-  let tempoDesdeUltimaRepos = null;
+  var tempoDesdeUltima = null;
   if (tsRepostos.length > 0) {
-    tempoDesdeUltimaRepos = Math.round((Date.now() - tsRepostos[tsRepostos.length-1]) / 60000);
+    tempoDesdeUltima = Math.round((Date.now() - tsRepostos[tsRepostos.length-1]) / 60000);
   }
 
-  // Tempo médio de reposição após alerta crítico (do evento crítico até próxima reposição)
-  const tsCriticos  = eventos.filter(r=>(r[9]||'').toLowerCase()==='critico').map(r=>parseTS(r)).filter(Boolean);
-  let tempoMedioRepoCritico = null;
-  const intervalos = [];
-  tsCriticos.forEach(tc => {
-    const proxRepo = tsRepostos.find(tr => tr > tc);
-    if (proxRepo) intervalos.push((proxRepo - tc) / 60000);
-  });
-  if (intervalos.length > 0) {
-    tempoMedioRepoCritico = Math.round(intervalos.reduce((a,b)=>a+b,0) / intervalos.length);
+  var tsCriticos = eventos.filter(function(r) { return (r[9]||'').toLowerCase() === 'critico'; }).map(parseTS).filter(Boolean);
+  var tsVazios   = eventos.filter(function(r) { return (r[9]||'').toLowerCase() === 'vazio';   }).map(parseTS).filter(Boolean);
+
+  function tempoMedioAteRepo(tsArray) {
+    var intervals = [];
+    tsArray.forEach(function(t) {
+      var prox = tsRepostos.find(function(tr) { return tr > t; });
+      if (prox) intervals.push((prox - t) / 60000);
+    });
+    return intervals.length ? Math.round(intervals.reduce(function(a,b){return a+b;},0) / intervals.length) : null;
   }
 
-  // Tempo médio de reposição após palete vazio
-  const tsVazios = eventos.filter(r=>(r[9]||'').toLowerCase()==='vazio').map(r=>parseTS(r)).filter(Boolean);
-  let tempoMedioRepoVazio = null;
-  const intervalosVazio = [];
-  tsVazios.forEach(tv => {
-    const proxRepo = tsRepostos.find(tr => tr > tv);
-    if (proxRepo) intervalosVazio.push((proxRepo - tv) / 60000);
-  });
-  if (intervalosVazio.length > 0) {
-    tempoMedioRepoVazio = Math.round(intervalosVazio.reduce((a,b)=>a+b,0) / intervalosVazio.length);
-  }
-
-  // Período total de monitoramento
-  const primeiro = parseTS(rows[0]);
-  const ultimo   = parseTS(rows[rows.length-1]);
-  let periodoStr = '—';
+  var primeiro = parseTS(rows[0]);
+  var ultimo   = parseTS(rows[rows.length-1]);
+  var periodoStr = '—';
   if (primeiro && ultimo) {
-    const diffMin = Math.round((ultimo - primeiro) / 60000);
-    periodoStr = diffMin < 60
-      ? diffMin + ' min'
-      : diffMin < 1440
-        ? Math.floor(diffMin/60) + 'h ' + (diffMin%60) + 'min'
-        : Math.floor(diffMin/1440) + 'd ' + Math.floor((diffMin%1440)/60) + 'h';
+    var diffMin = Math.round((ultimo - primeiro) / 60000);
+    periodoStr = diffMin < 60 ? diffMin + ' min'
+               : diffMin < 1440 ? Math.floor(diffMin/60) + 'h ' + (diffMin%60) + 'min'
+               : Math.floor(diffMin/1440) + 'd ' + Math.floor((diffMin%1440)/60) + 'h';
   }
 
   return {
-    totalReposicoes, totalVazio, totalCritico,
-    tempoMedioRepos, tempoDesdeUltimaRepos,
-    tempoMedioRepoCritico, tempoMedioRepoVazio,
-    periodoStr,
+    totalReposicoes: totalReposicoes,
+    totalVazio: totalVazio,
+    totalCritico: totalCritico,
+    tempoMedioRepos: tempoMedioRepos,
+    tempoDesdeUltima: tempoDesdeUltima,
+    tempoMedioCritico: tempoMedioAteRepo(tsCriticos),
+    tempoMedioVazio: tempoMedioAteRepo(tsVazios),
+    periodoStr: periodoStr,
     totalRegistros: rows.length
   };
 }
@@ -674,83 +748,49 @@ function fmtMin(min) {
 }
 
 function renderStats(rows) {
-  const grid    = document.getElementById('statsGrid');
-  const grouped = groupByMac(rows);
-  const macs    = Object.keys(grouped);
+  var grid    = document.getElementById('statsGrid');
+  var grouped = groupByMac(rows);
+  var macs    = sortedMacs(grouped);
 
   grid.innerHTML = '';
 
   if (!macs.length) {
-    grid.innerHTML = '<div class="empty-state">Sem dados para calcular estatísticas.</div>';
+    grid.innerHTML = '<div class="empty-state"><strong>Sem dados suficientes</strong>Aguarde leituras com eventos para calcular as estatísticas.</div>';
     return;
   }
 
-  macs.sort((a,b) => {
-    const ai=deviceCache.findIndex(d=>d.mac===a), bi=deviceCache.findIndex(d=>d.mac===b);
-    if (ai===-1&&bi===-1) return 0; if (ai===-1) return 1; if (bi===-1) return -1; return ai-bi;
-  });
+  macs.forEach(function(mac, idx) {
+    var info = deviceInfo(mac);
+    var s    = calcStats(grouped[mac]);
+    var macShort = mac.length === 12 ? mac.slice(0,4) + '…' + mac.slice(-4) : mac;
 
-  macs.forEach((mac, idx) => {
-    const rows  = grouped[mac];
-    const info  = deviceInfo(mac);
-    const s     = calcStats(rows);
-    const macShort = mac.length===12 ? mac.slice(0,4)+'…'+mac.slice(-4) : mac;
+    var warnClass = s.tempoDesdeUltima !== null && s.tempoDesdeUltima > 120 ? 'warn' : '';
 
-    const card = document.createElement('div');
+    var card = document.createElement('div');
     card.className = 'stat-card';
-    card.style.animationDelay = (idx*.07)+'s';
-    card.innerHTML = `
-      <div class="stat-card-header">
-        <div>
-          <div class="stat-card-name">${info.name}</div>
-          <div class="stat-card-product">${info.product !== '—' ? info.product : ''}</div>
-        </div>
-        <div class="stat-card-mac">${macShort}</div>
-      </div>
-
-      <div class="stat-rows">
-        <div class="stat-divider">Reposições</div>
-        <div class="stat-row">
-          <span class="stat-row-label">Total de reposições</span>
-          <span class="stat-row-value accent">${s.totalReposicoes}</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-row-label">Tempo médio entre reposições</span>
-          <span class="stat-row-value">${fmtMin(s.tempoMedioRepos)}</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-row-label">Tempo desde a última reposição</span>
-          <span class="stat-row-value ${s.tempoDesdeUltimaRepos > 120 ? 'warn' : ''}">${fmtMin(s.tempoDesdeUltimaRepos)}</span>
-        </div>
-
-        <div class="stat-divider">Alertas</div>
-        <div class="stat-row">
-          <span class="stat-row-label">Alertas de carga crítica emitidos</span>
-          <span class="stat-row-value warn">${s.totalCritico}</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-row-label">Alertas de palete vazio emitidos</span>
-          <span class="stat-row-value danger">${s.totalVazio}</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-row-label">Tempo médio para repor após crítico</span>
-          <span class="stat-row-value">${fmtMin(s.tempoMedioRepoCritico)}</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-row-label">Tempo médio para repor após vazio</span>
-          <span class="stat-row-value">${fmtMin(s.tempoMedioRepoVazio)}</span>
-        </div>
-
-        <div class="stat-divider">Monitoramento</div>
-        <div class="stat-row">
-          <span class="stat-row-label">Período monitorado</span>
-          <span class="stat-row-value">${s.periodoStr}</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-row-label">Leituras registradas na base</span>
-          <span class="stat-row-value">${s.totalRegistros.toLocaleString('pt-BR')}</span>
-        </div>
-      </div>`;
+    card.style.animationDelay = (idx * .07) + 's';
+    card.innerHTML =
+      '<div class="stat-card-header">' +
+        '<div>' +
+          '<div class="stat-card-name">' + info.name + '</div>' +
+          '<div class="stat-card-product">' + (info.product !== '—' ? info.product : '') + '</div>' +
+        '</div>' +
+        '<div class="stat-card-mac">' + macShort + '</div>' +
+      '</div>' +
+      '<div class="stat-rows">' +
+        '<div class="stat-divider">Reposições</div>' +
+        '<div class="stat-row"><span class="stat-row-label">Reposições realizadas</span><span class="stat-row-value accent">' + s.totalReposicoes + '</span></div>' +
+        '<div class="stat-row"><span class="stat-row-label">Intervalo médio entre reposições</span><span class="stat-row-value">' + fmtMin(s.tempoMedioRepos) + '</span></div>' +
+        '<div class="stat-row"><span class="stat-row-label">Tempo decorrido desde a última reposição</span><span class="stat-row-value ' + warnClass + '">' + fmtMin(s.tempoDesdeUltima) + '</span></div>' +
+        '<div class="stat-divider">Alertas</div>' +
+        '<div class="stat-row"><span class="stat-row-label">Alertas de carga crítica emitidos</span><span class="stat-row-value warn">' + s.totalCritico + '</span></div>' +
+        '<div class="stat-row"><span class="stat-row-label">Alertas de palete vazio emitidos</span><span class="stat-row-value danger">' + s.totalVazio + '</span></div>' +
+        '<div class="stat-row"><span class="stat-row-label">Tempo médio de reposição após crítico</span><span class="stat-row-value">' + fmtMin(s.tempoMedioCritico) + '</span></div>' +
+        '<div class="stat-row"><span class="stat-row-label">Tempo médio de reposição após vazio</span><span class="stat-row-value">' + fmtMin(s.tempoMedioVazio) + '</span></div>' +
+        '<div class="stat-divider">Monitoramento</div>' +
+        '<div class="stat-row"><span class="stat-row-label">Período total de monitoramento</span><span class="stat-row-value">' + s.periodoStr + '</span></div>' +
+        '<div class="stat-row"><span class="stat-row-label">Leituras registradas na base</span><span class="stat-row-value">' + s.totalRegistros.toLocaleString('pt-BR') + '</span></div>' +
+      '</div>';
     grid.appendChild(card);
   });
 }
@@ -761,15 +801,14 @@ function renderStats(rows) {
 function renderAll(rows) {
   if (!rows.length) return;
   lastData = rows;
-  const grouped = groupByMac(rows);
+  var grouped = groupByMac(rows);
   renderSummary(grouped);
   renderPaletes(grouped);
   populateTableSelect(grouped);
   updateTable();
-  // Atualiza stats se página estiver ativa
   if (document.getElementById('page-stats').classList.contains('active')) renderStats(rows);
   document.getElementById('lastUpdate').textContent =
-    'atualizado ' + new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    'atualizado ' + new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
 }
 
 // ══════════════════════════════════════════════════════
@@ -777,13 +816,13 @@ function renderAll(rows) {
 // ══════════════════════════════════════════════════════
 async function fetchData() {
   try {
-    const res  = await fetch(CSV_URL+'&t='+Date.now());
+    const res  = await fetch(CSV_URL + '&t=' + Date.now());
     const text = await res.text();
-    const rows = parseCSV(text).filter(r=>!isNaN(parseInt(r[7])));
+    const rows = parseCSV(text).filter(function(r) { return !isNaN(parseInt(r[7])); });
     if (rows.length) renderAll(rows);
   } catch(err) {
     console.error(err);
-    document.getElementById('lastUpdate').textContent = 'erro na conexão';
+    document.getElementById('lastUpdate').textContent = 'Erro na conexão';
   } finally {
     document.getElementById('loadingOverlay').classList.add('hidden');
   }
@@ -792,8 +831,8 @@ async function fetchData() {
 function manualRefresh() {
   const btn = document.getElementById('btnRefresh');
   btn.classList.add('spinning'); btn.disabled = true;
-  Promise.all([fetchData(), fetchDevices()]).finally(() => {
-    setTimeout(()=>{ btn.classList.remove('spinning'); btn.disabled=false; }, 600);
+  Promise.all([fetchData(), fetchDevices()]).finally(function() {
+    setTimeout(function() { btn.classList.remove('spinning'); btn.disabled = false; }, 600);
   });
 }
 
@@ -801,7 +840,7 @@ function manualRefresh() {
 //  INIT
 // ══════════════════════════════════════════════════════
 loadDeviceCache();
-Promise.all([fetchDevices(), fetchData()]).then(()=>renderAll(lastData));
+Promise.all([fetchDevices(), fetchData()]).then(function() { renderAll(lastData); });
 setInterval(fetchData, REFRESH_MS);
 </script>
 </body>
