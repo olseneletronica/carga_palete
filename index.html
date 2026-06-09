@@ -299,7 +299,7 @@
 </div>
 
 <script>
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbzCusfnjv3YnqlBXwfa8dOJ3VSDdYAxsIHUqoFT3bVWWDZjuVaLXswzo-axQGTjeA/exec';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbx3-oSMwFsA8ALT3vcKU7ZWjoSD1ExYO4uA3aBvkqBCyYZ8J02mYYjw3MBJtP5Lme4R/exec';
 const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vRAZD5ue759yWSG-rhT8pcyR1cLOK9ssciEPKoiR7hrhPpr2777ZtaxqxjEQqflXl63l-TDIzhqTvpA/pub?output=csv';
 const REFRESH_MS=60000;
 const LS_KEY='monitor_paletes_devices_v3';
@@ -773,6 +773,23 @@ function manualRefresh(){
 }
 
 // ── INIT ───────────────────────────────────────────────
+// Migração automática: v2 → v3 (adiciona campo store)
+(function migrateCache() {
+  var old = localStorage.getItem('monitor_paletes_devices_v2');
+  var cur = localStorage.getItem('monitor_paletes_devices_v3');
+  if (old && !cur) {
+    try {
+      var devices = JSON.parse(old);
+      // Garante que todos os dispositivos têm o campo store
+      devices = devices.map(function(d) {
+        return { mac: d.mac, name: d.name, product: d.product || '—', store: d.store || '' };
+      });
+      localStorage.setItem('monitor_paletes_devices_v3', JSON.stringify(devices));
+      console.log('Cache migrado de v2 para v3:', devices.length, 'dispositivos.');
+    } catch(e) { console.warn('Falha na migração de cache:', e); }
+  }
+})();
+
 loadDeviceCache();
 setTimeout(hideLoading,8000);
 Promise.all([fetchDevices(),fetchData()]).then(function(){renderAll(lastData);}).catch(function(e){console.error(e);}).finally(hideLoading);
