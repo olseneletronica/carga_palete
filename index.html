@@ -263,9 +263,9 @@
   <!-- SUMMARY -->
   <div class="summary-bar" id="summaryBar">
     <div class="summary-card"><div class="summary-label">Dispositivos</div><div class="summary-value" id="sumTotal">—</div></div>
-    <div class="summary-card"><div class="summary-label">Carga cheia</div><div class="summary-value ok" id="sumOk">—</div></div>
-    <div class="summary-card"><div class="summary-label">Carga baixa</div><div class="summary-value warn" id="sumWarn">—</div></div>
-    <div class="summary-card"><div class="summary-label">Offline</div><div class="summary-value off" id="sumOffline">—</div></div>
+    <div class="summary-card"><div class="summary-label">Todas as cargas</div><div class="summary-value ok" id="sumOk">—</div></div>
+    <div class="summary-card"><div class="summary-label">Carga parcial</div><div class="summary-value warn" id="sumWarn">—</div></div>
+    <div class="summary-card"><div class="summary-label">Sem carga</div><div class="summary-value danger" id="sumOffline">—</div></div>
   </div>
 
   <!-- PALETES -->
@@ -291,13 +291,11 @@
           <th>Dispositivo</th>
           <th>Produto</th>
           <th>C1</th><th>C2</th><th>C3</th><th>C4</th>
-          <th>Presentes</th>
           <th>Reposições</th>
-          <th>Evento</th>
         </tr>
       </thead>
       <tbody id="tableBody">
-        <tr><td colspan="10" class="muted" style="text-align:center;padding:24px">carregando...</td></tr>
+        <tr><td colspan="8" class="muted" style="text-align:center;padding:24px">carregando...</td></tr>
       </tbody>
     </table>
   </div>
@@ -460,17 +458,18 @@ function calcStatus(presentes) {
 // ══════════════════════════════════════════════════════
 function renderSummary(grouped) {
   const macs = Object.keys(grouped);
-  let ok=0, warn=0, offline=0;
+  let ok=0, warn=0, empty=0;
   macs.forEach(mac => {
-    if (isOffline(grouped[mac])) { offline++; return; }
     const last = grouped[mac][grouped[mac].length-1];
     const p    = parseInt(last[7])||0;
-    if (p===4) ok++; else warn++;
+    if (p===4) ok++;
+    else if (p===0) empty++;
+    else warn++;
   });
   document.getElementById('sumTotal').textContent   = macs.length;
   document.getElementById('sumOk').textContent      = ok;
   document.getElementById('sumWarn').textContent    = warn;
-  document.getElementById('sumOffline').textContent = offline;
+  document.getElementById('sumOffline').textContent = empty;
 }
 
 // ══════════════════════════════════════════════════════
@@ -506,23 +505,14 @@ function renderPaletes(grouped) {
     const ev    = (last[9]||'').toLowerCase();
     const status = offline ? 'offline' : calcStatus(pres);
 
-    const statusLabel = { cheio:'carga cheia', baixo:'carga baixa', vazio:'sem carga', parcial:'carga parcial', offline:'offline' }[status];
-    const presClass   = offline ? 'off' : { cheio:'accent', baixo:'warn', vazio:'danger', parcial:'warn' }[status];
-    const macShort    = mac.length===12 ? mac.slice(0,4)+'…'+mac.slice(-4) : mac;
-    const evText      = ev ? `último evento: ${ev} — ${last[0]} ${last[1]}` : '';
+    const macShort = mac.length===12 ? mac.slice(0,4)+'…'+mac.slice(-4) : mac;
 
     // Última reposição
     const ultimaRepos   = rows.slice().reverse().find(r=>(r[9]||'').toLowerCase()==='reposto');
     const ultimaReposTs = ultimaRepos ? ultimaRepos[0]+' '+ultimaRepos[1] : '—';
 
-    // Online/offline label
-    const onlineLabelClass = offline ? 'offline' : 'online';
-    const onlineLabelText  = offline ? 'offline' : 'online';
-
-    const slotClass = v => offline ? 'offline-slot' : (v===0 ? 'present' : 'absent');
-
     const card = document.createElement('div');
-    card.className = 'palete-card' + (offline ? ' offline' : '');
+    card.className = 'palete-card';
     card.style.animationDelay = (idx*.07)+'s';
     card.innerHTML = `
       <div class="pc-header">
@@ -530,36 +520,25 @@ function renderPaletes(grouped) {
           <div class="pc-name">${info.name}</div>
           <div class="pc-mac">${macShort}</div>
         </div>
-        <div class="pc-badges">
-          <span class="pc-status ${status}">
-            <span class="pc-status-dot${offline?'':' blink'}"></span>${statusLabel}
-          </span>
-          <span class="pc-online-badge ${onlineLabelClass}">${onlineLabelText}</span>
-        </div>
       </div>
       ${info.product && info.product!=='—' ? `<div class="pc-product">${info.product}</div>` : ''}
       <div class="pc-slots">
         ${[c1,c2,c3,c4].map((v,i)=>`
-          <div class="slot ${slotClass(v)}">
+          <div class="slot ${v===0?'present':'absent'}">
             <div class="slot-dot"></div>
             <div class="slot-label">C${i+1}</div>
           </div>`).join('')}
       </div>
       <div class="pc-kpis">
         <div class="kpi">
-          <div class="kpi-label">Carga total</div>
-          <div class="kpi-value ${presClass}">${offline?'—':pres+'/4'}</div>
-        </div>
-        <div class="kpi">
           <div class="kpi-label">Reposições</div>
           <div class="kpi-value">${repos}</div>
         </div>
-        <div class="kpi">
-          <div class="kpi-label">Última repos.</div>
+        <div class="kpi" style="grid-column:span 2">
+          <div class="kpi-label">Última reposição</div>
           <div class="kpi-value" style="font-size:12px;padding-top:2px">${ultimaReposTs}</div>
         </div>
-      </div>
-      ${evText ? `<div class="pc-evento">${evText}</div>` : ''}`;
+      </div>`;
     grid.appendChild(card);
   });
 }
@@ -590,7 +569,7 @@ function updateTable() {
   const recent  = rows.slice(-50).reverse();
 
   if (!recent.length) {
-    tbody.innerHTML = '<tr><td colspan="10" class="muted" style="text-align:center;padding:20px">sem dados</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" class="muted" style="text-align:center;padding:20px">sem dados</td></tr>';
     return;
   }
 
@@ -598,16 +577,13 @@ function updateTable() {
   tbody.innerHTML = recent.map(r => {
     const info    = deviceInfo((r[2]||'').toUpperCase());
     const dataHora = (r[0]||'').trim() + ' ' + (r[1]||'').trim();
-    const ev       = (r[9]||'').toLowerCase();
-    const rowClass = ev ? 'row-'+ev : '';
-    return `<tr class="${rowClass}">
+  
+    return `<tr>
       <td>${dataHora}</td>
       <td>${info.name}</td>
       <td class="muted">${info.product}</td>
       ${fmt(parseInt(r[3]))}${fmt(parseInt(r[4]))}${fmt(parseInt(r[5]))}${fmt(parseInt(r[6]))}
-      <td>${r[7]||'0'}</td>
       <td>${r[8]||'0'}</td>
-      <td>${badgeHtml(r[9])}</td>
     </tr>`;
   }).join('');
 }
