@@ -719,7 +719,22 @@ function renderCharts(rows){
     function evDataset(evPoints,color,label,order){
       var data=new Array(histPoints.length).fill(null);
       evPoints.forEach(function(p){var idx=nearestIdx(p.x);data[idx]=p.y;});
-      return{label:label,data:data,backgroundColor:color,borderColor:color,pointRadius:data.map(function(v){return v!==null?8:0;}),pointHoverRadius:data.map(function(v){return v!==null?10:0;}),type:'scatter',showLine:false,order:order};
+      return{
+        label:label,
+        data:data,
+        // Ponto sólido menor com borda branca fina — presença sem agressividade
+        backgroundColor:color,
+        borderColor:'#ffffff',
+        borderWidth:2,
+        pointRadius:data.map(function(v){return v!==null?5:0;}),
+        pointHoverRadius:data.map(function(v){return v!==null?7:0;}),
+        pointHoverBorderColor:color,
+        pointHoverBorderWidth:2,
+        pointHoverBackgroundColor:'#ffffff',
+        type:'scatter',
+        showLine:false,
+        order:order
+      };
     }
     var subText=[info.product!=='—'?info.product:'',info.store!=='—'?info.store:''].filter(Boolean).join(' · ');
     var canvasId='chart-'+mac;
@@ -738,10 +753,37 @@ function renderCharts(rows){
       '</div>';
     grid.appendChild(card);
     var ctx=document.getElementById(canvasId).getContext('2d');
+    // Detecta se período é < 24h para simplificar labels do eixo X
+    var spanMs = histPoints.length >= 2
+      ? (histPoints[histPoints.length-1].x - histPoints[0].x)
+      : 0;
+    var shortPeriod = spanMs < 86400000;
+
+    // Labels inteligentes: só hora se período < 24h, senão dd/MM HH:mm
+    var smartLabels = histPoints.map(function(p) {
+      if (!p.x) return '';
+      return shortPeriod
+        ? p.x.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})
+        : p.x.toLocaleString('pt-BR', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
+    });
+
+    // Máximo de ticks visíveis no eixo X — evita sobreposição
+    var maxTicks = Math.min(8, Math.max(4, Math.floor(histPoints.length / 10)));
+
     chartInstances[mac]=new Chart(ctx,{
       type:'line',
-      data:{labels:histLabels,datasets:[
-        {label:'Nível de carga',data:histValues,borderColor:'#c8cec9',borderWidth:1.5,pointRadius:0,fill:false,tension:0.2,order:4},
+      data:{labels:smartLabels,datasets:[
+        {
+          label:'Nível de carga',
+          data:histValues,
+          borderColor:'rgba(180,190,185,.5)',
+          borderWidth:1,
+          pointRadius:0,
+          fill:true,
+          backgroundColor:'rgba(180,190,185,.06)',
+          tension:0.15,
+          order:4
+        },
         evDataset(dataR,'#1a7a4a','Reposição',1),
         evDataset(dataC,'#b06a00','Carga crítica',2),
         evDataset(dataV,'#c0392b','Palete vazio',3)
@@ -751,13 +793,45 @@ function renderCharts(rows){
         plugins:{legend:{display:false},tooltip:{
           backgroundColor:'#fff',borderColor:'#e0e2dc',borderWidth:1,
           titleColor:'#7a8480',bodyColor:'#1a1c1a',
-          titleFont:{family:'DM Mono',size:10},bodyFont:{family:'DM Mono',size:12},
-          filter:function(item){return item.parsed.y!==null;},
-          callbacks:{title:function(i){return i[0].label||'';},label:function(i){if(i.parsed.y===null)return null;return ' '+i.dataset.label+': '+i.parsed.y+'/4 cargas';}}
+          padding:10,
+          titleFont:{family:'DM Mono',size:10},
+          bodyFont:{family:'DM Mono',size:12},
+          filter:function(item){return item.parsed.y!==null&&item.dataset.label!=='Nível de carga';},
+          callbacks:{
+            title:function(i){return i[0].label||'';},
+            label:function(i){
+              if(i.parsed.y===null)return null;
+              var labels={
+                'Reposição':'Reposição completa — '+i.parsed.y+'/4 cargas',
+                'Carga crítica':'Carga crítica — '+i.parsed.y+'/4 cargas',
+                'Palete vazio':'Palete vazio — 0/4 cargas'
+              };
+              return ' '+(labels[i.dataset.label]||i.dataset.label);
+            }
+          }
         }},
         scales:{
-          x:{ticks:{color:'#7a8480',font:{family:'DM Mono',size:9},maxTicksLimit:8,maxRotation:0,autoSkip:true},grid:{color:'#e8eae6'}},
-          y:{min:0,max:4,ticks:{color:'#7a8480',font:{family:'DM Mono',size:10},stepSize:1},grid:{color:'#e8eae6'}}
+          x:{
+            ticks:{
+              color:'#7a8480',
+              font:{family:'DM Mono',size:9},
+              maxTicksLimit:maxTicks,
+              maxRotation:0,
+              autoSkip:true,
+              autoSkipPadding:16
+            },
+            grid:{color:'rgba(224,226,220,.6)'}
+          },
+          y:{
+            min:0,max:4,
+            ticks:{
+              color:'#7a8480',
+              font:{family:'DM Mono',size:10},
+              stepSize:1,
+              callback:function(v){return v+'';}
+            },
+            grid:{color:'rgba(224,226,220,.6)'}
+          }
         }
       }
     });
