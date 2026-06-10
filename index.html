@@ -180,6 +180,20 @@
   @keyframes slide{to{left:100%;}}
   .loading-text{font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.1em;}
 
+  /* ADMIN */
+  .admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;}
+  .admin-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:14px;opacity:0;transform:translateY(8px);animation:fadeUp .4s ease forwards;}
+  .admin-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+  .admin-card-name{font-family:var(--font-sans);font-size:15px;font-weight:600;}
+  .admin-card-meta{font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-top:2px;}
+  .admin-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+  .admin-stat{background:var(--bg);border-radius:var(--radius);padding:10px 12px;}
+  .admin-stat-label{font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;}
+  .admin-stat-value{font-family:var(--font-mono);font-size:18px;font-weight:300;color:var(--text);}
+  .btn-reset{display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;background:transparent;border:1px solid rgba(192,57,43,.3);border-radius:var(--radius);padding:8px 14px;cursor:pointer;color:var(--danger);transition:background var(--tr),border-color var(--tr),box-shadow var(--tr);width:100%;justify-content:center;margin-top:4px;}
+  .btn-reset:hover{background:rgba(192,57,43,.07);border-color:var(--danger);box-shadow:0 0 0 3px rgba(192,57,43,.08);}
+  .btn-reset:disabled{opacity:.4;cursor:default;}
+
   @media(max-width:720px){
     header,.nav-tabs{padding-left:16px;padding-right:16px;}
     .page{padding:16px;gap:16px;}
@@ -257,6 +271,7 @@
   <button class="nav-tab active" onclick="showPage('monitor',this)">Monitor</button>
   <button class="nav-tab" onclick="showPage('stats',this)">Estatísticas</button>
   <button class="nav-tab" onclick="showPage('graficos',this)">Gráficos</button>
+  <button class="nav-tab" onclick="showPage('admin',this)">Administração</button>
 </nav>
 
 <!-- PAGE MONITOR -->
@@ -312,8 +327,45 @@
   </div>
 </div>
 
+<!-- PAGE ADMINISTRAÇÃO -->
+<div class="page" id="page-admin">
+  <div class="card" style="border-left:4px solid var(--danger);">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+      <div class="section-title" style="color:var(--danger);">Zona de Administração</div>
+    </div>
+    <p style="font-family:var(--font-mono);font-size:11px;color:var(--muted);line-height:1.7;">
+      As ações abaixo são <strong style="color:var(--danger)">irreversíveis</strong>.
+      Ao zerar o histórico de um palete, todas as leituras registradas na planilha serão
+      permanentemente apagadas e os contadores de reposição serão reiniciados.
+    </p>
+  </div>
+  <div class="admin-grid" id="adminGrid">
+    <div class="empty-state"><strong>Carregando dispositivos</strong>Aguarde...</div>
+  </div>
+</div>
+
+<!-- MODAL ZERAR HISTÓRICO -->
+<div class="modal-backdrop" id="resetBackdrop">
+  <div class="modal" style="max-width:460px;padding:32px;">
+    <div class="modal-header" style="margin-bottom:12px;">
+      <div class="modal-title" style="color:var(--danger);">Zerar histórico</div>
+    </div>
+    <p id="resetMsg" style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:8px;"></p>
+    <p style="font-family:var(--font-mono);font-size:11px;color:var(--danger);margin-bottom:28px;">
+      Esta ação não pode ser desfeita.
+    </p>
+    <div style="display:flex;justify-content:flex-end;gap:10px;">
+      <button class="btn secondary" onclick="closeReset()">Cancelar</button>
+      <button class="btn" id="resetOkBtn"
+        style="background:var(--danger);color:#fff;border-color:var(--danger);">
+        Zerar histórico
+      </button>
+    </div>
+  </div>
+</div>
+
 <script>
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbxD8LucIHm8EnEjT3jODg-Ih0dlRtIFmPKoq-EjL6Ss_kgB1HFBFE5weseHgemuhv9X/exec';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbykm47QyoUVerQ3kh3SSU9Leyob9MaQYxPL7vMKG6jqjN_IN-Lq7075AmPS2pQaFz8/exec';
 const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vRAZD5ue759yWSG-rhT8pcyR1cLOK9ssciEPKoiR7hrhPpr2777ZtaxqxjEQqflXl63l-TDIzhqTvpA/pub?output=csv';
 const REFRESH_MS=60000;
 const LS_KEY='monitor_paletes_devices_v3';
@@ -326,6 +378,108 @@ function showPage(name,btn){
   btn.classList.add('active');
   if(name==='stats')renderStats(lastData);
   if(name==='graficos')renderCharts(lastData);
+  if(name==='admin')renderAdmin(lastData);
+}
+
+// ── ADMINISTRAÇÃO ──────────────────────────────────────
+function renderAdmin(rows){
+  var grid=document.getElementById('adminGrid');
+  var grouped=groupByMac(rows);
+  var macs=sortedMacs(grouped);
+  grid.innerHTML='';
+  if(!macs.length){
+    grid.innerHTML='<div class="empty-state"><strong>Nenhum dispositivo encontrado</strong>Cadastre um palete para gerenciá-lo aqui.</div>';
+    return;
+  }
+  macs.forEach(function(mac,idx){
+    var rows=grouped[mac], info=deviceInfo(mac);
+    var last=latestRow(rows);
+    var repos=parseInt(last[8])||0;
+    var macShort=mac.length===12?mac.slice(0,4)+'…'+mac.slice(-4):mac;
+    var subText=[info.product&&info.product!=='—'?info.product:'', info.store&&info.store!=='—'?info.store:''].filter(Boolean).join(' · ');
+
+    var card=document.createElement('div');
+    card.className='admin-card';
+    card.style.animationDelay=(idx*.06)+'s';
+    card.innerHTML=
+      '<div class="admin-card-header">'+
+        '<div>'+
+          '<div class="admin-card-name">'+info.name+'</div>'+
+          '<div class="admin-card-meta">'+(subText||macShort)+'</div>'+
+        '</div>'+
+        '<div class="admin-card-meta">'+macShort+'</div>'+
+      '</div>'+
+      '<div class="admin-stats">'+
+        '<div class="admin-stat"><div class="admin-stat-label">Reposições</div><div class="admin-stat-value">'+repos+'</div></div>'+
+        '<div class="admin-stat"><div class="admin-stat-label">Leituras</div><div class="admin-stat-value">'+rows.length+'</div></div>'+
+        '<div class="admin-stat"><div class="admin-stat-label">Dispositivo</div><div class="admin-stat-value" style="font-size:11px;padding-top:4px">'+macShort+'</div></div>'+
+      '</div>'+
+      '<button class="btn-reset" id="btnReset-'+mac+'" onclick="confirmarReset(''+mac+'')">'+
+        '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l10 10M11 1L1 11"/></svg>'+
+        'Zerar histórico'+
+      '</button>';
+    grid.appendChild(card);
+  });
+}
+
+function confirmarReset(mac){
+  var info=deviceInfo(mac);
+  var nome=info.name||mac;
+  var loja=info.store&&info.store!=='—'?' — '+info.store:'';
+  document.getElementById('resetMsg').innerHTML=
+    'Você está prestes a apagar <strong>todo o histórico</strong> do palete <strong>'+nome+loja+'</strong>.<br><br>'+
+    'Isso inclui todas as leituras registradas na planilha e os contadores de reposição.';
+  document.getElementById('resetOkBtn').onclick=function(){
+    executarReset(mac);
+  };
+  document.getElementById('resetBackdrop').classList.add('open');
+}
+
+function closeReset(){
+  document.getElementById('resetBackdrop').classList.remove('open');
+}
+
+async function executarReset(mac){
+  var btn=document.getElementById('resetOkBtn');
+  var btnCard=document.getElementById('btnReset-'+mac);
+  btn.disabled=true;
+  btn.textContent='Zerando...';
+  if(btnCard)btnCard.disabled=true;
+
+  try{
+    var url=SCRIPT_URL+'?action=reset_mac&mac='+encodeURIComponent(mac)+'&t='+Date.now();
+    var res=await fetch(url);
+    var data=await res.json();
+
+    if(data.status==='ok'){
+      closeReset();
+      // Recarrega dados do CSV após zerar
+      await fetchData();
+      // Re-renderiza admin
+      renderAdmin(lastData);
+      // Feedback visual breve no card
+      var cardBtn=document.getElementById('btnReset-'+mac);
+      if(cardBtn){
+        cardBtn.textContent='Histórico zerado';
+        cardBtn.style.color='var(--accent)';
+        cardBtn.style.borderColor='var(--accent)';
+        setTimeout(function(){
+          if(cardBtn){
+            cardBtn.innerHTML='<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l10 10M11 1L1 11"/></svg> Zerar histórico';
+            cardBtn.style.color='';cardBtn.style.borderColor='';cardBtn.disabled=false;
+          }
+        },3000);
+      }
+    } else {
+      alert('Erro ao zerar: '+(data.message||'tente novamente.'));
+      btn.disabled=false;btn.textContent='Zerar histórico';
+      if(btnCard)btnCard.disabled=false;
+    }
+  }catch(e){
+    alert('Falha na conexão. Tente novamente.');
+    btn.disabled=false;btn.textContent='Zerar histórico';
+    if(btnCard)btnCard.disabled=false;
+  }
 }
 
 // ── DISPOSITIVOS ───────────────────────────────────────
@@ -427,6 +581,7 @@ async function saveDevices(){
 }
 document.getElementById('modalBackdrop').addEventListener('click',function(e){if(e.target===this)closeModal();});
 document.getElementById('confirmBackdrop').addEventListener('click',function(e){if(e.target===this)closeConfirm();});
+document.getElementById('resetBackdrop').addEventListener('click',function(e){if(e.target===this)closeReset();});
 
 // ── PARSE / AGRUPAMENTO ────────────────────────────────
 var lastData=[];
