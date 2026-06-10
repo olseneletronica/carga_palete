@@ -495,7 +495,10 @@ async function fetchDevices(){
     var res=await fetch(SCRIPT_URL+'?action=get_devices&t='+Date.now());
     var data=await res.json();
     if(Array.isArray(data))saveDeviceCache(data);
-  }catch(e){console.warn('Cache local em uso.',e);}
+  }catch(e){
+    console.warn('fetchDevices: usando cache local.',e);
+  }
+  return true; // Sempre resolve, nunca trava o Promise.all
 }
 
 // ── MODAL ──────────────────────────────────────────────
@@ -1058,12 +1061,17 @@ function renderAll(rows){
 function hideLoading(){document.getElementById('loadingOverlay').classList.add('hidden');}
 async function fetchData(){
   try{
-    var res=await fetch(CSV_URL+'&t='+Date.now(), {cache:'no-store', headers:{'Cache-Control':'no-cache, no-store, must-revalidate', 'Pragma':'no-cache'}});
+    var res=await fetch(CSV_URL+'&t='+Date.now(), {cache:'no-store'});
     var text=await res.text();
     var rows=parseCSV(text).filter(function(r){return !isNaN(parseInt(r[7]));});
     if(rows.length)renderAll(rows);
-  }catch(err){console.error(err);document.getElementById('lastUpdate').textContent='Erro na conexão';}
-  finally{hideLoading();}
+  }catch(err){
+    console.error('fetchData erro:',err);
+    document.getElementById('lastUpdate').textContent='Erro na conexão';
+  }finally{
+    hideLoading();
+  }
+  return true; // Sempre resolve
 }
 function manualRefresh(){
   var btn=document.getElementById('btnRefresh');
