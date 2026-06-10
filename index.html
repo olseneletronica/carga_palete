@@ -223,6 +223,20 @@
   </div>
 </div>
 
+<!-- MODAL CONFIRMAÇÃO EXCLUSÃO -->
+<div class="modal-backdrop" id="confirmBackdrop">
+  <div class="modal" style="max-width:420px;padding:32px;">
+    <div class="modal-header" style="margin-bottom:12px;">
+      <div class="modal-title">Remover palete</div>
+    </div>
+    <p id="confirmMsg" style="font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:28px;"></p>
+    <div style="display:flex;justify-content:flex-end;gap:10px;">
+      <button class="btn secondary" onclick="closeConfirm()">Cancelar</button>
+      <button class="btn" id="confirmOkBtn" style="background:var(--danger);color:#fff;border-color:var(--danger);">Remover</button>
+    </div>
+  </div>
+</div>
+
 <!-- HEADER -->
 <header>
   <div class="header-title"><div class="header-logo"></div>monitor / paletes</div>
@@ -338,12 +352,29 @@ function openModal(){
   setModalStatus('');
   document.getElementById('modalBackdrop').classList.add('open');
 }
+var _rowToRemove = null;
+
 function confirmarRemocao(btn){
   var row=btn.parentElement;
   var inputs=row.querySelectorAll('input');
-  var nome=inputs[1]?inputs[1].value.trim():'este palete';
-  var msg=nome?'Remover "'+nome+'" do cadastro?':'Remover este palete do cadastro?';
-  if(window.confirm(msg)) row.remove();
+  var nome=inputs[1]?inputs[1].value.trim():'';
+  var loja=inputs[3]?inputs[3].value.trim():'';
+  var desc=nome?(loja?'"'+nome+'" — '+loja:'"'+nome+'"'):'este palete';
+  document.getElementById('confirmMsg').textContent=
+    'Tem certeza que deseja remover '+desc+' do cadastro? Esta ação não pode ser desfeita.';
+  _rowToRemove=row;
+  document.getElementById('confirmOkBtn').onclick=function(){
+    _rowToRemove.remove();
+    closeConfirm();
+    // Auto-salva após confirmação
+    saveDevices();
+  };
+  document.getElementById('confirmBackdrop').classList.add('open');
+}
+
+function closeConfirm(){
+  document.getElementById('confirmBackdrop').classList.remove('open');
+  _rowToRemove=null;
 }
 
 function closeModal(){document.getElementById('modalBackdrop').classList.remove('open');}
@@ -395,6 +426,7 @@ async function saveDevices(){
   finally{btn.disabled=false;}
 }
 document.getElementById('modalBackdrop').addEventListener('click',function(e){if(e.target===this)closeModal();});
+document.getElementById('confirmBackdrop').addEventListener('click',function(e){if(e.target===this)closeConfirm();});
 
 // ── PARSE / AGRUPAMENTO ────────────────────────────────
 var lastData=[];
