@@ -17,25 +17,17 @@
   }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-size:14px;min-height:100vh;}
-
-  /* HEADER */
   header{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:50;box-shadow:var(--shadow);}
   .header-title{font-family:var(--font-mono);font-size:12px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:10px;}
   .header-logo{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px rgba(26,122,74,.15);}
   .header-right{display:flex;align-items:center;gap:10px;}
   .last-update{font-family:var(--font-mono);font-size:11px;color:var(--muted);}
-
-  /* NAV */
   .nav-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--surface);padding:0 32px;}
   .nav-tab{font-family:var(--font-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;padding:13px 20px;cursor:pointer;color:var(--muted);border:none;border-bottom:2px solid transparent;margin-bottom:-1px;background:none;transition:color var(--tr),border-color var(--tr);}
   .nav-tab:hover{color:var(--text);}
   .nav-tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:500;}
-
-  /* PAGES */
   .page{display:none;padding:28px 32px;}
   .page.active{display:flex;flex-direction:column;gap:24px;}
-
-  /* BUTTONS */
   .btn{display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;background:transparent;border:1px solid var(--border);border-radius:var(--radius);padding:8px 14px;cursor:pointer;color:var(--accent);transition:background var(--tr),border-color var(--tr),box-shadow var(--tr);}
   .btn:hover{background:rgba(26,122,74,.07);border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,122,74,.08);}
   .btn:active{opacity:.75;}
@@ -48,8 +40,6 @@
   .btn svg{transition:transform .5s;}
   .btn.spinning svg{animation:spin .6s linear infinite;}
   @keyframes spin{to{transform:rotate(360deg);}}
-
-  /* MODAL */
   .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:200;align-items:center;justify-content:center;}
   .modal-backdrop.open{display:flex;}
   .modal{background:var(--surface);border:1px solid var(--border);border-radius:8px;width:680px;max-width:96vw;padding:28px;box-shadow:0 12px 48px rgba(0,0,0,.14);max-height:88vh;overflow-y:auto;position:relative;}
@@ -71,8 +61,6 @@
   .modal-status{font-family:var(--font-mono);font-size:11px;color:var(--muted);min-height:16px;transition:color .3s;}
   .modal-status.ok{color:var(--accent);}
   .modal-status.error{color:var(--danger);}
-
-  /* ANIMATIONS */
   @keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
   @keyframes flash-ok{0%{box-shadow:0 0 0 0 rgba(26,122,74,.5)}60%{box-shadow:0 0 0 8px rgba(26,122,74,0)}100%{box-shadow:none}}
   @keyframes flash-warn{0%{box-shadow:0 0 0 0 rgba(176,106,0,.5)}60%{box-shadow:0 0 0 8px rgba(176,106,0,0)}100%{box-shadow:none}}
@@ -80,8 +68,6 @@
   .flash-ok{animation:flash-ok .9s ease-out forwards;}
   .flash-warn{animation:flash-warn .9s ease-out forwards;}
   .flash-danger{animation:flash-danger .9s ease-out forwards;}
-
-  /* LOJA GROUPS */
   .store-section{display:flex;flex-direction:column;gap:14px;}
   .store-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
   .store-title{font-family:var(--font-sans);font-size:16px;font-weight:600;color:var(--text);}
@@ -92,8 +78,6 @@
   .store-badge.danger{background:rgba(192,57,43,.1);color:var(--danger);}
   .store-badge-dot{width:5px;height:5px;border-radius:50%;background:currentColor;}
   .store-divider{border:none;border-top:1px solid var(--border);margin:8px 0 0;}
-
-  /* PALETE CARDS */
   .paletes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;}
   .palete-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--border);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow);opacity:0;transform:translateY(8px);animation:fadeUp .4s ease forwards;display:flex;flex-direction:column;gap:14px;transition:border-color var(--tr),box-shadow var(--tr);}
   .palete-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.09);}
@@ -105,9 +89,6 @@
   .pc-mac{font-family:var(--font-mono);font-size:10px;color:var(--muted);margin-top:3px;}
   .pc-meta{display:flex;flex-direction:column;gap:2px;margin-top:-8px;}
   .pc-product{font-family:var(--font-mono);font-size:11px;color:var(--muted);}
-  .pc-store{font-family:var(--font-mono);font-size:11px;color:var(--accent);font-weight:500;}
-
-  /* SLOTS */
   .pc-slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
   .slot{display:flex;flex-direction:column;align-items:center;gap:6px;padding:11px 4px;border-radius:var(--radius);border:1px solid var(--border);transition:border-color var(--tr),background var(--tr);}
   .slot.present{border-color:var(--accent);background:rgba(26,122,74,.06);}
@@ -117,21 +98,15 @@
   .slot.present .slot-icon svg{stroke:var(--accent);}
   .slot.absent .slot-icon svg{stroke:var(--danger);}
   .slot-label{font-family:var(--font-mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;}
-
-  /* KPIs */
   .pc-kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
   .kpi{background:var(--bg);border-radius:var(--radius);padding:11px 13px;}
   .kpi-label{font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px;}
   .kpi-value{font-family:var(--font-mono);font-size:13px;color:var(--text);line-height:1.3;}
   .kpi-value.mono-lg{font-size:24px;font-weight:300;}
-
-  /* FILTER BAR */
   .filter-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
   .filter-label{font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
   .filter-select{font-family:var(--font-mono);font-size:11px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:7px 10px;color:var(--text);cursor:pointer;transition:border-color var(--tr);}
   .filter-select:focus{outline:none;border-color:var(--accent);}
-
-  /* CARD / TABLE */
   .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px 26px;box-shadow:var(--shadow);}
   .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px;flex-wrap:wrap;}
   .section-title{font-family:var(--font-sans);font-size:13px;font-weight:600;color:var(--text);}
@@ -142,8 +117,6 @@
   tbody tr:hover{background:rgba(0,0,0,.02);}
   tbody td{font-family:var(--font-mono);font-size:11px;color:var(--text);padding:10px;white-space:nowrap;}
   tbody td.muted{color:var(--muted);}
-
-  /* STATS */
   .stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:20px;}
   .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;display:flex;flex-direction:column;gap:20px;box-shadow:var(--shadow);opacity:0;transform:translateY(8px);animation:fadeUp .4s ease forwards;}
   .stat-card-header{display:flex;align-items:flex-start;justify-content:space-between;}
@@ -159,8 +132,6 @@
   .stat-row-value.accent{color:var(--accent);}
   .stat-row-value.warn{color:var(--warn);}
   .stat-row-value.danger{color:var(--danger);}
-
-  /* CHARTS */
   .charts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(480px,1fr));gap:20px;}
   .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);opacity:0;transform:translateY(8px);animation:fadeUp .4s ease forwards;}
   .chart-card-name{font-family:var(--font-sans);font-size:15px;font-weight:600;color:var(--text);}
@@ -169,8 +140,6 @@
   .chart-legend{display:flex;gap:16px;margin-top:14px;flex-wrap:wrap;}
   .legend-item{display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:10px;color:var(--muted);}
   .legend-dot{width:8px;height:8px;border-radius:50%;}
-
-  /* EMPTY / LOADING */
   .empty-state{text-align:center;padding:60px 20px;font-family:var(--font-mono);font-size:12px;color:var(--muted);letter-spacing:.05em;line-height:2.4;}
   .empty-state strong{display:block;font-family:var(--font-sans);font-size:14px;color:var(--text);font-weight:600;margin-bottom:8px;}
   .loading-overlay{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:100;transition:opacity .5s;}
@@ -179,8 +148,6 @@
   .loading-bar::after{content:'';position:absolute;left:-40%;top:0;width:40%;height:100%;background:var(--accent);border-radius:2px;animation:slide 1s ease-in-out infinite;}
   @keyframes slide{to{left:100%;}}
   .loading-text{font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.1em;}
-
-  /* ADMIN */
   .admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;}
   .admin-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:14px;opacity:0;transform:translateY(8px);animation:fadeUp .4s ease forwards;}
   .admin-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
@@ -190,17 +157,10 @@
   .admin-stat{background:var(--bg);border-radius:var(--radius);padding:10px 12px;}
   .admin-stat-label{font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;}
   .admin-stat-value{font-family:var(--font-mono);font-size:18px;font-weight:300;color:var(--text);}
-  .btn-reset{display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;background:transparent;border:1px solid rgba(192,57,43,.3);border-radius:var(--radius);padding:8px 14px;cursor:pointer;color:var(--danger);transition:background var(--tr),border-color var(--tr),box-shadow var(--tr);width:100%;justify-content:center;margin-top:4px;}
-  .btn-reset:hover{background:rgba(192,57,43,.07);border-color:var(--danger);box-shadow:0 0 0 3px rgba(192,57,43,.08);}
+  .btn-reset{display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;background:transparent;border:1px solid rgba(192,57,43,.3);border-radius:var(--radius);padding:8px 14px;cursor:pointer;color:var(--danger);transition:background var(--tr),border-color var(--tr);width:100%;justify-content:center;margin-top:4px;}
+  .btn-reset:hover{background:rgba(192,57,43,.07);border-color:var(--danger);}
   .btn-reset:disabled{opacity:.4;cursor:default;}
-
-  @media(max-width:720px){
-    header,.nav-tabs{padding-left:16px;padding-right:16px;}
-    .page{padding:16px;gap:16px;}
-    .paletes-grid,.stats-grid,.charts-grid{grid-template-columns:1fr;}
-    .device-row{grid-template-columns:1fr 1fr;}
-    .device-row input:first-child{grid-column:1/-1;}
-  }
+  @media(max-width:720px){header,.nav-tabs{padding-left:16px;padding-right:16px;}.page{padding:16px;gap:16px;}.paletes-grid,.stats-grid,.charts-grid,.admin-grid{grid-template-columns:1fr;}.device-row{grid-template-columns:1fr 1fr;}.device-row input:first-child{grid-column:1/-1;}}
   @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
 </style>
 </head>
@@ -211,7 +171,7 @@
   <div class="loading-text">carregando dados</div>
 </div>
 
-<!-- MODAL -->
+<!-- MODAL DISPOSITIVOS -->
 <div class="modal-backdrop" id="modalBackdrop">
   <div class="modal">
     <div class="modal-header">
@@ -251,6 +211,21 @@
   </div>
 </div>
 
+<!-- MODAL ZERAR HISTÓRICO -->
+<div class="modal-backdrop" id="resetBackdrop">
+  <div class="modal" style="max-width:460px;padding:32px;">
+    <div class="modal-header" style="margin-bottom:12px;">
+      <div class="modal-title" style="color:var(--danger);">Zerar histórico</div>
+    </div>
+    <p id="resetMsg" style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:8px;"></p>
+    <p style="font-family:var(--font-mono);font-size:11px;color:var(--danger);margin-bottom:28px;">Esta ação não pode ser desfeita.</p>
+    <div style="display:flex;justify-content:flex-end;gap:10px;">
+      <button class="btn secondary" onclick="closeReset()">Cancelar</button>
+      <button class="btn" id="resetOkBtn" style="background:var(--danger);color:#fff;border-color:var(--danger);">Zerar histórico</button>
+    </div>
+  </div>
+</div>
+
 <!-- HEADER -->
 <header>
   <div class="header-title"><div class="header-logo"></div>monitor / paletes</div>
@@ -282,21 +257,13 @@
       <div class="section-title">Histórico de leituras</div>
       <div class="filter-bar">
         <span class="filter-label">Filtrar</span>
-        <select class="filter-select" id="tableStoreFilter" onchange="updateTable()">
-          <option value="__all__">Todas as lojas</option>
-        </select>
-        <select class="filter-select" id="tableSelect" onchange="updateTable()">
-          <option value="__all__">Todos os dispositivos</option>
-        </select>
+        <select class="filter-select" id="tableStoreFilter" onchange="updateTable()"><option value="__all__">Todas as lojas</option></select>
+        <select class="filter-select" id="tableSelect" onchange="updateTable()"><option value="__all__">Todos os dispositivos</option></select>
       </div>
     </div>
     <table>
-      <thead>
-        <tr><th>Data / Hora</th><th>Loja</th><th>Dispositivo</th><th>Produto</th><th>C1</th><th>C2</th><th>C3</th><th>C4</th><th>Reposições</th></tr>
-      </thead>
-      <tbody id="tableBody">
-        <tr><td colspan="9" class="muted" style="text-align:center;padding:24px">Aguardando dados...</td></tr>
-      </tbody>
+      <thead><tr><th>Data / Hora</th><th>Loja</th><th>Dispositivo</th><th>Produto</th><th>C1</th><th>C2</th><th>C3</th><th>C4</th><th>Reposições</th></tr></thead>
+      <tbody id="tableBody"><tr><td colspan="9" class="muted" style="text-align:center;padding:24px">Aguardando dados...</td></tr></tbody>
     </table>
   </div>
 </div>
@@ -305,26 +272,18 @@
 <div class="page" id="page-stats">
   <div class="filter-bar">
     <span class="filter-label">Filtrar por loja</span>
-    <select class="filter-select" id="statsStoreFilter" onchange="renderStats(lastData)">
-      <option value="__all__">Todas as lojas</option>
-    </select>
+    <select class="filter-select" id="statsStoreFilter" onchange="renderStats(lastData)"><option value="__all__">Todas as lojas</option></select>
   </div>
-  <div class="stats-grid" id="statsGrid">
-    <div class="empty-state"><strong>Carregando estatísticas</strong>Os dados aparecem assim que houver leituras suficientes.</div>
-  </div>
+  <div class="stats-grid" id="statsGrid"><div class="empty-state"><strong>Carregando estatísticas</strong>Os dados aparecem assim que houver leituras suficientes.</div></div>
 </div>
 
 <!-- PAGE GRÁFICOS -->
 <div class="page" id="page-graficos">
   <div class="filter-bar">
     <span class="filter-label">Filtrar por loja</span>
-    <select class="filter-select" id="chartsStoreFilter" onchange="renderCharts(lastData)">
-      <option value="__all__">Todas as lojas</option>
-    </select>
+    <select class="filter-select" id="chartsStoreFilter" onchange="renderCharts(lastData)"><option value="__all__">Todas as lojas</option></select>
   </div>
-  <div class="charts-grid" id="chartsGrid">
-    <div class="empty-state"><strong>Carregando gráficos</strong>Os gráficos aparecem assim que houver eventos registrados.</div>
-  </div>
+  <div class="charts-grid" id="chartsGrid"><div class="empty-state"><strong>Carregando gráficos</strong>Os gráficos aparecem assim que houver eventos registrados.</div></div>
 </div>
 
 <!-- PAGE ADMINISTRAÇÃO -->
@@ -335,33 +294,10 @@
     </div>
     <p style="font-family:var(--font-mono);font-size:11px;color:var(--muted);line-height:1.7;">
       As ações abaixo são <strong style="color:var(--danger)">irreversíveis</strong>.
-      Ao zerar o histórico de um palete, todas as leituras registradas na planilha serão
-      permanentemente apagadas e os contadores de reposição serão reiniciados.
+      Ao zerar o histórico de um palete, todas as leituras registradas na planilha serão permanentemente apagadas e os contadores de reposição serão reiniciados.
     </p>
   </div>
-  <div class="admin-grid" id="adminGrid">
-    <div class="empty-state"><strong>Carregando dispositivos</strong>Aguarde...</div>
-  </div>
-</div>
-
-<!-- MODAL ZERAR HISTÓRICO -->
-<div class="modal-backdrop" id="resetBackdrop">
-  <div class="modal" style="max-width:460px;padding:32px;">
-    <div class="modal-header" style="margin-bottom:12px;">
-      <div class="modal-title" style="color:var(--danger);">Zerar histórico</div>
-    </div>
-    <p id="resetMsg" style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:8px;"></p>
-    <p style="font-family:var(--font-mono);font-size:11px;color:var(--danger);margin-bottom:28px;">
-      Esta ação não pode ser desfeita.
-    </p>
-    <div style="display:flex;justify-content:flex-end;gap:10px;">
-      <button class="btn secondary" onclick="closeReset()">Cancelar</button>
-      <button class="btn" id="resetOkBtn"
-        style="background:var(--danger);color:#fff;border-color:var(--danger);">
-        Zerar histórico
-      </button>
-    </div>
-  </div>
+  <div class="admin-grid" id="adminGrid"><div class="empty-state"><strong>Carregando dispositivos</strong>Aguarde...</div></div>
 </div>
 
 <script>
@@ -370,7 +306,6 @@ const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vRAZD5ue759yWSG-r
 const REFRESH_MS=60000;
 const LS_KEY='monitor_paletes_devices_v3';
 
-// ── NAVEGAÇÃO ──────────────────────────────────────────
 function showPage(name,btn){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
   document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
@@ -387,36 +322,27 @@ function renderAdmin(rows){
   var grouped=groupByMac(rows);
   var macs=sortedMacs(grouped);
   grid.innerHTML='';
-  if(!macs.length){
-    grid.innerHTML='<div class="empty-state"><strong>Nenhum dispositivo encontrado</strong>Cadastre um palete para gerenciá-lo aqui.</div>';
-    return;
-  }
+  if(!macs.length){grid.innerHTML='<div class="empty-state"><strong>Nenhum dispositivo encontrado</strong>Cadastre um palete para gerenciá-lo aqui.</div>';return;}
   macs.forEach(function(mac,idx){
-    var rows=grouped[mac], info=deviceInfo(mac);
-    var last=latestRow(rows);
+    var macRows=grouped[mac],info=deviceInfo(mac),last=latestRow(macRows);
     var repos=parseInt(last[8])||0;
     var macShort=mac.length===12?mac.slice(0,4)+'…'+mac.slice(-4):mac;
-    var subText=[info.product&&info.product!=='—'?info.product:'', info.store&&info.store!=='—'?info.store:''].filter(Boolean).join(' · ');
-
+    var subText=[info.product&&info.product!=='—'?info.product:'',info.store&&info.store!=='—'?info.store:''].filter(Boolean).join(' · ');
     var card=document.createElement('div');
-    card.className='admin-card';
-    card.style.animationDelay=(idx*.06)+'s';
+    card.className='admin-card';card.style.animationDelay=(idx*.06)+'s';
     card.innerHTML=
-      '<div class="admin-card-header">'+
-        '<div>'+
-          '<div class="admin-card-name">'+info.name+'</div>'+
-          '<div class="admin-card-meta">'+(subText||macShort)+'</div>'+
-        '</div>'+
-        '<div class="admin-card-meta">'+macShort+'</div>'+
-      '</div>'+
+      '<div class="admin-card-header"><div>'+
+        '<div class="admin-card-name">'+info.name+'</div>'+
+        '<div class="admin-card-meta">'+(subText||macShort)+'</div>'+
+      '</div><div class="admin-card-meta">'+macShort+'</div></div>'+
       '<div class="admin-stats">'+
         '<div class="admin-stat"><div class="admin-stat-label">Reposições</div><div class="admin-stat-value">'+repos+'</div></div>'+
-        '<div class="admin-stat"><div class="admin-stat-label">Leituras</div><div class="admin-stat-value">'+rows.length+'</div></div>'+
+        '<div class="admin-stat"><div class="admin-stat-label">Leituras</div><div class="admin-stat-value">'+macRows.length+'</div></div>'+
         '<div class="admin-stat"><div class="admin-stat-label">Dispositivo</div><div class="admin-stat-value" style="font-size:11px;padding-top:4px">'+macShort+'</div></div>'+
       '</div>'+
-      '<button class="btn-reset" id="btnReset-'+mac+'" onclick="confirmarReset(''+mac+'')">'+
+      '<button class="btn-reset" id="btnReset-'+mac+'" onclick="confirmarReset(\''+mac+'\')">'+
         '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l10 10M11 1L1 11"/></svg>'+
-        'Zerar histórico'+
+        ' Zerar histórico'+
       '</button>';
     grid.appendChild(card);
   });
@@ -426,159 +352,70 @@ function confirmarReset(mac){
   var info=deviceInfo(mac);
   var nome=info.name||mac;
   var loja=info.store&&info.store!=='—'?' — '+info.store:'';
-  document.getElementById('resetMsg').innerHTML=
-    'Você está prestes a apagar <strong>todo o histórico</strong> do palete <strong>'+nome+loja+'</strong>.<br><br>'+
-    'Isso inclui todas as leituras registradas na planilha e os contadores de reposição.';
-  document.getElementById('resetOkBtn').onclick=function(){
-    executarReset(mac);
-  };
+  document.getElementById('resetMsg').innerHTML='Você está prestes a apagar <strong>todo o histórico</strong> do palete <strong>'+nome+loja+'</strong>.<br><br>Isso inclui todas as leituras registradas na planilha e os contadores de reposição.';
+  document.getElementById('resetOkBtn').onclick=function(){executarReset(mac);};
   document.getElementById('resetBackdrop').classList.add('open');
 }
-
-function closeReset(){
-  document.getElementById('resetBackdrop').classList.remove('open');
-}
+function closeReset(){document.getElementById('resetBackdrop').classList.remove('open');}
 
 async function executarReset(mac){
   var btn=document.getElementById('resetOkBtn');
   var btnCard=document.getElementById('btnReset-'+mac);
-  btn.disabled=true;
-  btn.textContent='Zerando...';
+  btn.disabled=true;btn.textContent='Zerando...';
   if(btnCard)btnCard.disabled=true;
-
   try{
-    var url=SCRIPT_URL+'?action=reset_mac&mac='+encodeURIComponent(mac)+'&t='+Date.now();
-    var res=await fetch(url);
+    var res=await fetch(SCRIPT_URL+'?action=reset_mac&mac='+encodeURIComponent(mac)+'&t='+Date.now());
     var data=await res.json();
-
     if(data.status==='ok'){
       closeReset();
-      // Recarrega dados do CSV após zerar
       await fetchData();
-      // Re-renderiza admin
       renderAdmin(lastData);
-      // Feedback visual breve no card
-      var cardBtn=document.getElementById('btnReset-'+mac);
-      if(cardBtn){
-        cardBtn.textContent='Histórico zerado';
-        cardBtn.style.color='var(--accent)';
-        cardBtn.style.borderColor='var(--accent)';
-        setTimeout(function(){
-          if(cardBtn){
-            cardBtn.innerHTML='<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l10 10M11 1L1 11"/></svg> Zerar histórico';
-            cardBtn.style.color='';cardBtn.style.borderColor='';cardBtn.disabled=false;
-          }
-        },3000);
-      }
-    } else {
-      alert('Erro ao zerar: '+(data.message||'tente novamente.'));
-      btn.disabled=false;btn.textContent='Zerar histórico';
-      if(btnCard)btnCard.disabled=false;
-    }
-  }catch(e){
-    alert('Falha na conexão. Tente novamente.');
-    btn.disabled=false;btn.textContent='Zerar histórico';
-    if(btnCard)btnCard.disabled=false;
-  }
+      var cb=document.getElementById('btnReset-'+mac);
+      if(cb){cb.textContent='Histórico zerado';cb.style.color='var(--accent)';cb.style.borderColor='var(--accent)';setTimeout(function(){if(cb){cb.innerHTML='<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l10 10M11 1L1 11"/></svg> Zerar histórico';cb.style.color='';cb.style.borderColor='';cb.disabled=false;}},3000);}
+    }else{alert('Erro ao zerar: '+(data.message||'tente novamente.'));btn.disabled=false;btn.textContent='Zerar histórico';if(btnCard)btnCard.disabled=false;}
+  }catch(e){alert('Falha na conexão.');btn.disabled=false;btn.textContent='Zerar histórico';if(btnCard)btnCard.disabled=false;}
 }
 
 // ── DISPOSITIVOS ───────────────────────────────────────
 var deviceCache=[];
 function loadDeviceCache(){try{deviceCache=JSON.parse(localStorage.getItem(LS_KEY))||[];}catch(e){deviceCache=[];}}
 function saveDeviceCache(d){deviceCache=d;localStorage.setItem(LS_KEY,JSON.stringify(d));}
-function deviceInfo(mac){
-  var f=deviceCache.find(function(d){return d.mac.toUpperCase()===mac.toUpperCase();});
-  return f||{name:mac,product:'—',store:'—'};
-}
+function deviceInfo(mac){var f=deviceCache.find(function(d){return d.mac.toUpperCase()===mac.toUpperCase();});return f||{name:mac,product:'—',store:'—'};}
 async function fetchDevices(){
-  try{
-    var res=await fetch(SCRIPT_URL+'?action=get_devices&t='+Date.now());
-    var data=await res.json();
-    if(Array.isArray(data))saveDeviceCache(data);
-  }catch(e){
-    console.warn('fetchDevices: usando cache local.',e);
-  }
-  return true; // Sempre resolve, nunca trava o Promise.all
+  try{var res=await fetch(SCRIPT_URL+'?action=get_devices&t='+Date.now());var data=await res.json();if(Array.isArray(data))saveDeviceCache(data);}
+  catch(e){console.warn('fetchDevices: cache local.',e);}
+  return true;
 }
 
 // ── MODAL ──────────────────────────────────────────────
-function openModal(){
-  var list=document.getElementById('deviceList');
-  list.innerHTML='';
-  deviceCache.forEach(function(d){addDeviceRow(d.mac,d.name,d.product,d.store);});
-  setModalStatus('');
-  document.getElementById('modalBackdrop').classList.add('open');
-}
-var _rowToRemove = null;
-
+function openModal(){var list=document.getElementById('deviceList');list.innerHTML='';deviceCache.forEach(function(d){addDeviceRow(d.mac,d.name,d.product,d.store);});setModalStatus('');document.getElementById('modalBackdrop').classList.add('open');}
+var _rowToRemove=null;
 function confirmarRemocao(btn){
-  var row=btn.parentElement;
-  var inputs=row.querySelectorAll('input');
-  var nome=inputs[1]?inputs[1].value.trim():'';
-  var loja=inputs[3]?inputs[3].value.trim():'';
+  var row=btn.parentElement;var inputs=row.querySelectorAll('input');
+  var nome=inputs[1]?inputs[1].value.trim():'';var loja=inputs[3]?inputs[3].value.trim():'';
   var desc=nome?(loja?'"'+nome+'" — '+loja:'"'+nome+'"'):'este palete';
-  document.getElementById('confirmMsg').textContent=
-    'Tem certeza que deseja remover '+desc+' do cadastro? Esta ação não pode ser desfeita.';
+  document.getElementById('confirmMsg').textContent='Tem certeza que deseja remover '+desc+' do cadastro? Esta ação não pode ser desfeita.';
   _rowToRemove=row;
-  document.getElementById('confirmOkBtn').onclick=function(){
-    _rowToRemove.remove();
-    closeConfirm();
-    // Auto-salva após confirmação
-    saveDevices();
-  };
+  document.getElementById('confirmOkBtn').onclick=function(){_rowToRemove.remove();closeConfirm();saveDevices();};
   document.getElementById('confirmBackdrop').classList.add('open');
 }
-
-function closeConfirm(){
-  document.getElementById('confirmBackdrop').classList.remove('open');
-  _rowToRemove=null;
-}
-
+function closeConfirm(){document.getElementById('confirmBackdrop').classList.remove('open');_rowToRemove=null;}
 function closeModal(){document.getElementById('modalBackdrop').classList.remove('open');}
 function addDeviceRow(mac,name,product,store){
   mac=mac||'';name=name||'';product=product||'';store=store||'';
-  var list=document.getElementById('deviceList');
-  var row=document.createElement('div');
-  row.className='device-row';
-  row.innerHTML=
-    '<input type="text" placeholder="A4CF1234ABCD" value="'+mac+'" maxlength="12" style="text-transform:uppercase">'+
-    '<input type="text" placeholder="Palete 1" value="'+name+'">'+
-    '<input type="text" placeholder="Bobinas" value="'+product+'">'+
-    '<input type="text" placeholder="Loja Centro" value="'+store+'">'+
-    '<button class="btn-remove" onclick="confirmarRemocao(this)" title="Remover">×</button>';
+  var list=document.getElementById('deviceList');var row=document.createElement('div');row.className='device-row';
+  row.innerHTML='<input type="text" placeholder="A4CF1234ABCD" value="'+mac+'" maxlength="12" style="text-transform:uppercase">'+'<input type="text" placeholder="Palete 1" value="'+name+'">'+'<input type="text" placeholder="Bobinas" value="'+product+'">'+'<input type="text" placeholder="Loja Centro" value="'+store+'">'+'<button class="btn-remove" onclick="confirmarRemocao(this)" title="Remover">×</button>';
   list.appendChild(row);
 }
-function setModalStatus(msg,type){
-  var el=document.getElementById('modalStatus');
-  el.textContent=msg;
-  el.className='modal-status'+(type?' '+type:'');
-}
+function setModalStatus(msg,type){var el=document.getElementById('modalStatus');el.textContent=msg;el.className='modal-status'+(type?' '+type:'');}
 async function saveDevices(){
-  var rows=document.querySelectorAll('#deviceList .device-row');
-  var devices=[];
-  rows.forEach(function(row){
-    var inputs=row.querySelectorAll('input');
-    var mac=inputs[0].value.trim().toUpperCase().replace(/[^A-F0-9]/g,'');
-    var name=inputs[1].value.trim();
-    var product=inputs[2].value.trim();
-    var store=inputs[3].value.trim();
-    if(mac.length===12&&name)devices.push({mac:mac,name:name,product:product,store:store});
-  });
-  var btn=document.getElementById('btnSave');
-  btn.disabled=true;setModalStatus('Salvando...','');
+  var rows=document.querySelectorAll('#deviceList .device-row');var devices=[];
+  rows.forEach(function(row){var inputs=row.querySelectorAll('input');var mac=inputs[0].value.trim().toUpperCase().replace(/[^A-F0-9]/g,'');var name=inputs[1].value.trim();var product=inputs[2].value.trim();var store=inputs[3].value.trim();if(mac.length===12&&name)devices.push({mac:mac,name:name,product:product,store:store});});
+  var btn=document.getElementById('btnSave');btn.disabled=true;setModalStatus('Salvando...','');
   try{
-    var res=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify(devices)});
-    var data=await res.json();
-    if(data.status==='ok'){
-      saveDeviceCache(devices);
-      setModalStatus('Cadastro salvo com sucesso.','ok');
-      setTimeout(function(){
-        closeModal();
-        // Remove todos os cards e seções existentes para forçar recriação com nomes atualizados
-        document.getElementById('storeGroups').innerHTML='';
-        if(lastData.length) renderAll(lastData);
-      },900);
-    }else{setModalStatus('Erro: '+data.message,'error');}
+    var res=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify(devices)});var data=await res.json();
+    if(data.status==='ok'){saveDeviceCache(devices);setModalStatus('Cadastro salvo com sucesso.','ok');setTimeout(function(){closeModal();document.getElementById('storeGroups').innerHTML='';if(lastData.length)renderAll(lastData);},900);}
+    else{setModalStatus('Erro: '+data.message,'error');}
   }catch(e){setModalStatus('Falha na conexão. Tente novamente.','error');}
   finally{btn.disabled=false;}
 }
@@ -586,299 +423,105 @@ document.getElementById('modalBackdrop').addEventListener('click',function(e){if
 document.getElementById('confirmBackdrop').addEventListener('click',function(e){if(e.target===this)closeConfirm();});
 document.getElementById('resetBackdrop').addEventListener('click',function(e){if(e.target===this)closeReset();});
 
-// ── PARSE / AGRUPAMENTO ────────────────────────────────
-var lastData=[];
-var prevStateMap={};
-function parseCSV(text){
-  return text.trim().split('\n').filter(function(l){return l.trim();}).map(function(line){
-    var cols=[],cur='',inQ=false;
-    for(var i=0;i<line.length;i++){var ch=line[i];if(ch==='"'){inQ=!inQ;continue;}if(ch===','&&!inQ){cols.push(cur.trim());cur='';}else cur+=ch;}
-    cols.push(cur.trim());return cols;
-  });
-}
-function groupByMac(rows){
-  var map={};
-  rows.forEach(function(r){var mac=(r[2]||'DESCONHECIDO').toUpperCase();if(!map[mac])map[mac]=[];map[mac].push(r);});
-  // Ordena cada grupo por timestamp real para garantir que o último seja o mais recente
-  Object.keys(map).forEach(function(mac){
-    map[mac].sort(function(a,b){
-      var ta=parseTS(a), tb=parseTS(b);
-      if(!ta&&!tb)return 0; if(!ta)return -1; if(!tb)return 1;
-      return ta-tb;
-    });
-  });
-  return map;
-}
-function parseTS(r){
-  try{
-    var d=new Date((r[0]||'')+' '+(r[1]||''));
-    return isNaN(d.getTime())?null:d;
-  }catch(e){return null;}
-}
-// Retorna a linha mais recente de um grupo por timestamp real
-function latestRow(rows){
-  var best=null, bestTs=null;
-  for(var i=rows.length-1;i>=0;i--){
-    var ts=parseTS(rows[i]);
-    if(ts&&(!bestTs||ts>bestTs)){bestTs=ts;best=rows[i];}
-  }
-  return best||rows[rows.length-1];
-}
+// ── DADOS ──────────────────────────────────────────────
+var lastData=[],prevStateMap={};
+function parseCSV(text){return text.trim().split('\n').filter(function(l){return l.trim();}).map(function(line){var cols=[],cur='',inQ=false;for(var i=0;i<line.length;i++){var ch=line[i];if(ch==='"'){inQ=!inQ;continue;}if(ch===','&&!inQ){cols.push(cur.trim());cur='';}else cur+=ch;}cols.push(cur.trim());return cols;});}
+function groupByMac(rows){var map={};rows.forEach(function(r){var mac=(r[2]||'DESCONHECIDO').toUpperCase();if(!map[mac])map[mac]=[];map[mac].push(r);});Object.keys(map).forEach(function(mac){map[mac].sort(function(a,b){var ta=parseTS(a),tb=parseTS(b);if(!ta&&!tb)return 0;if(!ta)return -1;if(!tb)return 1;return ta-tb;});});return map;}
+function parseTS(r){try{var d=new Date((r[0]||'')+' '+(r[1]||''));return isNaN(d.getTime())?null:d;}catch(e){return null;}}
+function latestRow(rows){var best=null,bestTs=null;for(var i=rows.length-1;i>=0;i--){var ts=parseTS(rows[i]);if(ts&&(!bestTs||ts>bestTs)){bestTs=ts;best=rows[i];}}return best||rows[rows.length-1];}
+function sortedMacs(grouped){var macs=Object.keys(grouped);macs.sort(function(a,b){var ai=deviceCache.findIndex(function(d){return d.mac===a;});var bi=deviceCache.findIndex(function(d){return d.mac===b;});if(ai===-1&&bi===-1)return 0;if(ai===-1)return 1;if(bi===-1)return -1;return ai-bi;});return macs;}
+function allStores(grouped){var stores=[];sortedMacs(grouped).forEach(function(mac){var s=deviceInfo(mac).store||'—';if(stores.indexOf(s)===-1)stores.push(s);});return stores;}
+function populateStoreFilters(grouped){var stores=allStores(grouped);['tableStoreFilter','statsStoreFilter','chartsStoreFilter'].forEach(function(id){var sel=document.getElementById(id);if(!sel)return;var prev=sel.value;sel.innerHTML='<option value="__all__">Todas as lojas</option>'+stores.map(function(s){return '<option value="'+s+'">'+s+'</option>';}).join('');if(prev&&stores.indexOf(prev)!==-1)sel.value=prev;});}
+function flashCard(el,pres){el.classList.remove('flash-ok','flash-warn','flash-danger');void el.offsetWidth;if(pres===4)el.classList.add('flash-ok');else if(pres===0)el.classList.add('flash-danger');else el.classList.add('flash-warn');setTimeout(function(){el.classList.remove('flash-ok','flash-warn','flash-danger');},1000);}
 
-function sortedMacs(grouped){
-  var macs=Object.keys(grouped);
-  macs.sort(function(a,b){
-    var ai=deviceCache.findIndex(function(d){return d.mac===a;});
-    var bi=deviceCache.findIndex(function(d){return d.mac===b;});
-    if(ai===-1&&bi===-1)return 0;if(ai===-1)return 1;if(bi===-1)return -1;return ai-bi;
-  });
-  return macs;
-}
-
-// Retorna lista única de lojas dos dispositivos com dados
-function allStores(grouped){
-  var stores=[];
-  sortedMacs(grouped).forEach(function(mac){
-    var s=deviceInfo(mac).store||'—';
-    if(stores.indexOf(s)===-1)stores.push(s);
-  });
-  return stores;
-}
-
-// Popula selects de filtro de loja
-function populateStoreFilters(grouped){
-  var stores=allStores(grouped);
-  var selectIds=['tableStoreFilter','statsStoreFilter','chartsStoreFilter'];
-  selectIds.forEach(function(id){
-    var sel=document.getElementById(id);
-    if(!sel)return;
-    var prev=sel.value;
-    sel.innerHTML='<option value="__all__">Todas as lojas</option>'+
-      stores.map(function(s){return '<option value="'+s+'">'+s+'</option>';}).join('');
-    if(prev&&stores.indexOf(prev)!==-1)sel.value=prev;
-  });
-}
-
-// ── FLASH ──────────────────────────────────────────────
-function flashCard(el,pres){
-  el.classList.remove('flash-ok','flash-warn','flash-danger');
-  void el.offsetWidth;
-  if(pres===4)el.classList.add('flash-ok');
-  else if(pres===0)el.classList.add('flash-danger');
-  else el.classList.add('flash-warn');
-  setTimeout(function(){el.classList.remove('flash-ok','flash-warn','flash-danger');},1000);
-}
-
-// ── MONITOR — grupos por loja ──────────────────────────
+// ── MONITOR ────────────────────────────────────────────
 var ICON_CHECK='<svg viewBox="0 0 14 14" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,7 5.5,10.5 12,3"/></svg>';
 var ICON_X='<svg viewBox="0 0 14 14" fill="none" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg>';
 
 function renderMonitor(grouped){
-  var container=document.getElementById('storeGroups');
-  var macs=sortedMacs(grouped);
-
-  // Agrupa MACs por loja
-  var storeMap={};
-  macs.forEach(function(mac){
-    var store=deviceInfo(mac).store||'—';
-    if(!storeMap[store])storeMap[store]=[];
-    storeMap[store].push(mac);
-  });
-
-  // Remove cards de MACs que sumiram
-  document.querySelectorAll('.palete-card').forEach(function(el){
-    if(macs.indexOf(el.id.replace('card-',''))===-1)el.remove();
-  });
-
-  var stores=Object.keys(storeMap);
-  var existingSections={};
+  var container=document.getElementById('storeGroups');var macs=sortedMacs(grouped);
+  var storeMap={};macs.forEach(function(mac){var store=deviceInfo(mac).store||'—';if(!storeMap[store])storeMap[store]=[];storeMap[store].push(mac);});
+  document.querySelectorAll('.palete-card').forEach(function(el){if(macs.indexOf(el.id.replace('card-',''))===-1)el.remove();});
+  var stores=Object.keys(storeMap),existingSections={};
   container.querySelectorAll('.store-section').forEach(function(s){existingSections[s.dataset.store]=s;});
-
   stores.forEach(function(store,si){
-    var storeMacs=storeMap[store];
-    var ok=0,warn=0,danger=0;
-    storeMacs.forEach(function(mac){
-      var p=parseInt(latestRow(grouped[mac])[7])||0;
-      if(p===4)ok++;else if(p===0)danger++;else warn++;
-    });
-
+    var storeMacs=storeMap[store],ok=0,warn=0,danger=0;
+    storeMacs.forEach(function(mac){var p=parseInt(latestRow(grouped[mac])[7])||0;if(p===4)ok++;else if(p===0)danger++;else warn++;});
     var section=existingSections[store];
-    if(!section){
-      section=document.createElement('div');
-      section.className='store-section';
-      section.dataset.store=store;
-      section.style.animationDelay=(si*.08)+'s';
-      section.innerHTML=
-        '<div class="store-header">'+
-          '<div class="store-title">'+store+'</div>'+
-          '<div class="store-badges" id="badges-'+encodeURIComponent(store)+'"></div>'+
-        '</div>'+
-        '<div class="paletes-grid" id="grid-'+encodeURIComponent(store)+'"></div>'+
-        '<hr class="store-divider">';
-      container.appendChild(section);
-    }
-
-    // Atualiza badges
+    if(!section){section=document.createElement('div');section.className='store-section';section.dataset.store=store;section.style.animationDelay=(si*.08)+'s';section.innerHTML='<div class="store-header"><div class="store-title">'+store+'</div><div class="store-badges" id="badges-'+encodeURIComponent(store)+'"></div></div><div class="paletes-grid" id="grid-'+encodeURIComponent(store)+'"></div><hr class="store-divider">';container.appendChild(section);}
     var badgesEl=document.getElementById('badges-'+encodeURIComponent(store));
-    if(badgesEl){
-      var b='';
-      if(ok>0)b+='<span class="store-badge ok"><span class="store-badge-dot"></span>'+ok+' com carga</span>';
-      if(warn>0)b+='<span class="store-badge warn"><span class="store-badge-dot"></span>'+warn+' parcial</span>';
-      if(danger>0)b+='<span class="store-badge danger"><span class="store-badge-dot"></span>'+danger+' sem carga</span>';
-      badgesEl.innerHTML=b;
-    }
-
-    // Renderiza cards dentro do grid da loja
-    var grid=document.getElementById('grid-'+encodeURIComponent(store));
-    if(!grid)return;
-
+    if(badgesEl){var b='';if(ok>0)b+='<span class="store-badge ok"><span class="store-badge-dot"></span>'+ok+' com carga</span>';if(warn>0)b+='<span class="store-badge warn"><span class="store-badge-dot"></span>'+warn+' parcial</span>';if(danger>0)b+='<span class="store-badge danger"><span class="store-badge-dot"></span>'+danger+' sem carga</span>';badgesEl.innerHTML=b;}
+    var grid=document.getElementById('grid-'+encodeURIComponent(store));if(!grid)return;
     storeMacs.forEach(function(mac,idx){
       var rows=grouped[mac],last=latestRow(rows),info=deviceInfo(mac);
       var c1=parseInt(last[3]),c2=parseInt(last[4]),c3=parseInt(last[5]),c4=parseInt(last[6]);
       var pres=parseInt(last[7])||0,repos=parseInt(last[8])||0;
       var macShort=mac.length===12?mac.slice(0,4)+'…'+mac.slice(-4):mac;
       var stateClass=pres===4?'state-ok':pres===0?'state-danger':'state-warn';
-
       var lastTs=parseTS(last);
       var lastTsStr=lastTs?lastTs.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'}):'—';
-
-      var ultimaReposRow=null;
-      for(var i=rows.length-1;i>=0;i--){if((rows[i][9]||'').toLowerCase()==='reposto'){ultimaReposRow=rows[i];break;}}
-      var ultimaReposTs='—';
-      if(ultimaReposRow){var t=parseTS(ultimaReposRow);if(t)ultimaReposTs=t.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});}
-
-      var slotsHtml=[c1,c2,c3,c4].map(function(v,i){
-        return '<div class="slot '+(v===0?'present':'absent')+'">' +
-          '<div class="slot-icon">'+(v===0?ICON_CHECK:ICON_X)+'</div>' +
-          '<div class="slot-label">C'+(i+1)+'</div></div>';
-      }).join('');
-
+      var ultimaReposRow=null;for(var i=rows.length-1;i>=0;i--){if((rows[i][9]||'').toLowerCase()==='reposto'){ultimaReposRow=rows[i];break;}}
+      var ultimaReposTs='—';if(ultimaReposRow){var t=parseTS(ultimaReposRow);if(t)ultimaReposTs=t.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});}
+      var slotsHtml=[c1,c2,c3,c4].map(function(v,i){return '<div class="slot '+(v===0?'present':'absent')+'"><div class="slot-icon">'+(v===0?ICON_CHECK:ICON_X)+'</div><div class="slot-label">C'+(i+1)+'</div></div>';}).join('');
       var existing=document.getElementById('card-'+mac);
       if(existing){
-        var prev=prevStateMap[mac];
-        if(prev!==undefined&&prev!==pres)flashCard(existing,pres);
-        var slotEls=existing.querySelectorAll('.slot');
-        [c1,c2,c3,c4].forEach(function(v,i){
-          slotEls[i].className='slot '+(v===0?'present':'absent');
-          slotEls[i].querySelector('.slot-icon').innerHTML=v===0?ICON_CHECK:ICON_X;
-        });
+        var prev=prevStateMap[mac];if(prev!==undefined&&prev!==pres)flashCard(existing,pres);
+        var slotEls=existing.querySelectorAll('.slot');[c1,c2,c3,c4].forEach(function(v,i){slotEls[i].className='slot '+(v===0?'present':'absent');slotEls[i].querySelector('.slot-icon').innerHTML=v===0?ICON_CHECK:ICON_X;});
         existing.className='palete-card '+stateClass;
-        var kpiVals=existing.querySelectorAll('.kpi-value');
-        if(kpiVals[0])kpiVals[0].textContent=repos;
-        if(kpiVals[1])kpiVals[1].textContent=ultimaReposTs;
-        if(kpiVals[2])kpiVals[2].textContent=lastTsStr;
-        // Move para grid correto se loja mudou
+        var kpiVals=existing.querySelectorAll('.kpi-value');if(kpiVals[0])kpiVals[0].textContent=repos;if(kpiVals[1])kpiVals[1].textContent=ultimaReposTs;if(kpiVals[2])kpiVals[2].textContent=lastTsStr;
         if(existing.parentElement!==grid)grid.appendChild(existing);
-      } else {
-        var card=document.createElement('div');
-        card.className='palete-card '+stateClass;
-        card.id='card-'+mac;
-        card.style.animationDelay=(idx*.07)+'s';
-        card.innerHTML=
-          '<div class="pc-header"><div>'+
-            '<div class="pc-name">'+info.name+'</div>'+
-            '<div class="pc-mac">'+macShort+'</div>'+
-          '</div></div>'+
-          '<div class="pc-meta">'+
-            (info.product&&info.product!=='—'?'<div class="pc-product">'+info.product+'</div>':'')+
-          '</div>'+
-          '<div class="pc-slots">'+slotsHtml+'</div>'+
-          '<div class="pc-kpis">'+
-            '<div class="kpi"><div class="kpi-label">Total de reposições</div><div class="kpi-value mono-lg">'+repos+'</div></div>'+
-            '<div class="kpi"><div class="kpi-label">Última reposição em</div><div class="kpi-value">'+ultimaReposTs+'</div></div>'+
-            '<div class="kpi" style="grid-column:1/-1"><div class="kpi-label">Última leitura recebida</div><div class="kpi-value">'+lastTsStr+'</div></div>'+
-          '</div>';
+      }else{
+        var card=document.createElement('div');card.className='palete-card '+stateClass;card.id='card-'+mac;card.style.animationDelay=(idx*.07)+'s';
+        card.innerHTML='<div class="pc-header"><div><div class="pc-name">'+info.name+'</div><div class="pc-mac">'+macShort+'</div></div></div>'+(info.product&&info.product!=='—'?'<div class="pc-meta"><div class="pc-product">'+info.product+'</div></div>':'')+'<div class="pc-slots">'+slotsHtml+'</div><div class="pc-kpis"><div class="kpi"><div class="kpi-label">Total de reposições</div><div class="kpi-value mono-lg">'+repos+'</div></div><div class="kpi"><div class="kpi-label">Última reposição em</div><div class="kpi-value">'+ultimaReposTs+'</div></div><div class="kpi" style="grid-column:1/-1"><div class="kpi-label">Última leitura recebida</div><div class="kpi-value">'+lastTsStr+'</div></div></div>';
         grid.appendChild(card);
       }
       prevStateMap[mac]=pres;
     });
   });
-
-  // Remove seções de lojas que não existem mais
-  Object.keys(existingSections).forEach(function(store){
-    if(!storeMap[store])existingSections[store].remove();
-  });
+  Object.keys(existingSections).forEach(function(store){if(!storeMap[store])existingSections[store].remove();});
 }
 
 // ── TABLE ──────────────────────────────────────────────
-function populateDeviceFilter(grouped){
-  var sel=document.getElementById('tableSelect'),prev=sel.value,macs=Object.keys(grouped);
-  sel.innerHTML='<option value="__all__">Todos os dispositivos</option>'+
-    macs.map(function(m){return '<option value="'+m+'">'+deviceInfo(m).name+'</option>';}).join('');
-  if(prev&&macs.indexOf(prev)!==-1)sel.value=prev;
-}
+function populateDeviceFilter(grouped){var sel=document.getElementById('tableSelect'),prev=sel.value,macs=Object.keys(grouped);sel.innerHTML='<option value="__all__">Todos os dispositivos</option>'+macs.map(function(m){return '<option value="'+m+'">'+deviceInfo(m).name+'</option>';}).join('');if(prev&&macs.indexOf(prev)!==-1)sel.value=prev;}
 function updateTable(){
-  var storeSel=document.getElementById('tableStoreFilter').value;
-  var devSel=document.getElementById('tableSelect').value;
-  var grouped=groupByMac(lastData);
+  var storeSel=document.getElementById('tableStoreFilter').value,devSel=document.getElementById('tableSelect').value;
   var rows=lastData;
-
-  if(storeSel!=='__all__'){
-    rows=rows.filter(function(r){return deviceInfo((r[2]||'').toUpperCase()).store===storeSel;});
-  }
-  if(devSel!=='__all__'){
-    rows=rows.filter(function(r){return (r[2]||'').toUpperCase()===devSel;});
-  }
-
-  var tbody=document.getElementById('tableBody');
-  var recent=rows.slice(-50).reverse();
+  if(storeSel!=='__all__')rows=rows.filter(function(r){return deviceInfo((r[2]||'').toUpperCase()).store===storeSel;});
+  if(devSel!=='__all__')rows=rows.filter(function(r){return (r[2]||'').toUpperCase()===devSel;});
+  var tbody=document.getElementById('tableBody'),recent=rows.slice(-50).reverse();
   if(!recent.length){tbody.innerHTML='<tr><td colspan="9" class="muted" style="text-align:center;padding:20px">Nenhum registro encontrado.</td></tr>';return;}
   var fmt=function(v){return '<td class="'+(v===0?'':'muted')+'">'+(v===0?'●':'○')+'</td>';};
-  tbody.innerHTML=recent.map(function(r){
-    var info=deviceInfo((r[2]||'').toUpperCase());
-    var dh=(r[0]||'').trim()+' '+(r[1]||'').trim();
-    return '<tr><td>'+dh+'</td><td class="muted">'+(info.store||'—')+'</td><td>'+info.name+'</td><td class="muted">'+info.product+'</td>'+
-      fmt(parseInt(r[3]))+fmt(parseInt(r[4]))+fmt(parseInt(r[5]))+fmt(parseInt(r[6]))+
-      '<td>'+(r[8]||'0')+'</td></tr>';
-  }).join('');
+  tbody.innerHTML=recent.map(function(r){var info=deviceInfo((r[2]||'').toUpperCase());var dh=(r[0]||'').trim()+' '+(r[1]||'').trim();return '<tr><td>'+dh+'</td><td class="muted">'+(info.store||'—')+'</td><td>'+info.name+'</td><td class="muted">'+info.product+'</td>'+fmt(parseInt(r[3]))+fmt(parseInt(r[4]))+fmt(parseInt(r[5]))+fmt(parseInt(r[6]))+'<td>'+(r[8]||'0')+'</td></tr>';}).join('');
 }
 
 // ── ESTATÍSTICAS ───────────────────────────────────────
-function fmtMin(min){
-  if(min===null||min===undefined)return '—';
-  if(min<60)return min+' min';
-  return Math.floor(min/60)+'h '+(min%60)+'min';
-}
+function fmtMin(min){if(min===null||min===undefined)return '—';if(min<60)return min+' min';return Math.floor(min/60)+'h '+(min%60)+'min';}
 function calcStats(rows){
   var eventos=rows.filter(function(r){return r[9]&&r[9].trim()!=='';});
   var totalRepos=parseInt((latestRow(rows)||[])[8]||'0')||0;
   var totalVazio=eventos.filter(function(r){return (r[9]||'').toLowerCase()==='vazio';}).length;
   var totalCrit=eventos.filter(function(r){return (r[9]||'').toLowerCase()==='critico';}).length;
   var tsRepos=eventos.filter(function(r){return (r[9]||'').toLowerCase()==='reposto';}).map(parseTS).filter(Boolean).sort(function(a,b){return a-b;});
-  var tempoMedioRepos=null;
-  if(tsRepos.length>=2){var soma=0;for(var i=1;i<tsRepos.length;i++)soma+=(tsRepos[i]-tsRepos[i-1]);tempoMedioRepos=Math.round(soma/(tsRepos.length-1)/60000);}
+  var tempoMedioRepos=null;if(tsRepos.length>=2){var soma=0;for(var i=1;i<tsRepos.length;i++)soma+=(tsRepos[i]-tsRepos[i-1]);tempoMedioRepos=Math.round(soma/(tsRepos.length-1)/60000);}
   var tempoDesde=tsRepos.length>0?Math.round((Date.now()-tsRepos[tsRepos.length-1])/60000):null;
-  function tmAteRepo(tsArr){
-    var ivs=[];tsArr.forEach(function(t){var p=tsRepos.find(function(tr){return tr>t;});if(p)ivs.push((p-t)/60000);});
-    return ivs.length?Math.round(ivs.reduce(function(a,b){return a+b;},0)/ivs.length):null;
-  }
+  function tmAteRepo(tsArr){var ivs=[];tsArr.forEach(function(t){var p=tsRepos.find(function(tr){return tr>t;});if(p)ivs.push((p-t)/60000);});return ivs.length?Math.round(ivs.reduce(function(a,b){return a+b;},0)/ivs.length):null;}
   var tsCrit=eventos.filter(function(r){return (r[9]||'').toLowerCase()==='critico';}).map(parseTS).filter(Boolean);
   var tsVaz=eventos.filter(function(r){return (r[9]||'').toLowerCase()==='vazio';}).map(parseTS).filter(Boolean);
   var prim=parseTS(rows[0]),ult=parseTS(rows[rows.length-1]),periodoStr='—';
   if(prim&&ult){var dm=Math.round((ult-prim)/60000);periodoStr=dm<60?dm+' min':dm<1440?Math.floor(dm/60)+'h '+(dm%60)+'min':Math.floor(dm/1440)+'d '+Math.floor((dm%1440)/60)+'h';}
-  return {totalRepos:totalRepos,totalVazio:totalVazio,totalCrit:totalCrit,tempoMedioRepos:tempoMedioRepos,tempoDesde:tempoDesde,tmCrit:tmAteRepo(tsCrit),tmVaz:tmAteRepo(tsVaz),periodoStr:periodoStr,totalReg:rows.length};
+  return{totalRepos:totalRepos,totalVazio:totalVazio,totalCrit:totalCrit,tempoMedioRepos:tempoMedioRepos,tempoDesde:tempoDesde,tmCrit:tmAteRepo(tsCrit),tmVaz:tmAteRepo(tsVaz),periodoStr:periodoStr,totalReg:rows.length};
 }
 function renderStats(rows){
-  var storeFilter=document.getElementById('statsStoreFilter').value;
-  var grid=document.getElementById('statsGrid');
-  var grouped=groupByMac(rows);
-  var macs=sortedMacs(grouped).filter(function(mac){
-    return storeFilter==='__all__'||deviceInfo(mac).store===storeFilter;
-  });
+  var storeFilter=document.getElementById('statsStoreFilter').value,grid=document.getElementById('statsGrid'),grouped=groupByMac(rows);
+  var macs=sortedMacs(grouped).filter(function(mac){return storeFilter==='__all__'||deviceInfo(mac).store===storeFilter;});
   grid.innerHTML='';
-  if(!macs.length){grid.innerHTML='<div class="empty-state"><strong>Sem dados</strong>Nenhum dispositivo encontrado para este filtro.</div>';return;}
+  if(!macs.length){grid.innerHTML='<div class="empty-state"><strong>Sem dados</strong>Nenhum dispositivo encontrado.</div>';return;}
   macs.forEach(function(mac,idx){
-    var info=deviceInfo(mac),s=calcStats(grouped[mac]);
-    var macShort=mac.length===12?mac.slice(0,4)+'…'+mac.slice(-4):mac;
+    var info=deviceInfo(mac),s=calcStats(grouped[mac]),macShort=mac.length===12?mac.slice(0,4)+'…'+mac.slice(-4):mac;
     var warnClass=s.tempoDesde!==null&&s.tempoDesde>120?'warn':'';
     var subText=[info.product!=='—'?info.product:'',info.store!=='—'?info.store:''].filter(Boolean).join(' · ');
-    var card=document.createElement('div');
-    card.className='stat-card';card.style.animationDelay=(idx*.07)+'s';
-    card.innerHTML=
-      '<div class="stat-card-header"><div>'+
-        '<div class="stat-card-name">'+info.name+'</div>'+
-        (subText?'<div class="stat-card-sub">'+subText+'</div>':'')+
-      '</div><div class="stat-card-mac">'+macShort+'</div></div>'+
+    var card=document.createElement('div');card.className='stat-card';card.style.animationDelay=(idx*.07)+'s';
+    card.innerHTML='<div class="stat-card-header"><div><div class="stat-card-name">'+info.name+'</div>'+(subText?'<div class="stat-card-sub">'+subText+'</div>':'')+'</div><div class="stat-card-mac">'+macShort+'</div></div>'+
       '<div class="stat-section"><div class="stat-section-title">Reposições</div>'+
       '<div class="stat-row"><span class="stat-row-label">Reposições realizadas</span><span class="stat-row-value accent">'+s.totalRepos+'</span></div>'+
       '<div class="stat-row"><span class="stat-row-label">Intervalo médio entre reposições</span><span class="stat-row-value">'+fmtMin(s.tempoMedioRepos)+'</span></div>'+
@@ -898,205 +541,55 @@ function renderStats(rows){
 // ── GRÁFICOS ───────────────────────────────────────────
 var chartInstances={};
 function renderCharts(rows){
-  var storeFilter=document.getElementById('chartsStoreFilter').value;
-  var grid=document.getElementById('chartsGrid');
-  var grouped=groupByMac(rows);
-  var macs=sortedMacs(grouped).filter(function(mac){
-    return storeFilter==='__all__'||deviceInfo(mac).store===storeFilter;
-  });
-  grid.innerHTML='';
-  Object.keys(chartInstances).forEach(function(k){chartInstances[k].destroy();});
-  chartInstances={};
-  if(!macs.length){grid.innerHTML='<div class="empty-state"><strong>Sem dados</strong>Nenhum dispositivo encontrado para este filtro.</div>';return;}
-
+  var storeFilter=document.getElementById('chartsStoreFilter').value,grid=document.getElementById('chartsGrid'),grouped=groupByMac(rows);
+  var macs=sortedMacs(grouped).filter(function(mac){return storeFilter==='__all__'||deviceInfo(mac).store===storeFilter;});
+  grid.innerHTML='';Object.keys(chartInstances).forEach(function(k){chartInstances[k].destroy();});chartInstances={};
+  if(!macs.length){grid.innerHTML='<div class="empty-state"><strong>Sem dados</strong>Nenhum dispositivo encontrado.</div>';return;}
   macs.forEach(function(mac,idx){
-    var macRows=grouped[mac],info=deviceInfo(mac);
-    var macShort=mac.length===12?mac.slice(0,4)+'…'+mac.slice(-4):mac;
+    var macRows=grouped[mac],info=deviceInfo(mac),macShort=mac.length===12?mac.slice(0,4)+'…'+mac.slice(-4):mac;
     var eventos=macRows.filter(function(r){return r[9]&&r[9].trim()!=='';});
     var dataC=[],dataV=[],dataR=[];
     eventos.forEach(function(r){var ts=parseTS(r);if(!ts)return;var ev=(r[9]||'').toLowerCase();var pt={x:ts,y:parseInt(r[7])||0};if(ev==='critico')dataC.push(pt);else if(ev==='vazio')dataV.push(pt);else if(ev==='reposto')dataR.push(pt);});
     var histPoints=macRows.slice(-200).map(function(r){return{x:parseTS(r),y:parseInt(r[7])||0};}).filter(function(p){return p.x;});
-    var histLabels=histPoints.map(function(p){return p.x.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});});
+    var spanMs=histPoints.length>=2?(histPoints[histPoints.length-1].x-histPoints[0].x):0;
+    var shortPeriod=spanMs<86400000;
+    var smartLabels=histPoints.map(function(p){if(!p.x)return '';return shortPeriod?p.x.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):p.x.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});});
     var histValues=histPoints.map(function(p){return p.y;});
+    var maxTicks=Math.min(8,Math.max(4,Math.floor(histPoints.length/10)));
     function nearestIdx(ts){var best=0,bestDiff=Infinity;for(var k=0;k<histPoints.length;k++){var diff=Math.abs(histPoints[k].x-ts);if(diff<bestDiff){bestDiff=diff;best=k;}}return best;}
-    function evDataset(evPoints,color,label,order){
-      var data=new Array(histPoints.length).fill(null);
-      evPoints.forEach(function(p){var idx=nearestIdx(p.x);data[idx]=p.y;});
-      return{
-        label:label,
-        data:data,
-        // Ponto sólido menor com borda branca fina — presença sem agressividade
-        backgroundColor:color,
-        borderColor:'#ffffff',
-        borderWidth:2,
-        pointRadius:data.map(function(v){return v!==null?5:0;}),
-        pointHoverRadius:data.map(function(v){return v!==null?7:0;}),
-        pointHoverBorderColor:color,
-        pointHoverBorderWidth:2,
-        pointHoverBackgroundColor:'#ffffff',
-        type:'scatter',
-        showLine:false,
-        order:order
-      };
-    }
+    function evDataset(evPoints,color,label,order){var data=new Array(histPoints.length).fill(null);evPoints.forEach(function(p){var idx=nearestIdx(p.x);data[idx]=p.y;});return{label:label,data:data,backgroundColor:color,borderColor:'#ffffff',borderWidth:2,pointRadius:data.map(function(v){return v!==null?5:0;}),pointHoverRadius:data.map(function(v){return v!==null?7:0;}),pointHoverBorderColor:color,pointHoverBorderWidth:2,pointHoverBackgroundColor:'#ffffff',type:'scatter',showLine:false,order:order};}
     var subText=[info.product!=='—'?info.product:'',info.store!=='—'?info.store:''].filter(Boolean).join(' · ');
     var canvasId='chart-'+mac;
-    var card=document.createElement('div');
-    card.className='chart-card';card.style.animationDelay=(idx*.08)+'s';
-    card.innerHTML=
-      '<div><div class="chart-card-name">'+info.name+'</div>'+
-      (subText?'<div class="chart-card-sub">'+subText+' · '+macShort+'</div>':'<div class="chart-card-sub">'+macShort+'</div>')+
-      '</div>'+
-      '<div class="chart-wrapper"><canvas id="'+canvasId+'"></canvas></div>'+
-      '<div class="chart-legend">'+
-        '<div class="legend-item"><div class="legend-dot" style="background:#1a7a4a"></div>Reposição</div>'+
-        '<div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div>Carga crítica</div>'+
-        '<div class="legend-item"><div class="legend-dot" style="background:#dc2626"></div>Palete vazio</div>'+
-        '<div class="legend-item"><div class="legend-dot" style="background:#c8cec9;border:1px solid #b0b8b4"></div>Nível de carga</div>'+
-      '</div>';
+    var card=document.createElement('div');card.className='chart-card';card.style.animationDelay=(idx*.08)+'s';
+    card.innerHTML='<div><div class="chart-card-name">'+info.name+'</div>'+(subText?'<div class="chart-card-sub">'+subText+' · '+macShort+'</div>':'<div class="chart-card-sub">'+macShort+'</div>')+'</div><div class="chart-wrapper"><canvas id="'+canvasId+'"></canvas></div><div class="chart-legend"><div class="legend-item"><div class="legend-dot" style="background:#1a7a4a"></div>Reposição</div><div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div>Carga crítica</div><div class="legend-item"><div class="legend-dot" style="background:#dc2626"></div>Palete vazio</div><div class="legend-item"><div class="legend-dot" style="background:#c8cec9;border:1px solid #b0b8b4"></div>Nível de carga</div></div>';
     grid.appendChild(card);
     var ctx=document.getElementById(canvasId).getContext('2d');
-    // Detecta se período é < 24h para simplificar labels do eixo X
-    var spanMs = histPoints.length >= 2
-      ? (histPoints[histPoints.length-1].x - histPoints[0].x)
-      : 0;
-    var shortPeriod = spanMs < 86400000;
-
-    // Labels inteligentes: só hora se período < 24h, senão dd/MM HH:mm
-    var smartLabels = histPoints.map(function(p) {
-      if (!p.x) return '';
-      return shortPeriod
-        ? p.x.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})
-        : p.x.toLocaleString('pt-BR', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
-    });
-
-    // Máximo de ticks visíveis no eixo X — evita sobreposição
-    var maxTicks = Math.min(8, Math.max(4, Math.floor(histPoints.length / 10)));
-
-    chartInstances[mac]=new Chart(ctx,{
-      type:'line',
-      data:{labels:smartLabels,datasets:[
-        {
-          label:'Nível de carga',
-          data:histValues,
-          borderColor:'rgba(180,190,185,.5)',
-          borderWidth:1,
-          pointRadius:0,
-          fill:true,
-          backgroundColor:'rgba(180,190,185,.06)',
-          tension:0.15,
-          order:4
-        },
-        evDataset(dataR,'#1a7a4a','Reposição',1),
-        evDataset(dataC,'#7c3aed','Carga crítica',2),
-        evDataset(dataV,'#dc2626','Palete vazio',3)
-      ]},
-      options:{
-        responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{display:false},tooltip:{
-          backgroundColor:'#fff',borderColor:'#e0e2dc',borderWidth:1,
-          titleColor:'#7a8480',bodyColor:'#1a1c1a',
-          padding:10,
-          titleFont:{family:'DM Mono',size:10},
-          bodyFont:{family:'DM Mono',size:12},
-          filter:function(item){return item.parsed.y!==null&&item.dataset.label!=='Nível de carga';},
-          callbacks:{
-            title:function(i){return i[0].label||'';},
-            label:function(i){
-              if(i.parsed.y===null)return null;
-              var labels={
-                'Reposição':'Reposição completa — '+i.parsed.y+'/4 cargas',
-                'Carga crítica':'Carga crítica — '+i.parsed.y+'/4 cargas',
-                'Palete vazio':'Palete vazio — 0/4 cargas'
-              };
-              return ' '+(labels[i.dataset.label]||i.dataset.label);
-            }
-          }
-        }},
-        scales:{
-          x:{
-            ticks:{
-              color:'#7a8480',
-              font:{family:'DM Mono',size:9},
-              maxTicksLimit:maxTicks,
-              maxRotation:0,
-              autoSkip:true,
-              autoSkipPadding:16
-            },
-            grid:{color:'rgba(224,226,220,.6)'}
-          },
-          y:{
-            min:0,max:5,
-            ticks:{
-              color:'#7a8480',
-              font:{family:'DM Mono',size:10},
-              stepSize:1,
-              callback:function(v){return v<=4?v+'':'';}
-            },
-            grid:{color:'rgba(224,226,220,.6)'}
-          }
-        }
-      }
-    });
+    chartInstances[mac]=new Chart(ctx,{type:'line',data:{labels:smartLabels,datasets:[{label:'Nível de carga',data:histValues,borderColor:'rgba(180,190,185,.5)',borderWidth:1,pointRadius:0,fill:true,backgroundColor:'rgba(180,190,185,.06)',tension:0.15,order:4},evDataset(dataR,'#1a7a4a','Reposição',1),evDataset(dataC,'#7c3aed','Carga crítica',2),evDataset(dataV,'#dc2626','Palete vazio',3)]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',borderColor:'#e0e2dc',borderWidth:1,titleColor:'#7a8480',bodyColor:'#1a1c1a',padding:10,titleFont:{family:'DM Mono',size:10},bodyFont:{family:'DM Mono',size:12},filter:function(item){return item.parsed.y!==null&&item.dataset.label!=='Nível de carga';},callbacks:{title:function(i){return i[0].label||'';},label:function(i){if(i.parsed.y===null)return null;var labels={'Reposição':'Reposição completa — '+i.parsed.y+'/4 cargas','Carga crítica':'Carga crítica — '+i.parsed.y+'/4 cargas','Palete vazio':'Palete vazio — 0/4 cargas'};return ' '+(labels[i.dataset.label]||i.dataset.label);}}}},scales:{x:{ticks:{color:'#7a8480',font:{family:'DM Mono',size:9},maxTicksLimit:maxTicks,maxRotation:0,autoSkip:true,autoSkipPadding:16},grid:{color:'rgba(224,226,220,.6)'}},y:{min:0,max:5,ticks:{color:'#7a8480',font:{family:'DM Mono',size:10},stepSize:1,callback:function(v){return v<=4?v+'':''}},grid:{color:'rgba(224,226,220,.6)'}}}}});
   });
 }
 
 // ── RENDER ALL ─────────────────────────────────────────
 function renderAll(rows){
-  if(!rows.length)return;
-  lastData=rows;
-  var grouped=groupByMac(rows);
-  populateStoreFilters(grouped);
-  populateDeviceFilter(grouped);
-  renderMonitor(grouped);
-  updateTable();
+  if(!rows.length)return;lastData=rows;var grouped=groupByMac(rows);
+  populateStoreFilters(grouped);populateDeviceFilter(grouped);renderMonitor(grouped);updateTable();
   if(document.getElementById('page-stats').classList.contains('active'))renderStats(rows);
   if(document.getElementById('page-graficos').classList.contains('active'))renderCharts(rows);
-  var now=new Date();
-  var timeStr=now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  document.getElementById('lastUpdate').textContent='atualizado '+timeStr;
+  if(document.getElementById('page-admin').classList.contains('active'))renderAdmin(rows);
+  document.getElementById('lastUpdate').textContent='atualizado '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
 }
 
 // ── FETCH ──────────────────────────────────────────────
 function hideLoading(){document.getElementById('loadingOverlay').classList.add('hidden');}
 async function fetchData(){
-  try{
-    var res=await fetch(CSV_URL+'&t='+Date.now(), {cache:'no-store'});
-    var text=await res.text();
-    var rows=parseCSV(text).filter(function(r){return !isNaN(parseInt(r[7]));});
-    if(rows.length)renderAll(rows);
-  }catch(err){
-    console.error('fetchData erro:',err);
-    document.getElementById('lastUpdate').textContent='Erro na conexão';
-  }finally{
-    hideLoading();
-  }
-  return true; // Sempre resolve
+  try{var res=await fetch(CSV_URL+'&t='+Date.now(),{cache:'no-store'});var text=await res.text();var rows=parseCSV(text).filter(function(r){return !isNaN(parseInt(r[7]));});if(rows.length)renderAll(rows);}
+  catch(err){console.error('fetchData:',err);document.getElementById('lastUpdate').textContent='Erro na conexão';}
+  finally{hideLoading();}
+  return true;
 }
-function manualRefresh(){
-  var btn=document.getElementById('btnRefresh');
-  btn.classList.add('spinning');btn.disabled=true;
-  Promise.all([fetchData(),fetchDevices()]).finally(function(){setTimeout(function(){btn.classList.remove('spinning');btn.disabled=false;},600);});
-}
+function manualRefresh(){var btn=document.getElementById('btnRefresh');btn.classList.add('spinning');btn.disabled=true;Promise.all([fetchData(),fetchDevices()]).finally(function(){setTimeout(function(){btn.classList.remove('spinning');btn.disabled=false;},600);});}
 
 // ── INIT ───────────────────────────────────────────────
-// Migração automática: v2 → v3 (adiciona campo store)
-(function migrateCache() {
-  var old = localStorage.getItem('monitor_paletes_devices_v2');
-  var cur = localStorage.getItem('monitor_paletes_devices_v3');
-  if (old && !cur) {
-    try {
-      var devices = JSON.parse(old);
-      // Garante que todos os dispositivos têm o campo store
-      devices = devices.map(function(d) {
-        return { mac: d.mac, name: d.name, product: d.product || '—', store: d.store || '' };
-      });
-      localStorage.setItem('monitor_paletes_devices_v3', JSON.stringify(devices));
-      console.log('Cache migrado de v2 para v3:', devices.length, 'dispositivos.');
-    } catch(e) { console.warn('Falha na migração de cache:', e); }
-  }
-})();
-
+(function migrateCache(){var old=localStorage.getItem('monitor_paletes_devices_v2');var cur=localStorage.getItem('monitor_paletes_devices_v3');if(old&&!cur){try{var devices=JSON.parse(old);devices=devices.map(function(d){return{mac:d.mac,name:d.name,product:d.product||'—',store:d.store||''};});localStorage.setItem('monitor_paletes_devices_v3',JSON.stringify(devices));}catch(e){}}})();
 loadDeviceCache();
 setTimeout(hideLoading,8000);
 Promise.all([fetchDevices(),fetchData()]).then(function(){renderAll(lastData);}).catch(function(e){console.error(e);}).finally(hideLoading);
