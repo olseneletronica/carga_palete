@@ -433,7 +433,20 @@ async function fetchDevices(){
 }
 
 // ── MODAL ──────────────────────────────────────────────
-function openModal(){var list=document.getElementById('deviceList');list.innerHTML='';deviceCache.forEach(function(d){addDeviceRow(d.mac,d.name,d.product,d.store);});setModalStatus('');document.getElementById('modalBackdrop').classList.add('open');}
+function openModal(){
+  var list=document.getElementById('deviceList');
+  list.innerHTML='<div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);padding:12px 0;">Carregando cadastro...</div>';
+  setModalStatus('');
+  document.getElementById('modalBackdrop').classList.add('open');
+  // Sempre busca do servidor ao abrir o modal
+  fetchDevices().then(function(){
+    list.innerHTML='';
+    deviceCache.forEach(function(d){addDeviceRow(d.mac,d.name,d.product,d.store);});
+    if(deviceCache.length===0){
+      list.innerHTML='<div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);padding:12px 0;">Nenhum dispositivo cadastrado. Clique em "+ Novo palete" para adicionar.</div>';
+    }
+  });
+}
 var _rowToRemove=null;
 function confirmarRemocao(btn){
   var row=btn.parentElement;var inputs=row.querySelectorAll('input');
