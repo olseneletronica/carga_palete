@@ -9,12 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
-  :root {
-    --bg:#f2f3f0; --surface:#fff; --border:#e0e2dc; --text:#1a1c1a;
-    --muted:#7a8480; --accent:#1a7a4a; --warn:#b06a00; --danger:#c0392b;
-    --font-mono:'DM Mono',monospace; --font-sans:'DM Sans',sans-serif;
-    --radius:5px; --shadow:0 1px 4px rgba(0,0,0,.06); --tr:240ms ease;
-  }
+  :root{--bg:#f2f3f0;--surface:#fff;--border:#e0e2dc;--text:#1a1c1a;--muted:#7a8480;--accent:#1a7a4a;--warn:#b06a00;--danger:#c0392b;--font-mono:'DM Mono',monospace;--font-sans:'DM Sans',sans-serif;--radius:5px;--shadow:0 1px 4px rgba(0,0,0,.06);--tr:240ms ease;}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-size:14px;min-height:100vh;}
   header{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:50;box-shadow:var(--shadow);}
@@ -30,8 +25,7 @@
   .page.active{display:flex;flex-direction:column;gap:24px;}
   .btn{display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;background:transparent;border:1px solid var(--border);border-radius:var(--radius);padding:8px 14px;cursor:pointer;color:var(--accent);transition:background var(--tr),border-color var(--tr),box-shadow var(--tr);}
   .btn:hover{background:rgba(26,122,74,.07);border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,122,74,.08);}
-  .btn:active{opacity:.75;}
-  .btn:disabled{opacity:.4;cursor:default;}
+  .btn:active{opacity:.75;}.btn:disabled{opacity:.4;cursor:default;}
   .btn-devices{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 8px rgba(26,122,74,.25);}
   .btn-devices:hover{background:#156040;border-color:#156040;box-shadow:0 3px 12px rgba(26,122,74,.35);}
   .btn-devices svg{stroke:#fff;}
@@ -59,8 +53,7 @@
   .btn-remove:hover{color:var(--danger);background:rgba(192,57,43,.08);}
   .modal-footer{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding-top:16px;border-top:1px solid var(--border);}
   .modal-status{font-family:var(--font-mono);font-size:11px;color:var(--muted);min-height:16px;transition:color .3s;}
-  .modal-status.ok{color:var(--accent);}
-  .modal-status.error{color:var(--danger);}
+  .modal-status.ok{color:var(--accent);}.modal-status.error{color:var(--danger);}
   @keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
   @keyframes flash-ok{0%{box-shadow:0 0 0 0 rgba(26,122,74,.5)}60%{box-shadow:0 0 0 8px rgba(26,122,74,0)}100%{box-shadow:none}}
   @keyframes flash-warn{0%{box-shadow:0 0 0 0 rgba(176,106,0,.5)}60%{box-shadow:0 0 0 8px rgba(176,106,0,0)}100%{box-shadow:none}}
@@ -129,9 +122,7 @@
   .stat-row:last-child{border-bottom:none;}
   .stat-row-label{font-family:var(--font-sans);font-size:13px;color:var(--muted);}
   .stat-row-value{font-family:var(--font-mono);font-size:14px;color:var(--text);font-weight:500;white-space:nowrap;}
-  .stat-row-value.accent{color:var(--accent);}
-  .stat-row-value.warn{color:var(--warn);}
-  .stat-row-value.danger{color:var(--danger);}
+  .stat-row-value.accent{color:var(--accent);}.stat-row-value.warn{color:var(--warn);}.stat-row-value.danger{color:var(--danger);}
   .charts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(480px,1fr));gap:20px;}
   .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);opacity:0;transform:translateY(8px);animation:fadeUp .4s ease forwards;}
   .chart-card-name{font-family:var(--font-sans);font-size:15px;font-weight:600;color:var(--text);}
@@ -171,7 +162,6 @@
   <div class="loading-text">carregando dados</div>
 </div>
 
-<!-- MODAL DISPOSITIVOS -->
 <div class="modal-backdrop" id="modalBackdrop">
   <div class="modal">
     <div class="modal-header">
@@ -197,12 +187,9 @@
   </div>
 </div>
 
-<!-- MODAL CONFIRMAÇÃO EXCLUSÃO -->
 <div class="modal-backdrop" id="confirmBackdrop">
   <div class="modal" style="max-width:420px;padding:32px;">
-    <div class="modal-header" style="margin-bottom:12px;">
-      <div class="modal-title">Remover palete</div>
-    </div>
+    <div class="modal-header" style="margin-bottom:12px;"><div class="modal-title">Remover palete</div></div>
     <p id="confirmMsg" style="font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:28px;"></p>
     <div style="display:flex;justify-content:flex-end;gap:10px;">
       <button class="btn secondary" onclick="closeConfirm()">Cancelar</button>
@@ -211,12 +198,9 @@
   </div>
 </div>
 
-<!-- MODAL ZERAR HISTÓRICO -->
 <div class="modal-backdrop" id="resetBackdrop">
   <div class="modal" style="max-width:460px;padding:32px;">
-    <div class="modal-header" style="margin-bottom:12px;">
-      <div class="modal-title" style="color:var(--danger);">Remover dispositivo</div>
-    </div>
+    <div class="modal-header" style="margin-bottom:12px;"><div class="modal-title" style="color:var(--danger);">Remover dispositivo</div></div>
     <p id="resetMsg" style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:8px;"></p>
     <p style="font-family:var(--font-mono);font-size:11px;color:var(--danger);margin-bottom:28px;">Esta ação não pode ser desfeita.</p>
     <div style="display:flex;justify-content:flex-end;gap:10px;">
@@ -226,7 +210,6 @@
   </div>
 </div>
 
-<!-- HEADER -->
 <header>
   <div class="header-title"><div class="header-logo"></div>monitor / paletes</div>
   <div class="header-right">
@@ -249,7 +232,6 @@
   <button class="nav-tab" onclick="showPage('admin',this)">Administração</button>
 </nav>
 
-<!-- PAGE MONITOR -->
 <div class="page active" id="page-monitor">
   <div id="storeGroups"></div>
   <div class="card">
@@ -268,7 +250,6 @@
   </div>
 </div>
 
-<!-- PAGE ESTATÍSTICAS -->
 <div class="page" id="page-stats">
   <div class="filter-bar">
     <span class="filter-label">Filtrar por loja</span>
@@ -277,7 +258,6 @@
   <div class="stats-grid" id="statsGrid"><div class="empty-state"><strong>Carregando estatísticas</strong>Os dados aparecem assim que houver leituras suficientes.</div></div>
 </div>
 
-<!-- PAGE GRÁFICOS -->
 <div class="page" id="page-graficos">
   <div class="filter-bar">
     <span class="filter-label">Filtrar por loja</span>
@@ -286,20 +266,14 @@
   <div class="charts-grid" id="chartsGrid"><div class="empty-state"><strong>Carregando gráficos</strong>Os gráficos aparecem assim que houver eventos registrados.</div></div>
 </div>
 
-<!-- PAGE ADMINISTRAÇÃO -->
 <div class="page" id="page-admin">
   <div class="card" style="border-left:4px solid var(--danger);">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:12px;">
       <div class="section-title" style="color:var(--danger);">Zona de Administração</div>
-      <button class="btn secondary" onclick="limparCacheLocal()" style="font-size:10px;">
-        <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 2A5 5 0 1 0 11 6"/><polyline points="8 0 10.5 2 8.5 4.5"/></svg>
-        Sincronizar cache
-      </button>
     </div>
     <p style="font-family:var(--font-mono);font-size:11px;color:var(--muted);line-height:1.7;">
       As ações abaixo são <strong style="color:var(--danger)">irreversíveis</strong>.
       Ao remover um dispositivo, todas as leituras da planilha, os contadores e o cadastro serão permanentemente apagados.
-      Se os nomes dos dispositivos estiverem desatualizados, use <strong>Sincronizar cache</strong>.
     </p>
   </div>
   <div class="admin-grid" id="adminGrid"><div class="empty-state"><strong>Carregando dispositivos</strong>Aguarde...</div></div>
@@ -321,115 +295,43 @@ function showPage(name,btn){
   if(name==='admin')renderAdmin(lastData);
 }
 
-// ── ADMINISTRAÇÃO ──────────────────────────────────────
-function limparCacheLocal(){
-  localStorage.removeItem(LS_KEY);
-  deviceCache=[];
-  fetchDevices().then(function(){
-    return fetchData();
-  }).then(function(){
-    renderAdmin(lastData);
-    alert('Cache sincronizado com sucesso. ' + deviceCache.length + ' dispositivo(s) carregado(s).');
-  });
-}
-
-function renderAdmin(rows){
-  var grid=document.getElementById('adminGrid');
-  var grouped=groupByMac(rows);
-  var macs=sortedMacs(grouped);
-  grid.innerHTML='';
-  if(!macs.length){grid.innerHTML='<div class="empty-state"><strong>Nenhum dispositivo encontrado</strong>Cadastre um palete para gerenciá-lo aqui.</div>';return;}
-  macs.forEach(function(mac,idx){
-    var macRows=grouped[mac],info=deviceInfo(mac),last=latestRow(macRows);
-    var repos=parseInt(last[8])||0;
-    var macShort=mac.length===12?mac.slice(0,4)+'…'+mac.slice(-4):mac;
-    var subText=[info.product&&info.product!=='—'?info.product:'',info.store&&info.store!=='—'?info.store:''].filter(Boolean).join(' · ');
-    var card=document.createElement('div');
-    card.className='admin-card';card.style.animationDelay=(idx*.06)+'s';
-    card.innerHTML=
-      '<div class="admin-card-header"><div>'+
-        '<div class="admin-card-name">'+info.name+'</div>'+
-        '<div class="admin-card-meta">'+(subText||macShort)+'</div>'+
-      '</div><div class="admin-card-meta">'+macShort+'</div></div>'+
-      '<div class="admin-stats">'+
-        '<div class="admin-stat"><div class="admin-stat-label">Reposições</div><div class="admin-stat-value">'+repos+'</div></div>'+
-        '<div class="admin-stat"><div class="admin-stat-label">Leituras</div><div class="admin-stat-value">'+macRows.length+'</div></div>'+
-        '<div class="admin-stat"><div class="admin-stat-label">Dispositivo</div><div class="admin-stat-value" style="font-size:11px;padding-top:4px">'+macShort+'</div></div>'+
-      '</div>'+
-      '<button class="btn-reset" id="btnReset-'+mac+'" onclick="confirmarReset(\''+mac+'\')">'+
-        '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l10 10M11 1L1 11"/></svg>'+
-        ' Zerar histórico'+
-      '</button>';
-    grid.appendChild(card);
-  });
-}
-
-function confirmarReset(mac){
-  var info=deviceInfo(mac);
-  var nome=info.name||mac;
-  var loja=info.store&&info.store!=='—'?' — '+info.store:'';
-  document.getElementById('resetMsg').innerHTML='Você está prestes a <strong>remover completamente</strong> o palete <strong>'+nome+loja+'</strong>.<br><br>Isso apagará todas as leituras da planilha, os contadores de reposição e o cadastro do dispositivo (MAC, nome, produto e loja).';
-  document.getElementById('resetOkBtn').onclick=function(){executarReset(mac);};
-  document.getElementById('resetBackdrop').classList.add('open');
-}
-function closeReset(){document.getElementById('resetBackdrop').classList.remove('open');}
-
-async function executarReset(mac){
-  var btn=document.getElementById('resetOkBtn');
-  btn.disabled=true;btn.textContent='Zerando...';
-  try{
-    var res=await fetch(SCRIPT_URL+'?action=reset_mac&mac='+encodeURIComponent(mac)+'&t='+Date.now());
-    var data=await res.json();
-    if(data.status==='ok'){
-      closeReset();
-      // 1. Remove do cache local imediatamente
-      deviceCache=deviceCache.filter(function(d){return d.mac.toUpperCase()!==mac.toUpperCase();});
-      saveDeviceCache(deviceCache);
-      // 2. Remove das leituras em memória
-      lastData=lastData.filter(function(r){return (r[2]||'').toUpperCase()!==mac.toUpperCase();});
-      // 3. Limpa e re-renderiza tudo do zero
-      document.getElementById('storeGroups').innerHTML='';
-      renderAll(lastData);
-      renderAdmin(lastData);
-    }else{
-      alert('Erro ao zerar: '+(data.message||'tente novamente.'));
-    }
-  }catch(e){
-    alert('Falha na conexão. Tente novamente.');
-  }finally{
-    // Sempre restaura o botão do modal
-    btn.disabled=false;
-    btn.textContent='Remover dispositivo';
-  }
-}
-
 // ── DISPOSITIVOS ───────────────────────────────────────
+// deviceCache é APENAS um espelho da aba Dispositivos da planilha.
+// Nunca é fonte de verdade — sempre vem do servidor.
 var deviceCache=[];
-function loadDeviceCache(){
-  // Carrega cache local apenas como fallback temporário
-  // O fetchDevices sempre sobrescreve com dados do servidor
-  try{deviceCache=JSON.parse(localStorage.getItem(LS_KEY))||[];}catch(e){deviceCache=[];}
+
+function deviceInfo(mac){
+  var f=deviceCache.find(function(d){return d.mac.toUpperCase()===mac.toUpperCase();});
+  return f||{name:mac,product:'—',store:'—'};
 }
-function saveDeviceCache(d){deviceCache=d;localStorage.setItem(LS_KEY,JSON.stringify(d));}
-function deviceInfo(mac){var f=deviceCache.find(function(d){return d.mac.toUpperCase()===mac.toUpperCase();});return f||{name:mac,product:'—',store:'—'};}
+
+// fetchDevices: busca a aba Dispositivos do servidor.
+// IMPORTANTE: sem headers customizados para não bloquear o redirecionamento do Apps Script.
 async function fetchDevices(){
   try{
-    var res=await fetch(SCRIPT_URL+'?action=get_devices&t='+Date.now(),{
-      cache:'no-store',
-      headers:{'Cache-Control':'no-cache, no-store, must-revalidate','Pragma':'no-cache'}
-    });
-    var data=await res.json();
-    if(Array.isArray(data)){
-      // Sempre substitui o cache local pelo que veio do servidor
-      // Nunca mescla — o servidor é a fonte de verdade
+    var url=SCRIPT_URL+'?action=get_devices&t='+Date.now();
+    var res=await fetch(url);
+    var text=await res.text();
+    // Apps Script às vezes retorna texto antes do JSON — extrai o JSON
+    var jsonStart=text.indexOf('[');
+    var jsonEnd=text.lastIndexOf(']');
+    if(jsonStart===-1||jsonEnd===-1){
+      console.warn('[fetchDevices] Resposta inesperada:',text.substring(0,200));
+      return false;
+    }
+    var data=JSON.parse(text.substring(jsonStart,jsonEnd+1));
+    if(Array.isArray(data)&&data.length>=0){
       deviceCache=data;
-      localStorage.setItem(LS_KEY, JSON.stringify(data));
-      console.log('[fetchDevices] Cache atualizado do servidor:', data.length, 'dispositivos');
+      localStorage.setItem(LS_KEY,JSON.stringify(data));
+      console.log('[fetchDevices] OK —',data.length,'dispositivo(s):',data.map(function(d){return d.mac+':'+d.name;}).join(', '));
+      return true;
     }
   }catch(e){
-    console.warn('[fetchDevices] Falha — usando cache local:', e);
+    console.warn('[fetchDevices] Erro:',e);
+    // Fallback: usa localStorage se disponível
+    try{var cached=JSON.parse(localStorage.getItem(LS_KEY));if(Array.isArray(cached)){deviceCache=cached;console.warn('[fetchDevices] Usando cache local:',cached.length,'dispositivos');}}catch(e2){}
   }
-  return true;
+  return false;
 }
 
 // ── MODAL ──────────────────────────────────────────────
@@ -438,12 +340,12 @@ function openModal(){
   list.innerHTML='<div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);padding:12px 0;">Carregando cadastro...</div>';
   setModalStatus('');
   document.getElementById('modalBackdrop').classList.add('open');
-  // Sempre busca do servidor ao abrir o modal
   fetchDevices().then(function(){
     list.innerHTML='';
-    deviceCache.forEach(function(d){addDeviceRow(d.mac,d.name,d.product,d.store);});
     if(deviceCache.length===0){
-      list.innerHTML='<div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);padding:12px 0;">Nenhum dispositivo cadastrado. Clique em "+ Novo palete" para adicionar.</div>';
+      list.innerHTML='<div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);padding:12px 0;">Nenhum dispositivo cadastrado.</div>';
+    } else {
+      deviceCache.forEach(function(d){addDeviceRow(d.mac,d.name,d.product,d.store);});
     }
   });
 }
@@ -471,15 +373,63 @@ async function saveDevices(){
   rows.forEach(function(row){var inputs=row.querySelectorAll('input');var mac=inputs[0].value.trim().toUpperCase().replace(/[^A-F0-9]/g,'');var name=inputs[1].value.trim();var product=inputs[2].value.trim();var store=inputs[3].value.trim();if(mac.length===12&&name)devices.push({mac:mac,name:name,product:product,store:store});});
   var btn=document.getElementById('btnSave');btn.disabled=true;setModalStatus('Salvando...','');
   try{
-    var res=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify(devices)});var data=await res.json();
-    if(data.status==='ok'){saveDeviceCache(devices);setModalStatus('Cadastro salvo com sucesso.','ok');setTimeout(function(){closeModal();document.getElementById('storeGroups').innerHTML='';if(lastData.length)renderAll(lastData);},900);}
-    else{setModalStatus('Erro: '+data.message,'error');}
+    var res=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify(devices)});
+    var data=await res.json();
+    if(data.status==='ok'){
+      deviceCache=devices;
+      localStorage.setItem(LS_KEY,JSON.stringify(devices));
+      setModalStatus('Cadastro salvo com sucesso.','ok');
+      setTimeout(function(){closeModal();document.getElementById('storeGroups').innerHTML='';if(lastData.length)renderAll(lastData);},900);
+    }else{setModalStatus('Erro: '+data.message,'error');}
   }catch(e){setModalStatus('Falha na conexão. Tente novamente.','error');}
   finally{btn.disabled=false;}
 }
 document.getElementById('modalBackdrop').addEventListener('click',function(e){if(e.target===this)closeModal();});
 document.getElementById('confirmBackdrop').addEventListener('click',function(e){if(e.target===this)closeConfirm();});
 document.getElementById('resetBackdrop').addEventListener('click',function(e){if(e.target===this)closeReset();});
+
+// ── ADMINISTRAÇÃO ──────────────────────────────────────
+function renderAdmin(rows){
+  var grid=document.getElementById('adminGrid');
+  var grouped=groupByMac(rows);var macs=sortedMacs(grouped);
+  grid.innerHTML='';
+  if(!macs.length){grid.innerHTML='<div class="empty-state"><strong>Nenhum dispositivo encontrado</strong>Cadastre um palete para gerenciá-lo aqui.</div>';return;}
+  macs.forEach(function(mac,idx){
+    var macRows=grouped[mac],info=deviceInfo(mac),last=latestRow(macRows);
+    var repos=parseInt(last[8])||0;
+    var macShort=mac.length===12?mac.slice(0,4)+'…'+mac.slice(-4):mac;
+    var subText=[info.product&&info.product!=='—'?info.product:'',info.store&&info.store!=='—'?info.store:''].filter(Boolean).join(' · ');
+    var card=document.createElement('div');card.className='admin-card';card.style.animationDelay=(idx*.06)+'s';
+    card.innerHTML='<div class="admin-card-header"><div><div class="admin-card-name">'+info.name+'</div><div class="admin-card-meta">'+(subText||macShort)+'</div></div><div class="admin-card-meta">'+macShort+'</div></div>'+
+      '<div class="admin-stats"><div class="admin-stat"><div class="admin-stat-label">Reposições</div><div class="admin-stat-value">'+repos+'</div></div><div class="admin-stat"><div class="admin-stat-label">Leituras</div><div class="admin-stat-value">'+macRows.length+'</div></div><div class="admin-stat"><div class="admin-stat-label">Dispositivo</div><div class="admin-stat-value" style="font-size:11px;padding-top:4px">'+macShort+'</div></div></div>'+
+      '<button class="btn-reset" id="btnReset-'+mac+'" onclick="confirmarReset(\''+mac+'\')"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l10 10M11 1L1 11"/></svg> Remover dispositivo</button>';
+    grid.appendChild(card);
+  });
+}
+function confirmarReset(mac){
+  var info=deviceInfo(mac);var nome=info.name||mac;var loja=info.store&&info.store!=='—'?' — '+info.store:'';
+  document.getElementById('resetMsg').innerHTML='Você está prestes a <strong>remover completamente</strong> o palete <strong>'+nome+loja+'</strong>.<br><br>Isso apagará todas as leituras da planilha, os contadores de reposição e o cadastro do dispositivo (MAC, nome, produto e loja).';
+  document.getElementById('resetOkBtn').onclick=function(){executarReset(mac);};
+  document.getElementById('resetBackdrop').classList.add('open');
+}
+function closeReset(){document.getElementById('resetBackdrop').classList.remove('open');}
+async function executarReset(mac){
+  var btn=document.getElementById('resetOkBtn');btn.disabled=true;btn.textContent='Removendo...';
+  try{
+    var res=await fetch(SCRIPT_URL+'?action=reset_mac&mac='+encodeURIComponent(mac)+'&t='+Date.now());
+    var data=await res.json();
+    if(data.status==='ok'){
+      closeReset();
+      deviceCache=deviceCache.filter(function(d){return d.mac.toUpperCase()!==mac.toUpperCase();});
+      localStorage.setItem(LS_KEY,JSON.stringify(deviceCache));
+      lastData=lastData.filter(function(r){return (r[2]||'').toUpperCase()!==mac.toUpperCase();});
+      document.getElementById('storeGroups').innerHTML='';
+      renderAll(lastData);
+      renderAdmin(lastData);
+    }else{alert('Erro: '+(data.message||'tente novamente.'));}
+  }catch(e){alert('Falha na conexão. Tente novamente.');}
+  finally{btn.disabled=false;btn.textContent='Remover dispositivo';}
+}
 
 // ── DADOS ──────────────────────────────────────────────
 var lastData=[],prevStateMap={};
@@ -495,7 +445,6 @@ function flashCard(el,pres){el.classList.remove('flash-ok','flash-warn','flash-d
 // ── MONITOR ────────────────────────────────────────────
 var ICON_CHECK='<svg viewBox="0 0 14 14" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,7 5.5,10.5 12,3"/></svg>';
 var ICON_X='<svg viewBox="0 0 14 14" fill="none" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg>';
-
 function renderMonitor(grouped){
   var container=document.getElementById('storeGroups');var macs=sortedMacs(grouped);
   var storeMap={};macs.forEach(function(mac){var store=deviceInfo(mac).store||'—';if(!storeMap[store])storeMap[store]=[];storeMap[store].push(mac);});
@@ -638,13 +587,13 @@ function renderAll(rows){
 
 // ── FETCH ──────────────────────────────────────────────
 function hideLoading(){document.getElementById('loadingOverlay').classList.add('hidden');}
+
 async function fetchData(){
   try{
-    var res=await fetch(CSV_URL+'&t='+Date.now(),{cache:'no-store'});
+    var res=await fetch(CSV_URL+'&t='+Date.now());
     var text=await res.text();
     var rows=parseCSV(text).filter(function(r){return !isNaN(parseInt(r[7]));});
     if(rows.length){
-      // Garante que dispositivos do servidor estão carregados antes de renderizar
       await fetchDevices();
       renderAll(rows);
     }
@@ -656,20 +605,18 @@ async function fetchData(){
   }
   return true;
 }
+
 function manualRefresh(){
   var btn=document.getElementById('btnRefresh');
   btn.classList.add('spinning');btn.disabled=true;
-  // fetchData já chama fetchDevices internamente
-  fetchData().finally(function(){
-    setTimeout(function(){btn.classList.remove('spinning');btn.disabled=false;},600);
-  });
+  fetchData().finally(function(){setTimeout(function(){btn.classList.remove('spinning');btn.disabled=false;},600);});
 }
 
 // ── INIT ───────────────────────────────────────────────
-(function migrateCache(){var old=localStorage.getItem('monitor_paletes_devices_v2');var cur=localStorage.getItem('monitor_paletes_devices_v3');if(old&&!cur){try{var devices=JSON.parse(old);devices=devices.map(function(d){return{mac:d.mac,name:d.name,product:d.product||'—',store:d.store||''};});localStorage.setItem('monitor_paletes_devices_v3',JSON.stringify(devices));}catch(e){}}})();
-loadDeviceCache();
+// Carrega cache local como exibição imediata enquanto busca do servidor
+try{var cached=JSON.parse(localStorage.getItem(LS_KEY));if(Array.isArray(cached))deviceCache=cached;}catch(e){}
+
 setTimeout(hideLoading,8000);
-// fetchData já chama fetchDevices internamente antes de renderizar
 fetchData().catch(function(e){console.error(e);}).finally(hideLoading);
 setInterval(fetchData,REFRESH_MS);
 </script>
