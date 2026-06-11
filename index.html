@@ -393,8 +393,14 @@ function loadDeviceCache(){try{deviceCache=JSON.parse(localStorage.getItem(LS_KE
 function saveDeviceCache(d){deviceCache=d;localStorage.setItem(LS_KEY,JSON.stringify(d));}
 function deviceInfo(mac){var f=deviceCache.find(function(d){return d.mac.toUpperCase()===mac.toUpperCase();});return f||{name:mac,product:'—',store:'—'};}
 async function fetchDevices(){
-  try{var res=await fetch(SCRIPT_URL+'?action=get_devices&t='+Date.now());var data=await res.json();if(Array.isArray(data))saveDeviceCache(data);}
-  catch(e){console.warn('fetchDevices: cache local.',e);}
+  try{
+    var res=await fetch(SCRIPT_URL+'?action=get_devices&t='+Date.now(),{
+      cache:'no-store',
+      headers:{'Cache-Control':'no-cache, no-store, must-revalidate','Pragma':'no-cache'}
+    });
+    var data=await res.json();
+    if(Array.isArray(data))saveDeviceCache(data);
+  }catch(e){console.warn('fetchDevices: cache local.',e);}
   return true;
 }
 
@@ -597,13 +603,27 @@ async function fetchData(){
   finally{hideLoading();}
   return true;
 }
-function manualRefresh(){var btn=document.getElementById('btnRefresh');btn.classList.add('spinning');btn.disabled=true;Promise.all([fetchData(),fetchDevices()]).finally(function(){setTimeout(function(){btn.classList.remove('spinning');btn.disabled=false;},600);});}
+function manualRefresh(){
+  var btn=document.getElementById('btnRefresh');
+  btn.classList.add('spinning');btn.disabled=true;
+  // Busca dispositivos primeiro, depois dados — garante nomes atualizados
+  fetchDevices().then(function(){
+    return fetchData();
+  }).finally(function(){
+    setTimeout(function(){btn.classList.remove('spinning');btn.disabled=false;},600);
+  });
+}
 
 // ── INIT ───────────────────────────────────────────────
 (function migrateCache(){var old=localStorage.getItem('monitor_paletes_devices_v2');var cur=localStorage.getItem('monitor_paletes_devices_v3');if(old&&!cur){try{var devices=JSON.parse(old);devices=devices.map(function(d){return{mac:d.mac,name:d.name,product:d.product||'—',store:d.store||''};});localStorage.setItem('monitor_paletes_devices_v3',JSON.stringify(devices));}catch(e){}}})();
 loadDeviceCache();
 setTimeout(hideLoading,8000);
-Promise.all([fetchDevices(),fetchData()]).then(function(){renderAll(lastData);}).catch(function(e){console.error(e);}).finally(hideLoading);
+// Carrega dispositivos primeiro para garantir nomes corretos nos cards
+fetchDevices().then(function(){
+  return fetchData();
+}).catch(function(e){
+  console.error(e);
+}).finally(hideLoading);
 setInterval(fetchData,REFRESH_MS);
 </script>
 </body>
