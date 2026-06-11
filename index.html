@@ -405,7 +405,11 @@ async function executarReset(mac){
 
 // ── DISPOSITIVOS ───────────────────────────────────────
 var deviceCache=[];
-function loadDeviceCache(){try{deviceCache=JSON.parse(localStorage.getItem(LS_KEY))||[];}catch(e){deviceCache=[];}}
+function loadDeviceCache(){
+  // Carrega cache local apenas como fallback temporário
+  // O fetchDevices sempre sobrescreve com dados do servidor
+  try{deviceCache=JSON.parse(localStorage.getItem(LS_KEY))||[];}catch(e){deviceCache=[];}
+}
 function saveDeviceCache(d){deviceCache=d;localStorage.setItem(LS_KEY,JSON.stringify(d));}
 function deviceInfo(mac){var f=deviceCache.find(function(d){return d.mac.toUpperCase()===mac.toUpperCase();});return f||{name:mac,product:'—',store:'—'};}
 async function fetchDevices(){
@@ -622,18 +626,28 @@ function renderAll(rows){
 // ── FETCH ──────────────────────────────────────────────
 function hideLoading(){document.getElementById('loadingOverlay').classList.add('hidden');}
 async function fetchData(){
-  try{var res=await fetch(CSV_URL+'&t='+Date.now(),{cache:'no-store'});var text=await res.text();var rows=parseCSV(text).filter(function(r){return !isNaN(parseInt(r[7]));});if(rows.length)renderAll(rows);}
-  catch(err){console.error('fetchData:',err);document.getElementById('lastUpdate').textContent='Erro na conexão';}
-  finally{hideLoading();}
+  try{
+    var res=await fetch(CSV_URL+'&t='+Date.now(),{cache:'no-store'});
+    var text=await res.text();
+    var rows=parseCSV(text).filter(function(r){return !isNaN(parseInt(r[7]));});
+    if(rows.length){
+      // Garante que dispositivos do servidor estão carregados antes de renderizar
+      await fetchDevices();
+      renderAll(rows);
+    }
+  }catch(err){
+    console.error('fetchData:',err);
+    document.getElementById('lastUpdate').textContent='Erro na conexão';
+  }finally{
+    hideLoading();
+  }
   return true;
 }
 function manualRefresh(){
   var btn=document.getElementById('btnRefresh');
   btn.classList.add('spinning');btn.disabled=true;
-  // Busca dispositivos primeiro, depois dados — garante nomes atualizados
-  fetchDevices().then(function(){
-    return fetchData();
-  }).finally(function(){
+  // fetchData já chama fetchDevices internamente
+  fetchData().finally(function(){
     setTimeout(function(){btn.classList.remove('spinning');btn.disabled=false;},600);
   });
 }
@@ -642,12 +656,8 @@ function manualRefresh(){
 (function migrateCache(){var old=localStorage.getItem('monitor_paletes_devices_v2');var cur=localStorage.getItem('monitor_paletes_devices_v3');if(old&&!cur){try{var devices=JSON.parse(old);devices=devices.map(function(d){return{mac:d.mac,name:d.name,product:d.product||'—',store:d.store||''};});localStorage.setItem('monitor_paletes_devices_v3',JSON.stringify(devices));}catch(e){}}})();
 loadDeviceCache();
 setTimeout(hideLoading,8000);
-// Carrega dispositivos primeiro para garantir nomes corretos nos cards
-fetchDevices().then(function(){
-  return fetchData();
-}).catch(function(e){
-  console.error(e);
-}).finally(hideLoading);
+// fetchData já chama fetchDevices internamente antes de renderizar
+fetchData().catch(function(e){console.error(e);}).finally(hideLoading);
 setInterval(fetchData,REFRESH_MS);
 </script>
 </body>
