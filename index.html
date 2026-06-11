@@ -215,13 +215,13 @@
 <div class="modal-backdrop" id="resetBackdrop">
   <div class="modal" style="max-width:460px;padding:32px;">
     <div class="modal-header" style="margin-bottom:12px;">
-      <div class="modal-title" style="color:var(--danger);">Zerar histórico</div>
+      <div class="modal-title" style="color:var(--danger);">Remover dispositivo</div>
     </div>
     <p id="resetMsg" style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:8px;"></p>
     <p style="font-family:var(--font-mono);font-size:11px;color:var(--danger);margin-bottom:28px;">Esta ação não pode ser desfeita.</p>
     <div style="display:flex;justify-content:flex-end;gap:10px;">
       <button class="btn secondary" onclick="closeReset()">Cancelar</button>
-      <button class="btn" id="resetOkBtn" style="background:var(--danger);color:#fff;border-color:var(--danger);">Zerar histórico</button>
+      <button class="btn" id="resetOkBtn" style="background:var(--danger);color:#fff;border-color:var(--danger);">Remover dispositivo</button>
     </div>
   </div>
 </div>
@@ -301,7 +301,7 @@
 </div>
 
 <script>
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbykm47QyoUVerQ3kh3SSU9Leyob9MaQYxPL7vMKG6jqjN_IN-Lq7075AmPS2pQaFz8/exec';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbzkQ7bIuB4ndgiQfo5wfeh56z7C0GrJqqtRulcWlaScrljwekg9CKAF0LMgjyWNdKc1/exec';
 const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vRAZD5ue759yWSG-rhT8pcyR1cLOK9ssciEPKoiR7hrhPpr2777ZtaxqxjEQqflXl63l-TDIzhqTvpA/pub?output=csv';
 const REFRESH_MS=60000;
 const LS_KEY='monitor_paletes_devices_v3';
@@ -352,7 +352,7 @@ function confirmarReset(mac){
   var info=deviceInfo(mac);
   var nome=info.name||mac;
   var loja=info.store&&info.store!=='—'?' — '+info.store:'';
-  document.getElementById('resetMsg').innerHTML='Você está prestes a apagar <strong>todo o histórico</strong> do palete <strong>'+nome+loja+'</strong>.<br><br>Isso inclui todas as leituras registradas na planilha e os contadores de reposição.';
+  document.getElementById('resetMsg').innerHTML='Você está prestes a <strong>remover completamente</strong> o palete <strong>'+nome+loja+'</strong>.<br><br>Isso apagará todas as leituras da planilha, os contadores de reposição e o cadastro do dispositivo (MAC, nome, produto e loja).';
   document.getElementById('resetOkBtn').onclick=function(){executarReset(mac);};
   document.getElementById('resetBackdrop').classList.add('open');
 }
@@ -368,10 +368,13 @@ async function executarReset(mac){
     var data=await res.json();
     if(data.status==='ok'){
       closeReset();
+      // Remove do cache local
+      deviceCache=deviceCache.filter(function(d){return d.mac.toUpperCase()!==mac.toUpperCase();});
+      saveDeviceCache(deviceCache);
+      // Recarrega dados e re-renderiza tudo
       await fetchData();
-      renderAdmin(lastData);
-      var cb=document.getElementById('btnReset-'+mac);
-      if(cb){cb.textContent='Histórico zerado';cb.style.color='var(--accent)';cb.style.borderColor='var(--accent)';setTimeout(function(){if(cb){cb.innerHTML='<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l10 10M11 1L1 11"/></svg> Zerar histórico';cb.style.color='';cb.style.borderColor='';cb.disabled=false;}},3000);}
+      document.getElementById('storeGroups').innerHTML='';
+      renderAll(lastData);
     }else{alert('Erro ao zerar: '+(data.message||'tente novamente.'));btn.disabled=false;btn.textContent='Zerar histórico';if(btnCard)btnCard.disabled=false;}
   }catch(e){alert('Falha na conexão.');btn.disabled=false;btn.textContent='Zerar histórico';if(btnCard)btnCard.disabled=false;}
 }
