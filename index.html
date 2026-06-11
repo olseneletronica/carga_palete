@@ -289,12 +289,17 @@
 <!-- PAGE ADMINISTRAÇÃO -->
 <div class="page" id="page-admin">
   <div class="card" style="border-left:4px solid var(--danger);">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:12px;">
       <div class="section-title" style="color:var(--danger);">Zona de Administração</div>
+      <button class="btn secondary" onclick="limparCacheLocal()" style="font-size:10px;">
+        <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 2A5 5 0 1 0 11 6"/><polyline points="8 0 10.5 2 8.5 4.5"/></svg>
+        Sincronizar cache
+      </button>
     </div>
     <p style="font-family:var(--font-mono);font-size:11px;color:var(--muted);line-height:1.7;">
       As ações abaixo são <strong style="color:var(--danger)">irreversíveis</strong>.
-      Ao zerar o histórico de um palete, todas as leituras registradas na planilha serão permanentemente apagadas e os contadores de reposição serão reiniciados.
+      Ao remover um dispositivo, todas as leituras da planilha, os contadores e o cadastro serão permanentemente apagados.
+      Se os nomes dos dispositivos estiverem desatualizados, use <strong>Sincronizar cache</strong>.
     </p>
   </div>
   <div class="admin-grid" id="adminGrid"><div class="empty-state"><strong>Carregando dispositivos</strong>Aguarde...</div></div>
@@ -317,6 +322,17 @@ function showPage(name,btn){
 }
 
 // ── ADMINISTRAÇÃO ──────────────────────────────────────
+function limparCacheLocal(){
+  localStorage.removeItem(LS_KEY);
+  deviceCache=[];
+  fetchDevices().then(function(){
+    return fetchData();
+  }).then(function(){
+    renderAdmin(lastData);
+    alert('Cache sincronizado com sucesso. ' + deviceCache.length + ' dispositivo(s) carregado(s).');
+  });
+}
+
 function renderAdmin(rows){
   var grid=document.getElementById('adminGrid');
   var grouped=groupByMac(rows);
@@ -399,8 +415,16 @@ async function fetchDevices(){
       headers:{'Cache-Control':'no-cache, no-store, must-revalidate','Pragma':'no-cache'}
     });
     var data=await res.json();
-    if(Array.isArray(data))saveDeviceCache(data);
-  }catch(e){console.warn('fetchDevices: cache local.',e);}
+    if(Array.isArray(data)){
+      // Sempre substitui o cache local pelo que veio do servidor
+      // Nunca mescla — o servidor é a fonte de verdade
+      deviceCache=data;
+      localStorage.setItem(LS_KEY, JSON.stringify(data));
+      console.log('[fetchDevices] Cache atualizado do servidor:', data.length, 'dispositivos');
+    }
+  }catch(e){
+    console.warn('[fetchDevices] Falha — usando cache local:', e);
+  }
   return true;
 }
 
