@@ -588,20 +588,36 @@ function renderAll(rows){
 // ── FETCH ──────────────────────────────────────────────
 function hideLoading(){document.getElementById('loadingOverlay').classList.add('hidden');}
 
+var fetchSeq=0; // controla qual requisição é a mais recente
 async function fetchData(){
+  var mySeq=++fetchSeq;
   try{
     var res=await fetch(CSV_URL+'&t='+Date.now());
     var text=await res.text();
     var rows=parseCSV(text).filter(function(r){return !isNaN(parseInt(r[7]));});
+
+    // Se outra requisição mais nova já começou, descarta esta resposta
+    if(mySeq!==fetchSeq){
+      console.warn('[fetchData] Resposta #'+mySeq+' descartada — já existe uma mais recente (#'+fetchSeq+')');
+      return true;
+    }
+
     if(rows.length){
       await fetchDevices();
+      // Verifica de novo após o await (fetchDevices também é assíncrono)
+      if(mySeq!==fetchSeq){
+        console.warn('[fetchData] Resposta #'+mySeq+' descartada após fetchDevices');
+        return true;
+      }
       renderAll(rows);
     }
   }catch(err){
     console.error('fetchData:',err);
-    document.getElementById('lastUpdate').textContent='Erro na conexão';
+    if(mySeq===fetchSeq){
+      document.getElementById('lastUpdate').textContent='Erro na conexão';
+    }
   }finally{
-    hideLoading();
+    if(mySeq===fetchSeq)hideLoading();
   }
   return true;
 }
